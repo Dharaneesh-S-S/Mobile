@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
-
+import 'package:on_audio_query/on_audio_query.dart';
 import '../providers/music_player_provider.dart';
 import 'now_playing_screen.dart';
 
@@ -10,9 +10,13 @@ class MiniPlayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
     final sequenceStateAsync = ref.watch(sequenceStateProvider);
     final playerStateAsync = ref.watch(playerStateProvider);
+    final positionAsync = ref.watch(positionProvider);
     final player = ref.watch(musicPlayerProvider);
+    final controller = ref.read(musicPlaybackControllerProvider);
+    final currentSong = ref.watch(currentSongProvider);
 
     return sequenceStateAsync.when(
       data: (sequenceState) {
@@ -21,6 +25,13 @@ class MiniPlayer extends ConsumerWidget {
         }
 
         final currentItem = sequenceState.currentSource!.tag as MediaItem;
+        final position = positionAsync.value ?? Duration.zero;
+        final duration = player.duration ?? currentItem.duration ?? Duration.zero;
+        final progress = (duration.inMilliseconds > 0)
+            ? (position.inMilliseconds / duration.inMilliseconds).clamp(0.0, 1.0)
+            : 0.0;
+
+        final isPlaying = playerStateAsync.value?.playing ?? false;
 
         return GestureDetector(
           onTap: () {
@@ -29,86 +40,99 @@ class MiniPlayer extends ConsumerWidget {
             );
           },
           child: Container(
-            height: 72,
+            height: 68,
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surfaceContainerHigh,
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(context).dividerColor,
-                  width: 1,
+              color: theme.colorScheme.surfaceContainerHighest,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.12),
+                  blurRadius: 8,
+                  offset: const Offset(0, -2),
                 ),
-              ),
+              ],
             ),
-            child: Row(
+            child: Column(
               children: [
-                if (currentItem.artUri != null)
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(4),
-                      child: Image.network(
-                        currentItem.artUri.toString(),
-                        width: 56,
-                        height: 56,
-                        fit: BoxFit.cover,
-                        errorBuilder: (_, __, ___) => const Icon(Icons.music_note, size: 56),
-                      ),
-                    ),
-                  )
-                else
-                  const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: Icon(Icons.music_note),
-                  ),
+                // Mini Progress Bar
+                LinearProgressIndicator(
+                  value: progress,
+                  minHeight: 2.5,
+                  backgroundColor: Colors.transparent,
+                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+                ),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        currentItem.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      if (currentItem.artist != null)
-                        Text(
-                          currentItem.artist!,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSurfaceVariant,
-                            fontSize: 12,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: Row(
+                      children: [
+                        // Album Art
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: SizedBox(
+                            width: 48,
+                            height: 48,
+                            child: currentSong != null
+                                ? QueryArtworkWidget(
+                                    id: currentSong.id,
+                                    type: ArtworkType.AUDIO,
+                                    artworkFit: BoxFit.cover,
+                                    nullArtworkWidget: Container(
+                                      color: theme.colorScheme.surfaceVariant,
+                                      child: const Icon(Icons.music_note, size: 24),
+                                    ),
+                                  )
+                                : Container(
+                                    color: theme.colorScheme.surfaceVariant,
+                                    child: const Icon(Icons.music_note, size: 24),
+                                  ),
                           ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                         ),
-                    ],
+                        const SizedBox(width: 12),
+
+                        // Title & Artist
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                currentItem.title,
+                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 2),
+                              Text(
+                                currentItem.artist ?? 'Unknown Artist',
+                                style: TextStyle(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                  fontSize: 12,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        // Play/Pause Button
+                        IconButton(
+                          iconSize: 32,
+                          icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled),
+                          color: theme.colorScheme.primary,
+                          onPressed: () => controller.togglePlayPause(),
+                        ),
+
+                        // Next Button
+                        IconButton(
+                          iconSize: 28,
+                          icon: const Icon(Icons.skip_next),
+                          onPressed: () => controller.seekToNext(),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                playerStateAsync.when(
-                  data: (playerState) {
-                    final isPlaying = playerState.playing;
-                    return IconButton(
-                      icon: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
-                      onPressed: () {
-                        if (isPlaying) {
-                          player.pause();
-                        } else {
-                          player.play();
-                        }
-                      },
-                    );
-                  },
-                  loading: () => const Padding(
-                    padding: EdgeInsets.all(16.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                  error: (_, __) => const SizedBox.shrink(),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.skip_next),
-                  onPressed: () => player.seekToNext(),
-                ),
-                const SizedBox(width: 8),
               ],
             ),
           ),
