@@ -12,32 +12,49 @@ class UsagePermissionWrapper extends StatefulWidget {
   State<UsagePermissionWrapper> createState() => _UsagePermissionWrapperState();
 }
 
-class _UsagePermissionWrapperState extends State<UsagePermissionWrapper> {
+class _UsagePermissionWrapperState extends State<UsagePermissionWrapper> with WidgetsBindingObserver {
   bool _hasPermission = false;
   bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkPermission();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed && !_hasPermission) {
+      _checkPermission();
+    }
   }
 
   Future<void> _checkPermission() async {
     setState(() => _isLoading = true);
     try {
-      // Just check if we can fetch something for today
       DateTime endDate = DateTime.now();
       DateTime startDate = endDate.subtract(const Duration(minutes: 1));
       await AppUsage().getAppUsage(startDate, endDate);
-      setState(() {
-        _hasPermission = true;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _hasPermission = true;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _hasPermission = false;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _hasPermission = false;
+          _isLoading = false;
+        });
+      }
     }
   }
 

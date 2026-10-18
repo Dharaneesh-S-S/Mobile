@@ -122,6 +122,34 @@ class NotificationService {
     );
   }
 
+  /// Shows an immediate notification
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+    String channelId = AppConstants.channelRemindersId,
+    String channelName = AppConstants.channelRemindersName,
+  }) async {
+    if (!_isInitialized) await initialize();
+
+    final androidDetails = AndroidNotificationDetails(
+      channelId,
+      channelName,
+      importance: Importance.high,
+      priority: Priority.high,
+      enableVibration: true,
+    );
+
+    await _notificationsPlugin.show(
+      id,
+      title,
+      body,
+      NotificationDetails(android: androidDetails),
+      payload: payload,
+    );
+  }
+
   /// Cancels a scheduled notification by ID
   Future<void> cancelNotification(int id) async {
     await _notificationsPlugin.cancel(id);
