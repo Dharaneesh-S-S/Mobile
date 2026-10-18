@@ -33,13 +33,16 @@ final appCategoriesProvider = StreamProvider<List<AppCategoryEntry>>((ref) {
 
 // Provider for installed apps to map package names to app names and icons
 final installedAppsProvider = FutureProvider<Map<String, Application>>((ref) async {
-  List<Application> apps = await DeviceApps.getInstalledApplications(
-    includeAppIcons: true,
-    includeSystemApps: true,
-    onlyAppsWithLaunchIntent: true,
-  );
-  
-  return { for (var app in apps) app.packageName : app };
+  try {
+    List<Application> apps = await DeviceApps.getInstalledApplications(
+      includeAppIcons: true,
+      includeSystemApps: true,
+      onlyAppsWithLaunchIntent: true,
+    );
+    return { for (var app in apps) app.packageName : app };
+  } catch (e) {
+    return {};
+  }
 });
 
 // Calculate total usage duration for a given date

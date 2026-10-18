@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:app_usage/app_usage.dart';
@@ -74,7 +75,18 @@ class _UsagePermissionWrapperState extends State<UsagePermissionWrapper> {
               const SizedBox(height: 32),
               FilledButton(
                 onPressed: () async {
-                  await AppSettings.openAppSettings(type: AppSettingsType.security);
+                  if (kIsWeb) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('App usage tracking is only available on native Android devices.'),
+                        behavior: SnackBarBehavior.floating,
+                      ),
+                    );
+                    return;
+                  }
+                  try {
+                    await AppSettings.openAppSettings(type: AppSettingsType.security);
+                  } catch (_) {}
                 },
                 child: const Text('Open Settings'),
               ),

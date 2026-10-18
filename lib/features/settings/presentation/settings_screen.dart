@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -60,6 +61,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _handleExportBackup() async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('File system backups are not supported in web browsers. Use the Android app for backup export.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     setState(() => _isExporting = true);
     try {
       final backupService = ref.read(backupServiceProvider);
@@ -90,6 +100,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _handleRestoreBackup() async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('File system backups are not supported in web browsers. Use the Android app for backup restore.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.any,

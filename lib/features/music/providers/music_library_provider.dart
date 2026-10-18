@@ -39,25 +39,29 @@ final songsProvider = FutureProvider<List<SongModel>>((ref) async {
   
   if (folder == null) return [];
 
-  // Request permissions if needed
-  bool hasPermission = await query.permissionsStatus();
-  if (!hasPermission) {
-    hasPermission = await query.permissionsRequest();
+  try {
+    // Request permissions if needed
+    bool hasPermission = await query.permissionsStatus();
+    if (!hasPermission) {
+      hasPermission = await query.permissionsRequest();
+    }
+    if (!hasPermission) return [];
+
+    final allSongs = await query.querySongs(
+      sortType: null,
+      orderType: OrderType.ASC_OR_SMALLER,
+      uriType: UriType.EXTERNAL,
+      ignoreCase: true,
+    );
+
+    // Filter recursively by checking if the path starts with the folder
+    final filtered = allSongs.where((song) {
+      final data = song.data; // the absolute file path
+      return data.startsWith(folder);
+    }).toList();
+    
+    return filtered;
+  } catch (e) {
+    return [];
   }
-  if (!hasPermission) return [];
-
-  final allSongs = await query.querySongs(
-    sortType: null,
-    orderType: OrderType.ASC_OR_SMALLER,
-    uriType: UriType.EXTERNAL,
-    ignoreCase: true,
-  );
-
-  // Filter recursively by checking if the path starts with the folder
-  final filtered = allSongs.where((song) {
-    final data = song.data; // the absolute file path
-    return data.startsWith(folder);
-  }).toList();
-  
-  return filtered;
 });
