@@ -230,7 +230,6 @@ final playlistSongsProvider = StreamProvider.family<List<SongModel>, String>((re
 final favoriteSongsProvider = FutureProvider<List<SongModel>>((ref) async {
   final db = ref.watch(databaseProvider);
   final allSongs = ref.watch(songsProvider).valueOrNull ?? [];
-  final pathMap = {for (var s in allSongs) s.data: s};
 
   final allMetadata = await db.select(db.songMetadata).get();
   final favPaths = allMetadata.where((m) => m.isFavorite).map((m) => m.songPath).toSet();

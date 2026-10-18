@@ -165,7 +165,6 @@ class CalendarSearchDelegate extends SearchDelegate<CalendarDisplayItem?> {
       case CalendarItemType.transaction:
         return Icons.attach_money;
       case CalendarItemType.event:
-      default:
         return Icons.event;
     }
   }

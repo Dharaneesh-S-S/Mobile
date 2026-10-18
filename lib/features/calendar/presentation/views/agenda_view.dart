@@ -4,8 +4,6 @@ import 'package:intl/intl.dart';
 import '../../providers/calendar_providers.dart';
 import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../tasks/presentation/pages/task_form_sheet.dart';
-import '../../../tasks/providers/tasks_providers.dart';
 import '../calendar_item_handler.dart';
 
 class AgendaView extends ConsumerWidget {
@@ -80,7 +78,6 @@ class AgendaView extends ConsumerWidget {
       case CalendarItemType.transaction:
         return const Icon(Icons.attach_money, color: Colors.blueGrey, size: 20);
       case CalendarItemType.event:
-      default:
         return const SizedBox.shrink();
     }
   }

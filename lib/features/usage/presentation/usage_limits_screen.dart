@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:uuid/uuid.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
-import '../models/usage_models.dart';
 import '../providers/focus_session_provider.dart';
 import '../providers/usage_providers.dart';
 import '../services/app_categorizer.dart';

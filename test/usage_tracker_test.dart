@@ -1,8 +1,6 @@
-import 'package:drift/drift.dart' as drift;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:personal_hub/core/database/app_database.dart';
-import 'package:personal_hub/features/usage/models/usage_models.dart';
 import 'package:personal_hub/features/usage/providers/focus_session_provider.dart';
 import 'package:personal_hub/features/usage/providers/usage_providers.dart';
 import 'package:personal_hub/features/usage/services/app_categorizer.dart';

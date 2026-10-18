@@ -3,8 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/calendar_providers.dart';
 import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
-import '../../../tasks/presentation/pages/task_form_sheet.dart';
-import '../../../tasks/providers/tasks_providers.dart';
 import '../calendar_item_handler.dart';
 
 class MonthView extends ConsumerStatefulWidget {
@@ -75,7 +73,6 @@ class _MonthViewState extends ConsumerState<MonthView> {
   Widget _buildMonthGrid(DateTime monthDate, List<CalendarDisplayItem> items) {
     // Calculate days to show
     final firstDayOfMonth = DateTime(monthDate.year, monthDate.month, 1);
-    final daysInMonth = DateUtils.getDaysInMonth(monthDate.year, monthDate.month);
     
     // 0 = Sunday, 1 = Monday ... 6 = Saturday in our UI, but weekday is 1=Monday...7=Sunday
     int firstWeekday = firstDayOfMonth.weekday;

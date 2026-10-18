@@ -22,7 +22,6 @@ class _UsageReportsScreenState extends ConsumerState<UsageReportsScreen> {
     final comparison = ref.watch(screenTimeComparisonProvider);
     final categorySummaries = ref.watch(categorySummariesProvider);
     final sevenDayPointsAsync = ref.watch(sevenDayTrendProvider(DateTime.now()));
-    final periodDuration = ref.watch(periodTotalDurationProvider);
     final dailyAvg = ref.watch(dailyAverageUsageProvider);
 
     return Scaffold(
