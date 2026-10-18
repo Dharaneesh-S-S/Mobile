@@ -19,16 +19,6 @@ subprojects {
     project.evaluationDependsOn(":app")
 }
 
-subprojects {
-    afterEvaluate {
-        tasks.matching {
-            it.name.contains("verifyReleaseResources") || it.name.contains("VerifyLibraryResources")
-        }.configureEach {
-            enabled = false
-        }
-    }
-}
-
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
