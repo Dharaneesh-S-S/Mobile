@@ -176,6 +176,24 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
       appBar: AppBar(
         title: Text(widget.existingEvent == null ? 'New Event' : 'Edit Event'),
         actions: [
+          if (widget.existingEvent != null)
+            IconButton(
+              icon: const Icon(Icons.copy),
+              tooltip: 'Duplicate Event',
+              onPressed: () {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EventEditorScreen(
+                      existingEvent: widget.existingEvent!.copyWith(
+                        id: const Uuid().v4(),
+                        title: '${widget.existingEvent!.title} (Copy)',
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
           TextButton(
             onPressed: _saveEvent,
             child: const Text('Save'),

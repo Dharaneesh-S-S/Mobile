@@ -98,6 +98,28 @@ class AppDatabase extends _$AppDatabase {
       beforeOpen: (details) async {
         // Enforce foreign key constraints in SQLite
         await customStatement('PRAGMA foreign_keys = ON;');
+
+        final existingCats = await select(moneyCategories).get();
+        if (existingCats.isEmpty) {
+          final now = DateTime.now().toUtc().millisecondsSinceEpoch;
+          final defaultCategories = [
+            MoneyCategoriesCompanion.insert(id: 'cat_salary', name: 'Salary', iconName: const Value('work'), colorValue: const Value(0xFF10B981), isExpense: const Value(false), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_freelance', name: 'Freelance', iconName: const Value('laptop'), colorValue: const Value(0xFF06B6D4), isExpense: const Value(false), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_investment', name: 'Investment', iconName: const Value('trending_up'), colorValue: const Value(0xFF8B5CF6), isExpense: const Value(false), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_other_inc', name: 'Other Income', iconName: const Value('attach_money'), colorValue: const Value(0xFF3B82F6), isExpense: const Value(false), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_food', name: 'Food & Dining', iconName: const Value('restaurant'), colorValue: const Value(0xFFEF4444), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_groceries', name: 'Groceries', iconName: const Value('shopping_cart'), colorValue: const Value(0xFFF97316), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_transport', name: 'Transportation', iconName: const Value('directions_car'), colorValue: const Value(0xFFF59E0B), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_bills', name: 'Bills & Utilities', iconName: const Value('receipt'), colorValue: const Value(0xFFEC4899), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_shopping', name: 'Shopping', iconName: const Value('shopping_bag'), colorValue: const Value(0xFF8B5CF6), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_entertainment', name: 'Entertainment', iconName: const Value('movie'), colorValue: const Value(0xFF6366F1), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_health', name: 'Healthcare', iconName: const Value('medical_services'), colorValue: const Value(0xFF14B8A6), isExpense: const Value(true), createdAtUtc: now),
+            MoneyCategoriesCompanion.insert(id: 'cat_other_exp', name: 'Other Expense', iconName: const Value('more_horiz'), colorValue: const Value(0xFF6B7280), isExpense: const Value(true), createdAtUtc: now),
+          ];
+          for (final c in defaultCategories) {
+            await into(moneyCategories).insert(c);
+          }
+        }
       },
     );
   }

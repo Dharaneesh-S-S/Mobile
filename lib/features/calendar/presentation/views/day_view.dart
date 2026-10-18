@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../providers/calendar_providers.dart';
 import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../calendar_item_handler.dart';
 
 class DayView extends ConsumerStatefulWidget {
   const DayView({super.key});
@@ -77,14 +78,17 @@ class _DayViewState extends ConsumerState<DayView> {
       padding: const EdgeInsets.all(8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: items.map((item) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: 2.0),
-          child: Row(
-            children: [
-              Container(width: 8, height: 8, decoration: BoxDecoration(color: item.color, shape: BoxShape.circle)),
-              const SizedBox(width: 8),
-              Expanded(child: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w600))),
-            ],
+        children: items.map((item) => GestureDetector(
+          onTap: () => openCalendarItem(context, ref, item),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2.0),
+            child: Row(
+              children: [
+                Container(width: 8, height: 8, decoration: BoxDecoration(color: item.color, shape: BoxShape.circle)),
+                const SizedBox(width: 8),
+                Expanded(child: Text(item.title, style: const TextStyle(fontWeight: FontWeight.w600))),
+              ],
+            ),
           ),
         )).toList(),
       ),
@@ -145,16 +149,19 @@ class _DayViewState extends ConsumerState<DayView> {
                 left: 70,
                 right: 10,
                 height: ((item.endTime.difference(item.startTime).inMinutes) / 60) * hourHeight,
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: item.color.withOpacity(0.8),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    item.title,
-                    style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                    overflow: TextOverflow.ellipsis,
+                child: GestureDetector(
+                  onTap: () => openCalendarItem(context, ref, item),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: item.color.withOpacity(0.8),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(
+                      item.title,
+                      style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
                   ),
                 ),
               ),

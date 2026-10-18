@@ -5,6 +5,7 @@ import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../tasks/presentation/pages/task_form_sheet.dart';
 import '../../../tasks/providers/tasks_providers.dart';
+import '../calendar_item_handler.dart';
 
 class MonthView extends ConsumerStatefulWidget {
   const MonthView({super.key});
@@ -165,20 +166,7 @@ class _MonthViewState extends ConsumerState<MonthView> {
                   }
                   final item = dayItems[idx];
                   return GestureDetector(
-                    onTap: () async {
-                      if (item.type == CalendarItemType.task) {
-                        final tasks = await ref.read(allTasksStreamProvider.future);
-                        final task = tasks.firstWhere((t) => t.id == item.sourceId);
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) => TaskFormSheet(task: task),
-                        );
-                      } else if (item.type == CalendarItemType.event || item.type == CalendarItemType.birthday || item.type == CalendarItemType.holiday) {
-                         // TODO handle event open
-                      }
-                    },
+                    onTap: () => openCalendarItem(context, ref, item),
                     child: Container(
                       margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
                       padding: const EdgeInsets.symmetric(horizontal: 2),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/calendar_providers.dart';
 import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../calendar_item_handler.dart';
 
 class WeekView extends ConsumerStatefulWidget {
   const WeekView({super.key});
@@ -168,17 +169,20 @@ class _WeekViewState extends ConsumerState<WeekView> {
             left: i * colWidth,
             width: colWidth - 2,
             height: ((item.endTime.difference(item.startTime).inMinutes) / 60) * hourHeight,
-            child: Container(
-              margin: const EdgeInsets.only(left: 2),
-              padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
-              decoration: BoxDecoration(
-                color: item.color.withOpacity(0.8),
-                borderRadius: BorderRadius.circular(2),
-              ),
-              child: Text(
-                item.title,
-                style: const TextStyle(color: Colors.white, fontSize: 8),
-                overflow: TextOverflow.ellipsis,
+            child: GestureDetector(
+              onTap: () => openCalendarItem(context, ref, item),
+              child: Container(
+                margin: const EdgeInsets.only(left: 2),
+                padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 1),
+                decoration: BoxDecoration(
+                  color: item.color.withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: Text(
+                  item.title,
+                  style: const TextStyle(color: Colors.white, fontSize: 8),
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
           )

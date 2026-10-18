@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter_quill/flutter_quill.dart' as quill;
 import 'package:pdf/pdf.dart' as pw_pdf;
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -33,22 +35,78 @@ class _DocumentEditorScreenState extends ConsumerState<DocumentEditorScreen> {
     });
   }
 
-  void _exportToPdf() async {
-    final pdf = pw.Document();
-    
-    // Simplistic PDF export placeholder
-    pdf.addPage(
-      pw.Page(
-        pageFormat: pw_pdf.PdfPageFormat.a4,
-        build: (pw.Context context) {
-          return pw.Center(
-            child: pw.Text("Document Export"),
-          );
-        },
-      ),
-    );
+  Future<void> _exportToPdf() async {
+    try {
+      final pages = await ref.read(documentPagesProvider(widget.documentId).future);
+      final pdf = pw.Document();
 
-    await Printing.sharePdf(bytes: await pdf.save(), filename: 'document.pdf');
+      if (pages.isEmpty) {
+        pdf.addPage(
+          pw.Page(
+            pageFormat: pw_pdf.PdfPageFormat.a4,
+            build: (pw.Context context) {
+              return pw.Center(
+                child: pw.Text("Empty Document", style: const pw.TextStyle(fontSize: 18)),
+              );
+            },
+          ),
+        );
+      } else {
+        for (int i = 0; i < pages.length; i++) {
+          final p = pages[i];
+          String textContent = '';
+          if (p.textContentJson.isNotEmpty && p.textContentJson != '[]') {
+            try {
+              final doc = quill.Document.fromJson(jsonDecode(p.textContentJson));
+              textContent = doc.toPlainText().trim();
+            } catch (_) {
+              textContent = '';
+            }
+          }
+          final bgColor = pw_pdf.PdfColor.fromInt(p.backgroundColor);
+
+          pdf.addPage(
+            pw.Page(
+              pageFormat: pw_pdf.PdfPageFormat.a4,
+              build: (pw.Context context) {
+                return pw.Container(
+                  color: bgColor,
+                  padding: const pw.EdgeInsets.all(32),
+                  child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            "Page ${i + 1} of ${pages.length}",
+                            style: pw.TextStyle(color: pw_pdf.PdfColors.grey600, fontSize: 10),
+                          ),
+                        ],
+                      ),
+                      pw.Divider(color: pw_pdf.PdfColors.grey400),
+                      pw.SizedBox(height: 12),
+                      pw.Text(
+                        textContent.isNotEmpty ? textContent : "(Blank Page)",
+                        style: const pw.TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          );
+        }
+      }
+
+      await Printing.sharePdf(bytes: await pdf.save(), filename: 'document_${widget.documentId}.pdf');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to export PDF: $e')),
+        );
+      }
+    }
   }
 
   @override

@@ -6,6 +6,7 @@ import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../tasks/presentation/pages/task_form_sheet.dart';
 import '../../../tasks/providers/tasks_providers.dart';
+import '../calendar_item_handler.dart';
 
 class AgendaView extends ConsumerWidget {
   const AgendaView({super.key});
@@ -59,18 +60,7 @@ class AgendaView extends ConsumerWidget {
                       : '${DateFormat('jm').format(item.startTime)} - ${DateFormat('jm').format(item.endTime)}',
                 ),
                 trailing: _getIconForType(item.type),
-                onTap: () async {
-                  if (item.type == CalendarItemType.task) {
-                    final tasks = await ref.read(allTasksStreamProvider.future);
-                    final task = tasks.firstWhere((t) => t.id == item.sourceId);
-                    showModalBottomSheet(
-                      context: context,
-                      isScrollControlled: true,
-                      backgroundColor: Colors.transparent,
-                      builder: (context) => TaskFormSheet(task: task),
-                    );
-                  }
-                },
+                onTap: () => openCalendarItem(context, ref, item),
               ),
             ),
           ],

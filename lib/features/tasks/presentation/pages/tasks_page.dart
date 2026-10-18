@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../providers/tasks_providers.dart';
 import 'task_form_sheet.dart';
+import '../../../../core/database/app_database.dart';
 import '../../../../core/theme/app_colors.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +26,8 @@ class TasksPage extends ConsumerWidget {
           IconButton(
             icon: const Icon(Icons.more_vert),
             onPressed: () {
-               // Show list options (rename, delete, etc.)
+              final lists = listsAsync.valueOrNull ?? [];
+              _showListOptionsMenu(context, ref, selectedListId, lists);
             },
           )
         ],
@@ -144,6 +146,173 @@ class TasksPage extends ConsumerWidget {
             },
             child: const Text('Create'),
           ),
+        ],
+      ),
+    );
+  }
+
+  void _showListOptionsMenu(BuildContext context, WidgetRef ref, String? selectedListId, List<TaskListEntry> lists) {
+    final currentList = (selectedListId != null && selectedListId != 'all' && selectedListId != 'completed')
+        ? lists.where((l) => l.id == selectedListId).firstOrNull
+        : null;
+
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: AppColors.backgroundSurface,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      builder: (ctx) {
+        if (currentList == null) {
+          return SafeArea(
+            child: Wrap(
+              children: [
+                ListTile(
+                  leading: const Icon(Icons.add, color: AppColors.accentEmerald),
+                  title: const Text('Create New List', style: TextStyle(color: AppColors.textPrimary)),
+                  onTap: () {
+                    Navigator.pop(ctx);
+                    _showCreateListDialog(context, ref);
+                  },
+                ),
+              ],
+            ),
+          );
+        }
+
+        return SafeArea(
+          child: Wrap(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Text(
+                  'List: ${currentList.title}',
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppColors.textPrimary),
+                ),
+              ),
+              const Divider(height: 1, color: AppColors.borderDefault),
+              ListTile(
+                leading: const Icon(Icons.edit_outlined, color: AppColors.textSecondary),
+                title: const Text('Rename List', style: TextStyle(color: AppColors.textPrimary)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showRenameListDialog(context, ref, currentList);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.palette_outlined, color: AppColors.textSecondary),
+                title: const Text('Change List Color', style: TextStyle(color: AppColors.textPrimary)),
+                onTap: () {
+                  Navigator.pop(ctx);
+                  _showChangeColorDialog(context, ref, currentList);
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.delete_outline, color: AppColors.lightError),
+                title: const Text('Delete List', style: TextStyle(color: AppColors.lightError)),
+                onTap: () async {
+                  Navigator.pop(ctx);
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (dCtx) => AlertDialog(
+                      backgroundColor: AppColors.backgroundSurface,
+                      title: const Text('Delete List', style: TextStyle(color: AppColors.textPrimary)),
+                      content: Text(
+                        'Are you sure you want to delete "${currentList.title}" and its tasks?',
+                        style: const TextStyle(color: AppColors.textSecondary),
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(dCtx, false),
+                          child: const Text('Cancel'),
+                        ),
+                        FilledButton(
+                          style: FilledButton.styleFrom(backgroundColor: AppColors.lightError),
+                          onPressed: () => Navigator.pop(dCtx, true),
+                          child: const Text('Delete'),
+                        ),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true) {
+                    await ref.read(taskServiceProvider).deleteList(currentList.id);
+                    ref.read(selectedListIdProvider.notifier).state = 'all';
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  void _showRenameListDialog(BuildContext context, WidgetRef ref, TaskListEntry list) {
+    final controller = TextEditingController(text: list.title);
+    showDialog(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        backgroundColor: AppColors.backgroundSurface,
+        title: const Text('Rename List', style: TextStyle(color: AppColors.textPrimary)),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          style: const TextStyle(color: AppColors.textPrimary),
+          decoration: const InputDecoration(hintText: 'List name'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dCtx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () {
+              final newTitle = controller.text.trim();
+              if (newTitle.isNotEmpty) {
+                ref.read(taskServiceProvider).updateList(list.copyWith(title: newTitle));
+                Navigator.pop(dCtx);
+              }
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showChangeColorDialog(BuildContext context, WidgetRef ref, TaskListEntry list) {
+    final colors = [
+      AppColors.accentEmerald.value,
+      AppColors.accentCyan.value,
+      AppColors.accentViolet.value,
+      const Color(0xFFF59E0B).value,
+      AppColors.lightError.value,
+      const Color(0xFFEC4899).value,
+      const Color(0xFF6366F1).value,
+      const Color(0xFF14B8A6).value,
+    ];
+
+    showDialog(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        backgroundColor: AppColors.backgroundSurface,
+        title: const Text('Change List Color', style: TextStyle(color: AppColors.textPrimary)),
+        content: Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: colors.map((c) => GestureDetector(
+            onTap: () {
+              ref.read(taskServiceProvider).updateList(list.copyWith(colorValue: c));
+              Navigator.pop(dCtx);
+            },
+            child: Container(
+              width: 36,
+              height: 36,
+              decoration: BoxDecoration(
+                color: Color(c),
+                shape: BoxShape.circle,
+                border: list.colorValue == c ? Border.all(color: Colors.white, width: 3) : null,
+              ),
+            ),
+          )).toList(),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dCtx), child: const Text('Close')),
         ],
       ),
     );

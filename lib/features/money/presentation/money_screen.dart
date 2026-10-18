@@ -6,6 +6,7 @@ import '../providers/money_providers.dart';
 import 'transaction_editor_screen.dart';
 import 'wallets_screen.dart';
 import 'statistics_screen.dart';
+import 'categories_screen.dart';
 
 class MoneyScreen extends ConsumerWidget {
   const MoneyScreen({super.key});
@@ -23,12 +24,21 @@ class MoneyScreen extends ConsumerWidget {
         title: const Text('Money Manager'),
         actions: [
           IconButton(
+            tooltip: 'Statistics & Reports',
             icon: const Icon(Icons.analytics),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const StatisticsScreen()));
             },
           ),
           IconButton(
+            tooltip: 'Categories',
+            icon: const Icon(Icons.category),
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (_) => const CategoriesScreen()));
+            },
+          ),
+          IconButton(
+            tooltip: 'Wallets',
             icon: const Icon(Icons.account_balance_wallet),
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const WalletsScreen()));

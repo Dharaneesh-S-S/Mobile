@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
 import '../providers/music_player_provider.dart';
+import 'now_playing_screen.dart';
 
 class MiniPlayer extends ConsumerWidget {
   const MiniPlayer({super.key});
@@ -23,7 +24,9 @@ class MiniPlayer extends ConsumerWidget {
 
         return GestureDetector(
           onTap: () {
-            // Open full player
+            Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const NowPlayingScreen()),
+            );
           },
           child: Container(
             height: 72,

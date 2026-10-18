@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'usage_permission_wrapper.dart';
+import 'usage_limits_screen.dart';
 import '../providers/usage_providers.dart';
 import 'package:device_apps/device_apps.dart';
 
@@ -36,7 +37,17 @@ class _UsageDashboardContentState extends ConsumerState<_UsageDashboardContent> 
         title: const Text('Usage Tracker'),
         actions: [
           IconButton(
+            icon: const Icon(Icons.timer_outlined),
+            tooltip: 'Usage Limits & Goals',
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => const UsageLimitsScreen()),
+              );
+            },
+          ),
+          IconButton(
             icon: const Icon(Icons.calendar_today),
+            tooltip: 'Select Date',
             onPressed: () async {
               final picked = await showDatePicker(
                 context: context,
@@ -48,7 +59,7 @@ class _UsageDashboardContentState extends ConsumerState<_UsageDashboardContent> 
                 setState(() => _selectedDate = picked);
               }
             },
-          )
+          ),
         ],
       ),
       body: dailyUsageAsync.when(
