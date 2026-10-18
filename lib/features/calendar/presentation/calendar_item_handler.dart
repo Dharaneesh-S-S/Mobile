@@ -14,6 +14,7 @@ Future<void> openCalendarItem(BuildContext context, WidgetRef ref, CalendarDispl
     if (task != null && context.mounted) {
       showModalBottomSheet(
         context: context,
+        useRootNavigator: true,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => TaskFormSheet(task: task),

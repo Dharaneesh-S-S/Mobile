@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import '../providers/calendar_providers.dart';
 import 'views/month_view.dart';
-import 'views/agenda_view.dart';
-import 'views/day_view.dart';
 import 'views/week_view.dart';
+import 'views/year_view.dart';
+import 'views/day_view.dart';
+import 'views/agenda_view.dart';
 import 'event_editor_screen.dart';
+import '../../tasks/presentation/pages/task_form_sheet.dart';
 import '../../../core/theme/app_colors.dart';
 import '../domain/models/calendar_display_item.dart';
 import 'calendar_item_handler.dart';
@@ -19,11 +21,18 @@ class CalendarScreen extends ConsumerWidget {
     final selectedDate = ref.watch(selectedDateProvider);
     final currentView = ref.watch(currentViewProvider);
 
+    String titleText;
+    if (currentView == CalendarViewType.year) {
+      titleText = '${selectedDate.year}';
+    } else if (currentView == CalendarViewType.day) {
+      titleText = DateFormat('MMM d, yyyy').format(selectedDate);
+    } else {
+      titleText = DateFormat('MMMM yyyy').format(selectedDate);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          DateFormat('MMMM yyyy').format(selectedDate),
-        ),
+        title: Text(titleText),
         actions: [
           IconButton(
             icon: const Icon(Icons.search),
@@ -36,18 +45,22 @@ class CalendarScreen extends ConsumerWidget {
           ),
           IconButton(
             icon: const Icon(Icons.today),
+            tooltip: 'Today',
             onPressed: () {
               ref.read(selectedDateProvider.notifier).state = DateTime.now();
             },
           ),
           PopupMenuButton<CalendarViewType>(
-            icon: const Icon(Icons.more_vert),
+            icon: const Icon(Icons.calendar_view_month_rounded),
+            tooltip: 'Select View',
+            initialValue: currentView,
             onSelected: (view) => ref.read(currentViewProvider.notifier).state = view,
             itemBuilder: (context) => const [
-              PopupMenuItem(value: CalendarViewType.month, child: Text('Month')),
-              PopupMenuItem(value: CalendarViewType.week, child: Text('Week')),
-              PopupMenuItem(value: CalendarViewType.day, child: Text('Day')),
-              PopupMenuItem(value: CalendarViewType.agenda, child: Text('Agenda')),
+              PopupMenuItem(value: CalendarViewType.month, child: Text('Month View')),
+              PopupMenuItem(value: CalendarViewType.week, child: Text('Week View')),
+              PopupMenuItem(value: CalendarViewType.year, child: Text('Year View')),
+              PopupMenuItem(value: CalendarViewType.day, child: Text('Day View')),
+              PopupMenuItem(value: CalendarViewType.agenda, child: Text('Agenda View')),
             ],
           ),
         ],
@@ -56,14 +69,76 @@ class CalendarScreen extends ConsumerWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: AppColors.accentCyan,
         onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const EventEditorScreen(),
-            ),
-          );
+          _showAddOptionsSheet(context, selectedDate);
         },
         child: const Icon(Icons.add, color: Colors.white),
+      ),
+    );
+  }
+
+  void _showAddOptionsSheet(BuildContext context, DateTime selectedDate) {
+    showModalBottomSheet(
+      context: context,
+      useRootNavigator: true,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      builder: (bCtx) => SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                width: 36,
+                height: 4,
+                margin: const EdgeInsets.only(bottom: 12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.4),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: AppColors.accentCyan,
+                  child: Icon(Icons.event, color: Colors.white),
+                ),
+                title: const Text('Add Event', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('Meetings, appointments, birthdays'),
+                onTap: () {
+                  Navigator.pop(bCtx);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EventEditorScreen(
+                        initialDate: selectedDate,
+                        initialType: CalendarItemType.event,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              ListTile(
+                leading: const CircleAvatar(
+                  backgroundColor: AppColors.accentEmerald,
+                  child: Icon(Icons.check_circle_outline, color: Colors.white),
+                ),
+                title: const Text('Add Task', style: TextStyle(fontWeight: FontWeight.bold)),
+                subtitle: const Text('To-do item with due date synced to Tasks'),
+                onTap: () {
+                  Navigator.pop(bCtx);
+                  showModalBottomSheet(
+                    context: context,
+                    useRootNavigator: true,
+                    isScrollControlled: true,
+                    backgroundColor: Colors.transparent,
+                    builder: (context) => TaskFormSheet(initialDueDate: selectedDate),
+                  );
+                },
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -74,6 +149,8 @@ class CalendarScreen extends ConsumerWidget {
         return const MonthView();
       case CalendarViewType.week:
         return const WeekView();
+      case CalendarViewType.year:
+        return const YearView();
       case CalendarViewType.day:
         return const DayView();
       case CalendarViewType.agenda:

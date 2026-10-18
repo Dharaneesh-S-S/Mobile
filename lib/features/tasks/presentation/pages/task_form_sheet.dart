@@ -1,16 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:drift/drift.dart' hide Column;
 import '../../providers/tasks_providers.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/theme/app_colors.dart';
-import 'package:intl/intl.dart';
-import 'package:drift/drift.dart' hide Column;
 
 class TaskFormSheet extends ConsumerStatefulWidget {
   final TaskItemEntry? task;
   final String? parentTaskId;
+  final DateTime? initialDueDate;
 
-  const TaskFormSheet({super.key, this.task, this.parentTaskId});
+  const TaskFormSheet({
+    super.key,
+    this.task,
+    this.parentTaskId,
+    this.initialDueDate,
+  });
 
   @override
   ConsumerState<TaskFormSheet> createState() => _TaskFormSheetState();
@@ -19,6 +25,9 @@ class TaskFormSheet extends ConsumerStatefulWidget {
 class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
   late TextEditingController _titleController;
   late TextEditingController _descController;
+  final TextEditingController _subtaskController = TextEditingController();
+  final List<String> _pendingSubtasks = [];
+
   DateTime? _dueDate;
   bool _hasTime = false;
   String? _selectedListId;
@@ -29,12 +38,15 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
     super.initState();
     _titleController = TextEditingController(text: widget.task?.title ?? '');
     _descController = TextEditingController(text: widget.task?.description ?? '');
-    
+
     if (widget.task?.dueDateUtc != null) {
       _dueDate = DateTime.fromMillisecondsSinceEpoch(widget.task!.dueDateUtc!, isUtc: true).toLocal();
       _hasTime = widget.task!.hasTime;
+    } else if (widget.initialDueDate != null) {
+      _dueDate = widget.initialDueDate;
+      _hasTime = false;
     }
-    
+
     _selectedListId = widget.task?.listId ?? ref.read(selectedListIdProvider);
     _recurrenceRule = widget.task?.recurrenceRule;
   }
@@ -43,177 +55,356 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
   void dispose() {
     _titleController.dispose();
     _descController.dispose();
+    _subtaskController.dispose();
     super.dispose();
   }
 
   void _saveTask() {
-    if (_titleController.text.isEmpty) return;
+    final title = _titleController.text.trim();
+    if (title.isEmpty) return;
 
     final service = ref.read(taskServiceProvider);
-    
+    final lists = ref.read(taskListsStreamProvider).valueOrNull ?? [];
+
+    String? targetListId = _selectedListId;
+    if (targetListId == 'all' || targetListId == 'completed' || targetListId == null) {
+      targetListId = lists.isNotEmpty ? lists.first.id : null;
+    }
+
     if (widget.task == null) {
       service.createTask(
-        title: _titleController.text,
-        description: _descController.text,
-        listId: _selectedListId == 'all' || _selectedListId == 'completed' ? null : _selectedListId,
+        title: title,
+        description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
+        listId: targetListId,
         parentTaskId: widget.parentTaskId,
         dueDate: _dueDate,
         hasTime: _hasTime,
         recurrenceRule: _recurrenceRule,
-      );
+      ).then((createdTask) {
+        // Add pending subtasks if any
+        if (createdTask != null && _pendingSubtasks.isNotEmpty) {
+          for (final subTitle in _pendingSubtasks) {
+            service.createTask(
+              title: subTitle,
+              listId: targetListId,
+              parentTaskId: createdTask.id,
+              dueDate: _dueDate,
+              hasTime: _hasTime,
+            );
+          }
+        }
+      });
     } else {
       service.updateTask(
         widget.task!.copyWith(
-          title: _titleController.text,
-          description: Value(_descController.text),
-          listId: Value(_selectedListId == 'all' || _selectedListId == 'completed' ? null : _selectedListId),
+          title: title,
+          description: Value(_descController.text.trim().isEmpty ? null : _descController.text.trim()),
+          listId: Value(targetListId),
           dueDateUtc: Value(_dueDate?.toUtc().millisecondsSinceEpoch),
           hasTime: _hasTime,
           recurrenceRule: Value(_recurrenceRule),
-        )
+        ),
       );
+      if (_pendingSubtasks.isNotEmpty) {
+        for (final subTitle in _pendingSubtasks) {
+          service.createTask(
+            title: subTitle,
+            listId: targetListId,
+            parentTaskId: widget.task!.id,
+            dueDate: _dueDate,
+            hasTime: _hasTime,
+          );
+        }
+      }
     }
-    Navigator.pop(context);
+    Navigator.of(context).pop();
+  }
+
+  void _showListPickerDialog(BuildContext context, List<TaskListEntry> lists) {
+    showDialog(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: const Text('Select Task List'),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            shrinkWrap: true,
+            children: [
+              for (final l in lists)
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Color(l.colorValue),
+                    radius: 8,
+                  ),
+                  title: Text(l.title),
+                  selected: _selectedListId == l.id,
+                  trailing: _selectedListId == l.id ? const Icon(Icons.check) : null,
+                  onTap: () {
+                    setState(() => _selectedListId = l.id);
+                    Navigator.pop(dCtx);
+                  },
+                ),
+              const Divider(),
+              ListTile(
+                leading: const Icon(Icons.add, color: AppColors.accentEmerald),
+                title: const Text('Create new list', style: TextStyle(color: AppColors.accentEmerald)),
+                onTap: () {
+                  Navigator.pop(dCtx);
+                  _showCreateListDialog(context);
+                },
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showCreateListDialog(BuildContext context) {
+    final controller = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (dCtx) => AlertDialog(
+        title: const Text('New List'),
+        content: TextField(
+          controller: controller,
+          autofocus: true,
+          decoration: const InputDecoration(hintText: 'List name'),
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(dCtx), child: const Text('Cancel')),
+          FilledButton(
+            onPressed: () async {
+              final name = controller.text.trim();
+              if (name.isNotEmpty) {
+                await ref.read(taskServiceProvider).createList(name, AppColors.accentEmerald.value);
+                final updatedLists = await ref.read(taskListsStreamProvider.future);
+                final newList = updatedLists.where((l) => l.title == name).firstOrNull;
+                if (newList != null && mounted) {
+                  setState(() => _selectedListId = newList.id);
+                }
+                if (dCtx.mounted) Navigator.pop(dCtx);
+              }
+            },
+            child: const Text('Create'),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final lists = ref.watch(taskListsStreamProvider).valueOrNull ?? [];
+
+    TaskListEntry? currentList;
+    if (_selectedListId != null && _selectedListId != 'all' && _selectedListId != 'completed') {
+      currentList = lists.where((l) => l.id == _selectedListId).firstOrNull;
+    }
+    currentList ??= lists.isNotEmpty ? lists.first : null;
 
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
       ),
       child: Container(
-        decoration: const BoxDecoration(
-          color: AppColors.backgroundSurface,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surface,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
         ),
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            TextField(
-              controller: _titleController,
-              autofocus: widget.task == null,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 18),
-              decoration: const InputDecoration(
-                hintText: 'New task',
-                hintStyle: TextStyle(color: AppColors.textSecondary),
-                border: InputBorder.none,
-              ),
-              onSubmitted: (_) => _saveTask(),
-            ),
-            TextField(
-              controller: _descController,
-              style: const TextStyle(color: AppColors.textPrimary, fontSize: 14),
-              decoration: const InputDecoration(
-                hintText: 'Add details',
-                hintStyle: TextStyle(color: AppColors.textSecondary),
-                border: InputBorder.none,
-              ),
-            ),
-            const SizedBox(height: 16),
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Top Bar with Drag Handle and Close button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  // List selector
-                  if (lists.isNotEmpty)
-                    ActionChip(
-                      backgroundColor: AppColors.backgroundBase,
-                      label: Text(
-                        lists.firstWhere((l) => l.id == _selectedListId, orElse: () => lists.first).title,
-                        style: const TextStyle(color: AppColors.textPrimary),
-                      ),
-                      avatar: const Icon(Icons.list, size: 16, color: AppColors.textSecondary),
-                      onPressed: () {
-                        // Show list picker
-                      },
-                    ),
-                  const SizedBox(width: 8),
-                  // Date picker
-                  ActionChip(
-                    backgroundColor: _dueDate != null ? AppColors.accentEmerald.withOpacity(0.2) : AppColors.backgroundBase,
-                    label: Text(
-                      _dueDate != null 
-                        ? (_hasTime ? DateFormat('MMM d, h:mm a').format(_dueDate!) : DateFormat('MMM d').format(_dueDate!))
-                        : 'Add Date',
-                      style: TextStyle(color: _dueDate != null ? AppColors.accentEmerald : AppColors.textPrimary),
-                    ),
-                    avatar: Icon(Icons.calendar_today, size: 16, color: _dueDate != null ? AppColors.accentEmerald : AppColors.textSecondary),
-                    onPressed: () async {
-                      final date = await showDatePicker(
-                        context: context,
-                        initialDate: _dueDate ?? DateTime.now(),
-                        firstDate: DateTime(2000),
-                        lastDate: DateTime(2100),
-                      );
-                      if (date != null) {
-                        setState(() {
-                          _dueDate = DateTime(date.year, date.month, date.day, _dueDate?.hour ?? 0, _dueDate?.minute ?? 0);
-                        });
-                        // Ask for time optionally
-                        final time = await showTimePicker(context: context, initialTime: TimeOfDay.now());
-                        if (time != null) {
-                          setState(() {
-                            _dueDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
-                            _hasTime = true;
-                          });
-                        } else {
-                           setState(() {
-                            _hasTime = false;
-                           });
-                        }
-                      }
-                    },
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    tooltip: 'Cancel',
+                    onPressed: () => Navigator.of(context).pop(),
                   ),
-                  const SizedBox(width: 8),
-                  // Recurrence
-                   ActionChip(
-                    backgroundColor: _recurrenceRule != null ? AppColors.accentEmerald.withOpacity(0.2) : AppColors.backgroundBase,
-                    label: Text(
-                      _recurrenceRule != null ? 'Recurring' : 'No repeat',
-                      style: TextStyle(color: _recurrenceRule != null ? AppColors.accentEmerald : AppColors.textPrimary),
-                    ),
-                    avatar: Icon(Icons.repeat, size: 16, color: _recurrenceRule != null ? AppColors.accentEmerald : AppColors.textSecondary),
-                    onPressed: () {
-                      // simple toggle for now
-                      setState(() {
-                        if (_recurrenceRule == null) {
-                          _recurrenceRule = 'FREQ=DAILY';
-                        } else {
-                          _recurrenceRule = null;
-                        }
-                      });
-                    },
+                  Text(
+                    widget.task == null ? 'New Task' : 'Edit Task',
+                    style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+                  ),
+                  FilledButton(
+                    onPressed: _saveTask,
+                    style: FilledButton.styleFrom(backgroundColor: AppColors.accentEmerald),
+                    child: const Text('Save'),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                if (widget.task != null)
-                  IconButton(
-                    icon: const Icon(Icons.delete, color: AppColors.lightError),
+              const Divider(height: 16),
+              // Title Field
+              TextField(
+                controller: _titleController,
+                autofocus: widget.task == null,
+                style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
+                decoration: const InputDecoration(
+                  hintText: 'What needs to be done?',
+                  border: InputBorder.none,
+                ),
+                onSubmitted: (_) => _saveTask(),
+              ),
+              // Description Field
+              TextField(
+                controller: _descController,
+                style: theme.textTheme.bodyMedium,
+                maxLines: 2,
+                minLines: 1,
+                decoration: const InputDecoration(
+                  hintText: 'Add details or notes',
+                  border: InputBorder.none,
+                  prefixIcon: Icon(Icons.notes_rounded, size: 20),
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Controls Chips (List, Date, Recurrence)
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    // List selector chip
+                    ActionChip(
+                      avatar: CircleAvatar(
+                        radius: 6,
+                        backgroundColor: currentList != null ? Color(currentList.colorValue) : AppColors.accentEmerald,
+                      ),
+                      label: Text(currentList?.title ?? 'My Tasks'),
+                      onPressed: () => _showListPickerDialog(context, lists),
+                    ),
+                    const SizedBox(width: 8),
+                    // Date & Time Chip
+                    FilterChip(
+                      selected: _dueDate != null,
+                      avatar: const Icon(Icons.calendar_today_rounded, size: 16),
+                      label: Text(
+                        _dueDate != null
+                            ? (_hasTime
+                                ? DateFormat('MMM d, h:mm a').format(_dueDate!)
+                                : DateFormat('MMM d').format(_dueDate!))
+                            : 'Set Due Date',
+                      ),
+                      onSelected: (selected) async {
+                        if (!selected) {
+                          setState(() {
+                            _dueDate = null;
+                            _hasTime = false;
+                          });
+                          return;
+                        }
+                        final date = await showDatePicker(
+                          context: context,
+                          initialDate: _dueDate ?? DateTime.now(),
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime(2100),
+                        );
+                        if (date != null) {
+                          setState(() {
+                            _dueDate = DateTime(date.year, date.month, date.day, _dueDate?.hour ?? 9, _dueDate?.minute ?? 0);
+                          });
+                          final time = await showTimePicker(
+                            context: context,
+                            initialTime: TimeOfDay.fromDateTime(_dueDate!),
+                          );
+                          if (time != null) {
+                            setState(() {
+                              _dueDate = DateTime(date.year, date.month, date.day, time.hour, time.minute);
+                              _hasTime = true;
+                            });
+                          }
+                        }
+                      },
+                    ),
+                    const SizedBox(width: 8),
+                    // Recurrence Chip
+                    FilterChip(
+                      selected: _recurrenceRule != null,
+                      avatar: const Icon(Icons.repeat_rounded, size: 16),
+                      label: Text(_recurrenceRule != null ? 'Daily Repeat' : 'Repeat'),
+                      onSelected: (val) {
+                        setState(() {
+                          _recurrenceRule = val ? 'FREQ=DAILY' : null;
+                        });
+                      },
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Subtasks section
+              if (_pendingSubtasks.isNotEmpty) ...[
+                const Text('Subtasks:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                const SizedBox(height: 4),
+                for (int i = 0; i < _pendingSubtasks.length; i++)
+                  Row(
+                    children: [
+                      const Icon(Icons.subdirectory_arrow_right, size: 18, color: Colors.grey),
+                      const SizedBox(width: 6),
+                      Expanded(child: Text(_pendingSubtasks[i])),
+                      IconButton(
+                        icon: const Icon(Icons.remove_circle_outline, size: 18, color: AppColors.lightError),
+                        onPressed: () => setState(() => _pendingSubtasks.removeAt(i)),
+                      ),
+                    ],
+                  ),
+              ],
+              Row(
+                children: [
+                  Expanded(
+                    child: TextField(
+                      controller: _subtaskController,
+                      decoration: const InputDecoration(
+                        hintText: 'Add a subtask...',
+                        isDense: true,
+                        border: InputBorder.none,
+                        prefixIcon: Icon(Icons.add, size: 18),
+                      ),
+                      onSubmitted: (val) {
+                        if (val.trim().isNotEmpty) {
+                          setState(() {
+                            _pendingSubtasks.add(val.trim());
+                            _subtaskController.clear();
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      if (_subtaskController.text.trim().isNotEmpty) {
+                        setState(() {
+                          _pendingSubtasks.add(_subtaskController.text.trim());
+                          _subtaskController.clear();
+                        });
+                      }
+                    },
+                    child: const Text('Add'),
+                  ),
+                ],
+              ),
+              if (widget.task != null) ...[
+                const SizedBox(height: 12),
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TextButton.icon(
+                    style: TextButton.styleFrom(foregroundColor: AppColors.lightError),
+                    icon: const Icon(Icons.delete_outline),
+                    label: const Text('Delete Task'),
                     onPressed: () {
                       ref.read(taskServiceProvider).deleteTask(widget.task!.id);
-                      Navigator.pop(context);
+                      Navigator.of(context).pop();
                     },
-                  )
-                else
-                  const SizedBox.shrink(),
-                ElevatedButton(
-                  onPressed: _saveTask,
-                  style: ElevatedButton.styleFrom(backgroundColor: AppColors.accentEmerald),
-                  child: const Text('Save', style: TextStyle(color: Colors.white)),
+                  ),
                 ),
               ],
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );

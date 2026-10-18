@@ -78,6 +78,18 @@ class AppShell extends StatelessWidget {
 
   void _onDestinationSelected(BuildContext context, int index) {
     if (index >= 0 && index < allNavDestinations.length) {
+      try {
+        final rootNav = Navigator.of(context, rootNavigator: true);
+        if (rootNav.canPop()) {
+          rootNav.pop();
+        }
+      } catch (_) {}
+      try {
+        final localNav = Navigator.of(context, rootNavigator: false);
+        if (localNav.canPop()) {
+          localNav.pop();
+        }
+      } catch (_) {}
       context.go(allNavDestinations[index].path);
     }
   }

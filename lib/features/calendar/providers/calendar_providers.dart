@@ -12,6 +12,7 @@ final currentViewProvider = StateProvider<CalendarViewType>((ref) => CalendarVie
 enum CalendarViewType {
   month,
   week,
+  year,
   day,
   agenda
 }

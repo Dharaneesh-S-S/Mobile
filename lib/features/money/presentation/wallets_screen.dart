@@ -52,75 +52,87 @@ class WalletsScreen extends ConsumerWidget {
 
   void _showWalletDialog(BuildContext context, WidgetRef ref, MoneyAccountEntry? existing) {
     final nameController = TextEditingController(text: existing?.name ?? '');
-    final typeController = TextEditingController(text: existing?.accountType ?? 'bank');
+    String selectedType = existing?.accountType ?? 'bank';
     final balanceController = TextEditingController(text: existing != null ? (existing.balancePaise / 100).toStringAsFixed(2) : '0');
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text(existing == null ? 'New Wallet' : 'Edit Wallet'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(labelText: 'Wallet Name'),
-            ),
-            TextField(
-              controller: typeController,
-              decoration: const InputDecoration(labelText: 'Type (bank, cash, wallet)'),
-            ),
-            if (existing == null)
+      builder: (context) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text(existing == null ? 'New Wallet' : 'Edit Wallet'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
               TextField(
-                controller: balanceController,
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                decoration: const InputDecoration(labelText: 'Initial Balance'),
+                controller: nameController,
+                decoration: const InputDecoration(labelText: 'Wallet Name (e.g. HDFC Bank, Cash)'),
               ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                value: selectedType,
+                decoration: const InputDecoration(labelText: 'Wallet Type'),
+                items: const [
+                  DropdownMenuItem(value: 'bank', child: Text('Bank Account')),
+                  DropdownMenuItem(value: 'cash', child: Text('Cash')),
+                  DropdownMenuItem(value: 'wallet', child: Text('Digital Wallet / UPI')),
+                  DropdownMenuItem(value: 'credit_card', child: Text('Credit Card')),
+                ],
+                onChanged: (v) {
+                  if (v != null) setDialogState(() => selectedType = v);
+                },
+              ),
+              if (existing == null) ...[
+                const SizedBox(height: 12),
+                TextField(
+                  controller: balanceController,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  decoration: const InputDecoration(labelText: 'Initial Balance (₹)'),
+                ),
+              ],
+            ],
+          ),
+          actions: [
+            if (existing != null)
+              TextButton(
+                onPressed: () async {
+                  await ref.read(databaseProvider).moneyDao.deleteAccount(existing.id);
+                  if (context.mounted) Navigator.pop(context);
+                },
+                child: const Text('Delete', style: TextStyle(color: AppColors.lightError)),
+              ),
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            FilledButton(
+              onPressed: () async {
+                final name = nameController.text.trim();
+                if (name.isEmpty) return;
+
+                if (existing != null) {
+                  await ref.read(databaseProvider).moneyDao.updateAccount(
+                    existing.copyWith(name: name, accountType: selectedType),
+                  );
+                } else {
+                  final balanceDouble = double.tryParse(balanceController.text) ?? 0.0;
+                  final balancePaise = (balanceDouble * 100).round();
+                  
+                  await ref.read(databaseProvider).moneyDao.insertAccount(
+                    MoneyAccountsCompanion.insert(
+                      id: const Uuid().v4(),
+                      name: name,
+                      accountType: selectedType,
+                      balancePaise: drift.Value(balancePaise),
+                      createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+                    ),
+                  );
+                }
+                if (context.mounted) Navigator.pop(context);
+              },
+              child: const Text('Save'),
+            ),
           ],
         ),
-        actions: [
-          if (existing != null)
-            TextButton(
-              onPressed: () async {
-                await ref.read(databaseProvider).moneyDao.deleteAccount(existing.id);
-                Navigator.pop(context);
-              },
-              child: const Text('Delete', style: TextStyle(color: AppColors.lightError)),
-            ),
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          TextButton(
-            onPressed: () async {
-              final name = nameController.text.trim();
-              if (name.isEmpty) return;
-
-              final type = typeController.text.trim().isEmpty ? 'bank' : typeController.text.trim();
-              
-              if (existing != null) {
-                await ref.read(databaseProvider).moneyDao.updateAccount(
-                  existing.copyWith(name: name, accountType: type)
-                );
-              } else {
-                final balanceDouble = double.tryParse(balanceController.text) ?? 0.0;
-                final balancePaise = (balanceDouble * 100).round();
-                
-                await ref.read(databaseProvider).moneyDao.insertAccount(
-                  MoneyAccountsCompanion.insert(
-                    id: const Uuid().v4(),
-                    name: name,
-                    accountType: type,
-                    balancePaise: drift.Value(balancePaise),
-                    createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-                  )
-                );
-              }
-              if (context.mounted) Navigator.pop(context);
-            },
-            child: const Text('Save'),
-          ),
-        ],
       ),
     );
   }

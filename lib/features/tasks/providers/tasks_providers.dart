@@ -88,7 +88,7 @@ class TaskService {
     await _db.taskDao.deleteList(listId);
   }
 
-  Future<void> createTask({
+  Future<TaskItemEntry> createTask({
     required String title,
     String? description,
     String? listId,
@@ -98,8 +98,10 @@ class TaskService {
     String? recurrenceRule,
     String? reminderOffsets,
   }) async {
+    final now = DateTime.now().toUtc().millisecondsSinceEpoch;
+    final taskId = _uuid.v4();
     final task = TaskItemsCompanion(
-      id: Value(_uuid.v4()),
+      id: Value(taskId),
       title: Value(title),
       description: Value(description),
       listId: Value(listId),
@@ -109,14 +111,28 @@ class TaskService {
       isCompleted: const Value(false),
       recurrenceRule: Value(recurrenceRule),
       reminderOffsets: Value(reminderOffsets),
-      createdAtUtc: Value(DateTime.now().toUtc().millisecondsSinceEpoch),
-      updatedAtUtc: Value(DateTime.now().toUtc().millisecondsSinceEpoch),
+      createdAtUtc: Value(now),
+      updatedAtUtc: Value(now),
     );
     await _db.taskDao.insertTask(task);
     
-    // Attempt to schedule notification
-    final inserted = (await _db.taskDao.watchAllTasks().first).firstWhere((t) => t.id == task.id.value);
+    final inserted = TaskItemEntry(
+      id: taskId,
+      listId: listId,
+      parentTaskId: parentTaskId,
+      title: title,
+      description: description,
+      dueDateUtc: dueDate?.toUtc().millisecondsSinceEpoch,
+      hasTime: hasTime,
+      isCompleted: false,
+      priority: 1,
+      recurrenceRule: recurrenceRule,
+      reminderOffsets: reminderOffsets,
+      createdAtUtc: now,
+      updatedAtUtc: now,
+    );
     _scheduleTaskNotification(inserted);
+    return inserted;
   }
 
   Future<void> updateTask(TaskItemEntry task) async {

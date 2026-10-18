@@ -15,13 +15,15 @@ class TasksPage extends ConsumerWidget {
     final selectedListId = ref.watch(selectedListIdProvider);
     final tasksTree = ref.watch(tasksTreeProvider);
 
+    final theme = Theme.of(context);
+
     return Scaffold(
-      backgroundColor: AppColors.backgroundBase,
+      backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        backgroundColor: AppColors.backgroundBase,
+        backgroundColor: theme.scaffoldBackgroundColor,
         elevation: 0,
-        title: const Text('Tasks', style: TextStyle(color: AppColors.textPrimary)),
-        iconTheme: const IconThemeData(color: AppColors.textPrimary),
+        title: Text('Tasks', style: theme.textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold)),
+        iconTheme: IconThemeData(color: theme.colorScheme.onSurface),
         actions: [
           IconButton(
             icon: const Icon(Icons.more_vert),
@@ -33,18 +35,26 @@ class TasksPage extends ConsumerWidget {
         ],
       ),
       drawer: Drawer(
-        backgroundColor: AppColors.backgroundSurface,
+        backgroundColor: theme.colorScheme.surface,
         child: listsAsync.when(
           data: (lists) {
             return ListView(
               children: [
-                const DrawerHeader(
-                  decoration: BoxDecoration(color: AppColors.accentEmerald),
-                  child: Text('My Tasks', style: TextStyle(color: Colors.white, fontSize: 24)),
+                DrawerHeader(
+                  decoration: const BoxDecoration(color: AppColors.accentEmerald),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [
+                      Icon(Icons.check_circle_outline_rounded, color: Colors.white, size: 36),
+                      SizedBox(height: 8),
+                      Text('My Tasks', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
+                    ],
+                  ),
                 ),
                 ListTile(
-                  leading: const Icon(Icons.all_inbox, color: AppColors.textSecondary),
-                  title: const Text('All Tasks', style: TextStyle(color: AppColors.textPrimary)),
+                  leading: const Icon(Icons.all_inbox_rounded),
+                  title: const Text('All Tasks'),
                   selected: selectedListId == 'all' || selectedListId == null,
                   onTap: () {
                     ref.read(selectedListIdProvider.notifier).state = 'all';
@@ -52,19 +62,22 @@ class TasksPage extends ConsumerWidget {
                   },
                 ),
                 ListTile(
-                  leading: const Icon(Icons.check_circle, color: AppColors.textSecondary),
-                  title: const Text('Completed', style: TextStyle(color: AppColors.textPrimary)),
+                  leading: const Icon(Icons.check_circle_rounded),
+                  title: const Text('Completed'),
                   selected: selectedListId == 'completed',
                   onTap: () {
                     ref.read(selectedListIdProvider.notifier).state = 'completed';
                     Navigator.pop(context);
                   },
                 ),
-                const Divider(color: AppColors.borderDefault),
+                const Divider(),
                 for (var list in lists)
                   ListTile(
-                    leading: Icon(Icons.list, color: Color(list.colorValue)),
-                    title: Text(list.title, style: const TextStyle(color: AppColors.textPrimary)),
+                    leading: CircleAvatar(
+                      radius: 7,
+                      backgroundColor: Color(list.colorValue),
+                    ),
+                    title: Text(list.title),
                     selected: selectedListId == list.id,
                     onTap: () {
                       ref.read(selectedListIdProvider.notifier).state = list.id;
@@ -73,9 +86,8 @@ class TasksPage extends ConsumerWidget {
                   ),
                 ListTile(
                   leading: const Icon(Icons.add, color: AppColors.accentEmerald),
-                  title: const Text('Create new list', style: TextStyle(color: AppColors.accentEmerald)),
+                  title: const Text('Create new list', style: TextStyle(color: AppColors.accentEmerald, fontWeight: FontWeight.w600)),
                   onTap: () {
-                    // Show create list dialog
                     _showCreateListDialog(context, ref);
                   },
                 ),
@@ -87,8 +99,30 @@ class TasksPage extends ConsumerWidget {
         ),
       ),
       body: tasksTree.isEmpty 
-        ? const Center(
-            child: Text('No tasks here!', style: TextStyle(color: AppColors.textSecondary)),
+        ? Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.task_alt_rounded, size: 64, color: theme.colorScheme.primary.withOpacity(0.4)),
+                const SizedBox(height: 16),
+                Text('No tasks here yet!', style: theme.textTheme.titleMedium?.copyWith(color: theme.colorScheme.onSurface.withOpacity(0.7))),
+                const SizedBox(height: 16),
+                FilledButton.icon(
+                  icon: const Icon(Icons.add),
+                  label: const Text('Add a Task'),
+                  style: FilledButton.styleFrom(backgroundColor: AppColors.accentEmerald),
+                  onPressed: () {
+                    showModalBottomSheet(
+                      context: context,
+                      useRootNavigator: true,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (context) => const TaskFormSheet(),
+                    );
+                  },
+                ),
+              ],
+            ),
           )
         : ListView.builder(
             itemCount: tasksTree.length,
@@ -103,6 +137,7 @@ class TasksPage extends ConsumerWidget {
         onPressed: () {
           showModalBottomSheet(
             context: context,
+            useRootNavigator: true,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
             builder: (context) => const TaskFormSheet(),
@@ -338,6 +373,8 @@ class TaskTile extends ConsumerWidget {
       }
     }
 
+    final theme = Theme.of(context);
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -355,30 +392,40 @@ class TaskTile extends ConsumerWidget {
           title: Text(
             task.title,
             style: TextStyle(
-              color: task.isCompleted ? AppColors.textSecondary : AppColors.textPrimary,
+              color: task.isCompleted
+                  ? theme.colorScheme.onSurface.withOpacity(0.4)
+                  : theme.colorScheme.onSurface,
               decoration: task.isCompleted ? TextDecoration.lineThrough : null,
+              fontWeight: FontWeight.w500,
             ),
           ),
           subtitle: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if (task.description != null && task.description!.isNotEmpty)
-                Text(task.description!, style: const TextStyle(color: AppColors.textSecondary)),
+                Text(
+                  task.description!,
+                  style: TextStyle(color: theme.colorScheme.onSurface.withOpacity(0.7)),
+                ),
               if (dueString != null)
                 Container(
                   margin: const EdgeInsets.only(top: 4),
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                   decoration: BoxDecoration(
-                    border: Border.all(color: AppColors.borderDefault),
+                    color: AppColors.accentEmerald.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Text(dueString, style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                  child: Text(
+                    dueString,
+                    style: const TextStyle(fontSize: 12, color: AppColors.accentEmerald, fontWeight: FontWeight.w600),
+                  ),
                 ),
             ],
           ),
           onTap: () {
             showModalBottomSheet(
               context: context,
+              useRootNavigator: true,
               isScrollControlled: true,
               backgroundColor: Colors.transparent,
               builder: (context) => TaskFormSheet(task: task),

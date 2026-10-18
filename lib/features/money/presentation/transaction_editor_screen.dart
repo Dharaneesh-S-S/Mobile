@@ -7,6 +7,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../../core/theme/app_colors.dart';
 import '../providers/money_providers.dart';
+import 'wallets_screen.dart';
 
 class TransactionEditorScreen extends ConsumerStatefulWidget {
   final MoneyTransactionEntry? existingTx;
@@ -134,8 +135,23 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
     // Filter categories by type
     final filteredCategories = categories.where((c) => c.isExpense == (_txType == 'expense')).toList();
 
+    final effectiveAccountId = accounts.any((a) => a.id == _accountId)
+        ? _accountId
+        : (accounts.isNotEmpty ? accounts.first.id : null);
+    final effectiveToAccountId = accounts.any((a) => a.id == _toAccountId)
+        ? _toAccountId
+        : null;
+    final effectiveCategoryId = filteredCategories.any((c) => c.id == _categoryId)
+        ? _categoryId
+        : (filteredCategories.isNotEmpty ? filteredCategories.first.id : null);
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          tooltip: 'Close',
+          onPressed: () => Navigator.pop(context),
+        ),
         title: Text(widget.existingTx == null ? 'New Transaction' : 'Edit Transaction'),
         actions: [
           if (widget.existingTx != null)
@@ -147,7 +163,11 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
               },
             ),
           TextButton(
-            onPressed: _saveTransaction,
+            onPressed: () {
+              _accountId ??= effectiveAccountId;
+              _categoryId ??= effectiveCategoryId;
+              _saveTransaction();
+            },
             child: const Text('Save'),
           ),
         ],
@@ -183,18 +203,49 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
               validator: (v) => v!.isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 16),
-            DropdownButtonFormField<String>(
-              initialValue: _accountId,
-              decoration: InputDecoration(labelText: _txType == 'transfer' ? 'From Wallet' : 'Wallet'),
-              items: accounts.map((a) => DropdownMenuItem(value: a.id, child: Text(a.name))).toList(),
-              onChanged: (v) => setState(() => _accountId = v),
-              validator: (v) => v == null ? 'Required' : null,
-            ),
+            if (accounts.isEmpty)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: AppColors.lightError.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: AppColors.lightError),
+                ),
+                child: Row(
+                  children: [
+                    const Icon(Icons.warning_amber_rounded, color: AppColors.lightError),
+                    const SizedBox(width: 8),
+                    const Expanded(
+                      child: Text('No wallets available. Create one to proceed.'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => const WalletsScreen()));
+                      },
+                      child: const Text('Add Wallet'),
+                    ),
+                  ],
+                ),
+              )
+            else
+              DropdownButtonFormField<String>(
+                value: effectiveAccountId,
+                decoration: InputDecoration(
+                  labelText: _txType == 'transfer' ? 'From Wallet' : 'Wallet',
+                  prefixIcon: const Icon(Icons.account_balance_wallet_outlined),
+                ),
+                items: accounts.map((a) => DropdownMenuItem(value: a.id, child: Text(a.name))).toList(),
+                onChanged: (v) => setState(() => _accountId = v),
+                validator: (v) => (v == null && effectiveAccountId == null) ? 'Required' : null,
+              ),
             if (_txType == 'transfer') ...[
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                initialValue: _toAccountId,
-                decoration: const InputDecoration(labelText: 'To Wallet'),
+                value: effectiveToAccountId,
+                decoration: const InputDecoration(
+                  labelText: 'To Wallet',
+                  prefixIcon: Icon(Icons.swap_horiz_rounded),
+                ),
                 items: accounts.map((a) => DropdownMenuItem(value: a.id, child: Text(a.name))).toList(),
                 onChanged: (v) => setState(() => _toAccountId = v),
                 validator: (v) => v == null ? 'Required' : null,
@@ -202,8 +253,11 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
             ] else ...[
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                initialValue: _categoryId,
-                decoration: const InputDecoration(labelText: 'Category'),
+                value: effectiveCategoryId,
+                decoration: const InputDecoration(
+                  labelText: 'Category',
+                  prefixIcon: Icon(Icons.category_outlined),
+                ),
                 items: filteredCategories.map((c) => DropdownMenuItem(value: c.id, child: Text(c.name))).toList(),
                 onChanged: (v) => setState(() => _categoryId = v),
               ),

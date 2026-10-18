@@ -100,8 +100,8 @@ class AppDatabase extends _$AppDatabase {
         await customStatement('PRAGMA foreign_keys = ON;');
 
         final existingCats = await select(moneyCategories).get();
+        final now = DateTime.now().toUtc().millisecondsSinceEpoch;
         if (existingCats.isEmpty) {
-          final now = DateTime.now().toUtc().millisecondsSinceEpoch;
           final defaultCategories = [
             MoneyCategoriesCompanion.insert(id: 'cat_salary', name: 'Salary', iconName: const Value('work'), colorValue: const Value(0xFF10B981), isExpense: const Value(false), createdAtUtc: now),
             MoneyCategoriesCompanion.insert(id: 'cat_freelance', name: 'Freelance', iconName: const Value('laptop'), colorValue: const Value(0xFF06B6D4), isExpense: const Value(false), createdAtUtc: now),
@@ -118,6 +118,17 @@ class AppDatabase extends _$AppDatabase {
           ];
           for (final c in defaultCategories) {
             await into(moneyCategories).insert(c);
+          }
+        }
+
+        final existingAccounts = await select(moneyAccounts).get();
+        if (existingAccounts.isEmpty) {
+          final defaultAccounts = [
+            MoneyAccountsCompanion.insert(id: 'acc_cash', name: 'Cash', accountType: 'cash', balancePaise: const Value(0), createdAtUtc: now),
+            MoneyAccountsCompanion.insert(id: 'acc_bank', name: 'Bank Account', accountType: 'bank', balancePaise: const Value(0), createdAtUtc: now),
+          ];
+          for (final a in defaultAccounts) {
+            await into(moneyAccounts).insert(a);
           }
         }
       },

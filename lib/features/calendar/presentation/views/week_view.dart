@@ -77,8 +77,10 @@ class _WeekViewState extends ConsumerState<WeekView> {
                   child: Text(
                     '${date.day}',
                     style: TextStyle(
-                      color: isToday ? Colors.white : AppColors.lightTextPrimary,
-                      fontWeight: isToday ? FontWeight.bold : FontWeight.normal,
+                      color: isToday
+                          ? Colors.white
+                          : Theme.of(context).colorScheme.onSurface,
+                      fontWeight: (isToday) ? FontWeight.bold : FontWeight.w600,
                     ),
                   ),
                 ),

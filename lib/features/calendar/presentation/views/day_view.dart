@@ -72,8 +72,9 @@ class _DayViewState extends ConsumerState<DayView> {
   }
 
   Widget _buildAllDaySection(List<CalendarDisplayItem> items) {
+    final theme = Theme.of(context);
     return Container(
-      color: AppColors.lightSurfaceVariant,
+      color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.5),
       width: double.infinity,
       padding: const EdgeInsets.all(8),
       child: Column(
