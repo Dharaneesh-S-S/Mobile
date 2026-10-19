@@ -7,6 +7,7 @@ import 'views/week_view.dart';
 import 'views/year_view.dart';
 import 'views/day_view.dart';
 import 'views/agenda_view.dart';
+import 'views/four_day_view.dart';
 import 'event_editor_screen.dart';
 import '../../tasks/presentation/pages/task_form_sheet.dart';
 import '../../../core/theme/app_colors.dart';
@@ -58,6 +59,7 @@ class CalendarScreen extends ConsumerWidget {
             itemBuilder: (context) => const [
               PopupMenuItem(value: CalendarViewType.month, child: Text('Month View')),
               PopupMenuItem(value: CalendarViewType.week, child: Text('Week View')),
+              PopupMenuItem(value: CalendarViewType.fourDay, child: Text('4-Day View')),
               PopupMenuItem(value: CalendarViewType.year, child: Text('Year View')),
               PopupMenuItem(value: CalendarViewType.day, child: Text('Day View')),
               PopupMenuItem(value: CalendarViewType.agenda, child: Text('Agenda View')),
@@ -149,6 +151,8 @@ class CalendarScreen extends ConsumerWidget {
         return const MonthView();
       case CalendarViewType.week:
         return const WeekView();
+      case CalendarViewType.fourDay:
+        return const FourDayView();
       case CalendarViewType.year:
         return const YearView();
       case CalendarViewType.day:

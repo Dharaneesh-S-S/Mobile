@@ -326,8 +326,9 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
             ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildChecklistItem(int index, {required Key key}) {
     final item = _checklist[index];
