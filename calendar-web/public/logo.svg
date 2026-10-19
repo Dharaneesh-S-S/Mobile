@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" fill="none">
+  <defs>
+    <linearGradient id="chronosGrad" x1="4" y1="4" x2="44" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3b82f6" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+    <linearGradient id="headerGrad" x1="4" y1="6" x2="44" y2="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1e40af" />
+    </linearGradient>
+  </defs>
+  <!-- Background Card -->
+  <rect x="4" y="6" width="40" height="36" rx="9" fill="url(#chronosGrad)" />
+  <!-- Card Header Strip -->
+  <path d="M4 15C4 10.0294 8.02944 6 13 6H35C39.9706 6 44 10.0294 44 15V16H4V15Z" fill="url(#headerGrad)" />
+  <!-- Binder Rings -->
+  <rect x="12" y="3" width="4" height="6" rx="2" fill="#ffffff" />
+  <rect x="32" y="3" width="4" height="6" rx="2" fill="#ffffff" />
+  <!-- Calendar Body White Inset -->
+  <rect x="8" y="19" width="32" height="20" rx="5" fill="#ffffff" fill-opacity="0.95" />
+  <!-- Date Number 19 or Chronos Clock Symbol -->
+  <circle cx="24" cy="29" r="6.5" stroke="#2563eb" stroke-width="2.2" />
+  <polyline points="24,25.5 24,29 27,30.5" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+</svg>

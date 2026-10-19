@@ -131,6 +131,8 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> with Single
       Colors.teal,
     ];
 
+    String? nameError;
+
     showDialog(
       context: context,
       builder: (ctx) => StatefulBuilder(
@@ -141,8 +143,16 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> with Single
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Category Name'),
+                decoration: InputDecoration(
+                  labelText: 'Category Name',
+                  errorText: nameError,
+                ),
                 autofocus: true,
+                onChanged: (val) {
+                  if (nameError != null) {
+                    setDialogState(() => nameError = null);
+                  }
+                },
               ),
               const SizedBox(height: 16),
               const Align(
@@ -174,26 +184,37 @@ class _CategoriesScreenState extends ConsumerState<CategoriesScreen> with Single
             FilledButton(
               onPressed: () async {
                 final name = nameController.text.trim();
-                if (name.isEmpty) return;
-
-                final db = ref.read(databaseProvider);
-                if (existing != null) {
-                  await db.moneyDao.updateCategory(
-                    existing.copyWith(name: name, colorValue: selectedColor.value),
-                  );
-                } else {
-                  await db.moneyDao.insertCategory(
-                    MoneyCategoriesCompanion.insert(
-                      id: const Uuid().v4(),
-                      name: name,
-                      iconName: const drift.Value('category'),
-                      colorValue: drift.Value(selectedColor.value),
-                      isExpense: drift.Value(isExpense),
-                      createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-                    ),
-                  );
+                if (name.isEmpty) {
+                  setDialogState(() => nameError = 'Please enter a category name');
+                  return;
                 }
-                if (mounted) Navigator.pop(ctx);
+
+                try {
+                  final db = ref.read(databaseProvider);
+                  if (existing != null) {
+                    await db.moneyDao.updateCategory(
+                      existing.copyWith(name: name, colorValue: selectedColor.value),
+                    );
+                  } else {
+                    await db.moneyDao.insertCategory(
+                      MoneyCategoriesCompanion.insert(
+                        id: const Uuid().v4(),
+                        name: name,
+                        iconName: const drift.Value('category'),
+                        colorValue: drift.Value(selectedColor.value),
+                        isExpense: drift.Value(isExpense),
+                        createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+                      ),
+                    );
+                  }
+                  if (ctx.mounted) Navigator.pop(ctx);
+                } catch (e) {
+                  if (ctx.mounted) {
+                    ScaffoldMessenger.of(ctx).showSnackBar(
+                      SnackBar(content: Text('Failed to save category: $e')),
+                    );
+                  }
+                }
               },
               child: const Text('Save'),
             ),

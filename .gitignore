@@ -47,5 +47,6 @@ android/app/build/
 android/build/
 **/build/
 *.apk
-*.aab
-
+# Web App
+calendar-web/node_modules/
+calendar-web/dist/

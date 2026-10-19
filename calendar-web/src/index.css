@@ -1,0 +1,64 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #f8fafc;
+    --color-border: #e2e8f0;
+    --color-text-primary: #0f172a;
+    --color-text-secondary: #64748b;
+  }
+
+  .dark {
+    --color-bg-primary: #0f172a;
+    --color-bg-secondary: #1e293b;
+    --color-border: #334155;
+    --color-text-primary: #f8fafc;
+    --color-text-secondary: #94a3b8;
+  }
+
+  body {
+    @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans antialiased select-none;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+  }
+
+  #root {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600;
+}
+
+/* Prevent text selection while dragging events */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Subtle animation helpers */
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.98); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-pop-in {
+  animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}

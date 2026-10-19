@@ -429,17 +429,25 @@ class _AppUsageDetailSheetState extends ConsumerState<AppUsageDetailSheet> {
                 ),
                 FilledButton(
                   onPressed: () async {
-                    final db = ref.read(databaseProvider);
-                    await db.usageDao.insertLimit(
-                      UsageLimitsCompanion.insert(
-                        id: currentLimit?.id ?? const Uuid().v4(),
-                        targetId: widget.appItem.packageName,
-                        limitType: 'app',
-                        limitDurationMinutes: durationMinutes,
-                      ),
-                    );
-                    if (ctx.mounted) Navigator.pop(ctx);
-                    setState(() {});
+                    try {
+                      final db = ref.read(databaseProvider);
+                      await db.usageDao.insertLimit(
+                        UsageLimitsCompanion.insert(
+                          id: currentLimit?.id ?? const Uuid().v4(),
+                          targetId: widget.appItem.packageName,
+                          limitType: 'app',
+                          limitDurationMinutes: durationMinutes,
+                        ),
+                      );
+                      if (ctx.mounted) Navigator.pop(ctx);
+                      if (mounted) setState(() {});
+                    } catch (e) {
+                      if (ctx.mounted) {
+                        ScaffoldMessenger.of(ctx).showSnackBar(
+                          SnackBar(content: Text('Failed to save limit: $e')),
+                        );
+                      }
+                    }
                   },
                   child: const Text('Save'),
                 ),

@@ -151,7 +151,7 @@ class TasksPage extends ConsumerWidget {
     final titleController = TextEditingController();
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dCtx) => AlertDialog(
         backgroundColor: AppColors.backgroundSurface,
         title: const Text('New List', style: TextStyle(color: AppColors.textPrimary)),
         content: TextField(
@@ -165,18 +165,18 @@ class TasksPage extends ConsumerWidget {
         ),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Navigator.pop(dCtx),
             child: const Text('Cancel'),
           ),
-          TextButton(
+          FilledButton(
             onPressed: () {
-              if (titleController.text.isNotEmpty) {
+              final text = titleController.text.trim();
+              if (text.isNotEmpty) {
                 ref.read(taskServiceProvider).createList(
-                  titleController.text, 
-                  AppColors.accentEmerald.value
+                  text, 
+                  AppColors.accentEmerald.value,
                 );
-                Navigator.pop(context);
-                Navigator.pop(context); // Close drawer
+                Navigator.pop(dCtx);
               }
             },
             child: const Text('Create'),

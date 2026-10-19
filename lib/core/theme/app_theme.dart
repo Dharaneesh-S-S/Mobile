@@ -83,6 +83,23 @@ class AppTheme {
           textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
         ),
       ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: AppColors.accentCyan,
+          foregroundColor: const Color(0xFF003548),
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: AppColors.accentCyan,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+      ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
           foregroundColor: AppColors.accentCyan,
@@ -192,6 +209,23 @@ class AppTheme {
           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 14),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
+        ),
+      ),
+      filledButtonTheme: FilledButtonThemeData(
+        style: FilledButton.styleFrom(
+          backgroundColor: const Color(0xFF0284C7),
+          foregroundColor: Colors.white,
+          elevation: 0,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+        ),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          foregroundColor: const Color(0xFF0284C7),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          textStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
         ),
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(

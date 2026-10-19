@@ -57,70 +57,79 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
     }
   }
 
+  bool _isSaving = false;
+
   Future<void> _saveNote() async {
-    final title = _titleController.text.trim();
-    String? content;
-    
-    if (_type == 'text') {
-      final delta = _quillController.document.toDelta().toJson();
-      // Only save if there's actual content or a title
-      if (delta.length == 1 && delta[0]['insert'] == '\n' && title.isEmpty && _selectedLabels.isEmpty) {
-        return; // Empty note, don't save
-      }
-      content = jsonEncode(delta);
-    } else {
-      if (title.isEmpty && _checklist.isEmpty && _selectedLabels.isEmpty) {
-        return;
-      }
-    }
-
-    final dao = ref.read(databaseProvider).noteDao;
-    
-    final companion = NoteItemsCompanion(
-      id: drift.Value(_noteId),
-      title: drift.Value(title),
-      content: drift.Value(content),
-      type: drift.Value(_type),
-      colorValue: drift.Value(_colorValue),
-      isPinned: drift.Value(_isPinned),
-      isArchived: drift.Value(_isArchived),
-      isDeleted: const drift.Value(false),
-      createdAtUtc: drift.Value(widget.existingNote?.note.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch),
-      updatedAtUtc: drift.Value(DateTime.now().toUtc().millisecondsSinceEpoch),
-    );
-
-    if (widget.existingNote == null) {
-      final checklistCompanions = _checklist.map((c) => ChecklistItemsCompanion.insert(
-        id: c.id,
-        noteId: _noteId,
-        itemText: c.itemText,
-        isChecked: drift.Value(c.isChecked),
-        sortOrder: drift.Value(c.sortOrder),
-      )).toList();
+    if (_isSaving) return;
+    _isSaving = true;
+    try {
+      final title = _titleController.text.trim();
+      String? content;
       
-      await dao.createNote(companion, _selectedLabels.map((l) => l.id).toList(), checklistCompanions);
-    } else {
-      // Reconstruct Entry for replace
-      final entry = NoteItemEntry(
-        id: _noteId,
-        title: title,
-        content: content,
-        type: _type,
-        colorValue: _colorValue,
-        isPinned: _isPinned,
-        isArchived: _isArchived,
-        isDeleted: false,
-        createdAtUtc: companion.createdAtUtc.value,
-        updatedAtUtc: companion.updatedAtUtc.value,
+      if (_type == 'text') {
+        final delta = _quillController.document.toDelta().toJson();
+        // Only save if there's actual content or a title
+        if (delta.length == 1 && delta[0]['insert'] == '\n' && title.isEmpty && _selectedLabels.isEmpty) {
+          return; // Empty note, don't save
+        }
+        content = jsonEncode(delta);
+      } else {
+        if (title.isEmpty && _checklist.isEmpty && _selectedLabels.isEmpty) {
+          return;
+        }
+      }
+
+      final dao = ref.read(databaseProvider).noteDao;
+      
+      final companion = NoteItemsCompanion(
+        id: drift.Value(_noteId),
+        title: drift.Value(title),
+        content: drift.Value(content),
+        type: drift.Value(_type),
+        colorValue: drift.Value(_colorValue),
+        isPinned: drift.Value(_isPinned),
+        isArchived: drift.Value(_isArchived),
+        isDeleted: const drift.Value(false),
+        createdAtUtc: drift.Value(widget.existingNote?.note.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch),
+        updatedAtUtc: drift.Value(DateTime.now().toUtc().millisecondsSinceEpoch),
       );
-      
-      await dao.updateNoteWithDetails(entry, _selectedLabels.map((l) => l.id).toList(), _checklist);
+
+      if (widget.existingNote == null) {
+        final checklistCompanions = _checklist.map((c) => ChecklistItemsCompanion.insert(
+          id: c.id,
+          noteId: _noteId,
+          itemText: c.itemText,
+          isChecked: drift.Value(c.isChecked),
+          sortOrder: drift.Value(c.sortOrder),
+        )).toList();
+        
+        await dao.createNote(companion, _selectedLabels.map((l) => l.id).toList(), checklistCompanions);
+      } else {
+        // Reconstruct Entry for replace
+        final entry = NoteItemEntry(
+          id: _noteId,
+          title: title,
+          content: content,
+          type: _type,
+          colorValue: _colorValue,
+          isPinned: _isPinned,
+          isArchived: _isArchived,
+          isDeleted: false,
+          createdAtUtc: companion.createdAtUtc.value,
+          updatedAtUtc: companion.updatedAtUtc.value,
+        );
+        
+        await dao.updateNoteWithDetails(entry, _selectedLabels.map((l) => l.id).toList(), _checklist);
+      }
+    } catch (e) {
+      debugPrint('Error saving note: $e');
+    } finally {
+      _isSaving = false;
     }
   }
 
   @override
   void dispose() {
-    _saveNote();
     _titleController.dispose();
     _quillController.dispose();
     super.dispose();
@@ -130,61 +139,92 @@ class _NoteEditorScreenState extends ConsumerState<NoteEditorScreen> {
   Widget build(BuildContext context) {
     Color bgColor = _colorValue != null ? Color(_colorValue!) : Theme.of(context).scaffoldBackgroundColor;
 
-    return Scaffold(
-      backgroundColor: bgColor,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
-            onPressed: () {
-              setState(() {
-                _isPinned = !_isPinned;
-                if (_isPinned) _isArchived = false;
-              });
-            },
-          ),
-          IconButton(
-            icon: const Icon(Icons.palette_outlined),
-            onPressed: _showColorPicker,
-          ),
-          IconButton(
-            icon: const Icon(Icons.archive_outlined),
-            onPressed: () {
-              setState(() {
-                _isArchived = true;
-                _isPinned = false;
-              });
-              Navigator.pop(context);
-            },
-          ),
-          PopupMenuButton(
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                value: 'labels',
-                child: const Text('Labels'),
-              ),
-              PopupMenuItem(
-                value: 'delete',
-                child: const Text('Delete'),
-              ),
-            ],
-            onSelected: (val) async {
-              if (val == 'labels') {
-                _showLabelPicker();
-              } else if (val == 'delete') {
-                if (widget.existingNote != null) {
-                  await ref.read(databaseProvider).noteDao.moveToTrash(_noteId);
-                }
-                if (mounted) {
+    return PopScope(
+      canPop: true,
+      onPopInvokedWithResult: (didPop, result) {
+        _saveNote();
+      },
+      child: Scaffold(
+        backgroundColor: bgColor,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          actions: [
+            FilledButton.tonal(
+              onPressed: () async {
+                await _saveNote();
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Note saved successfully!'),
+                      duration: Duration(milliseconds: 1200),
+                    ),
+                  );
                   Navigator.pop(context);
                 }
-              }
-            },
-          )
-        ],
-      ),
+              },
+              style: FilledButton.styleFrom(
+                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              ),
+              child: const Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(Icons.check, size: 16),
+                  SizedBox(width: 4),
+                  Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+                ],
+              ),
+            ),
+            IconButton(
+              icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
+              onPressed: () {
+                setState(() {
+                  _isPinned = !_isPinned;
+                  if (_isPinned) _isArchived = false;
+                });
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.palette_outlined),
+              onPressed: _showColorPicker,
+            ),
+            IconButton(
+              icon: const Icon(Icons.archive_outlined),
+              onPressed: () async {
+                setState(() {
+                  _isArchived = true;
+                  _isPinned = false;
+                });
+                await _saveNote();
+                if (context.mounted) Navigator.pop(context);
+              },
+            ),
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: 'labels',
+                  child: const Text('Labels'),
+                ),
+                PopupMenuItem(
+                  value: 'delete',
+                  child: const Text('Delete'),
+                ),
+              ],
+              onSelected: (val) async {
+                if (val == 'labels') {
+                  _showLabelPicker();
+                } else if (val == 'delete') {
+                  if (widget.existingNote != null) {
+                    await ref.read(databaseProvider).noteDao.moveToTrash(_noteId);
+                  }
+                  if (mounted) {
+                    Navigator.pop(context);
+                  }
+                }
+              },
+            ),
+          ],
+        ),
       body: Column(
         children: [
           Padding(

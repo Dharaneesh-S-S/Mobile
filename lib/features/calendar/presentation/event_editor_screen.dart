@@ -88,10 +88,12 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
         }
       }
     } else {
-      _startDate = baseDate;
-      _startTime = TimeOfDay(hour: baseDate.hour + 1, minute: 0);
-      _endDate = baseDate;
-      _endTime = TimeOfDay(hour: baseDate.hour + 2, minute: 0);
+      final start = baseDate.add(const Duration(hours: 1));
+      final end = baseDate.add(const Duration(hours: 2));
+      _startDate = DateTime(start.year, start.month, start.day);
+      _startTime = TimeOfDay(hour: start.hour, minute: 0);
+      _endDate = DateTime(end.year, end.month, end.day);
+      _endTime = TimeOfDay(hour: end.hour, minute: 0);
       if (widget.initialType != null) {
         _eventType = widget.initialType!;
       }
@@ -108,110 +110,128 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
   Future<void> _saveEvent() async {
     if (!_formKey.currentState!.validate()) return;
 
-    if (_eventType == CalendarItemType.task) {
-      // Map directly to Tasks feature!
-      final dueDateTime = DateTime(
-        _startDate.year,
-        _startDate.month,
-        _startDate.day,
-        _isAllDay ? 9 : _startTime.hour,
-        _isAllDay ? 0 : _startTime.minute,
-      );
+    try {
+      if (_eventType == CalendarItemType.task) {
+        // Map directly to Tasks feature!
+        final dueDateTime = DateTime(
+          _startDate.year,
+          _startDate.month,
+          _startDate.day,
+          _isAllDay ? 9 : _startTime.hour,
+          _isAllDay ? 0 : _startTime.minute,
+        );
 
-      final taskService = ref.read(taskServiceProvider);
-      final lists = ref.read(taskListsStreamProvider).valueOrNull ?? [];
-      final targetListId = _selectedTaskListId ?? (lists.isNotEmpty ? lists.first.id : null);
+        final taskService = ref.read(taskServiceProvider);
+        final lists = ref.read(taskListsStreamProvider).valueOrNull ?? [];
+        final targetListId = _selectedTaskListId != null && lists.any((l) => l.id == _selectedTaskListId)
+            ? _selectedTaskListId
+            : (lists.isNotEmpty ? lists.first.id : null);
 
-      await taskService.createTask(
+        await taskService.createTask(
+          title: _titleController.text.trim(),
+          description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
+          listId: targetListId,
+          dueDate: dueDateTime,
+          hasTime: !_isAllDay,
+        );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Task saved successfully!'), duration: Duration(milliseconds: 1200)),
+          );
+          Navigator.pop(context);
+        }
+        return;
+      }
+
+      final startUtc = DateTime(
+        _startDate.year, _startDate.month, _startDate.day,
+        _isAllDay ? 0 : _startTime.hour, _isAllDay ? 0 : _startTime.minute,
+      ).toUtc().millisecondsSinceEpoch;
+
+      final endUtc = DateTime(
+        _endDate.year, _endDate.month, _endDate.day,
+        _isAllDay ? 23 : _endTime.hour, _isAllDay ? 59 : _endTime.minute,
+      ).toUtc().millisecondsSinceEpoch;
+
+      if (endUtc <= startUtc) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('End time must be after start time')));
+        return;
+      }
+
+      String eventTypeStr = 'event';
+      if (_eventType == CalendarItemType.birthday) eventTypeStr = 'birthday';
+      if (_eventType == CalendarItemType.holiday) eventTypeStr = 'holiday';
+
+      final entry = CalendarEventEntry(
+        id: widget.existingEvent?.id ?? const Uuid().v4(),
         title: _titleController.text.trim(),
         description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
-        listId: targetListId,
-        dueDate: dueDateTime,
-        hasTime: !_isAllDay,
+        startTimeUtc: startUtc,
+        endTimeUtc: endUtc,
+        isAllDay: _isAllDay,
+        recurrenceRule: null, 
+        location: null,
+        colorValue: _selectedColor.value,
+        isCancelled: false,
+        eventType: eventTypeStr,
+        reminderOffsets: _reminderMinutes != null ? '[$_reminderMinutes]' : null,
+        createdAtUtc: widget.existingEvent?.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
+        updatedAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
       );
 
-      if (mounted) Navigator.pop(context);
-      return;
-    }
-
-    final startUtc = DateTime(
-      _startDate.year, _startDate.month, _startDate.day,
-      _isAllDay ? 0 : _startTime.hour, _isAllDay ? 0 : _startTime.minute,
-    ).toUtc().millisecondsSinceEpoch;
-
-    final endUtc = DateTime(
-      _endDate.year, _endDate.month, _endDate.day,
-      _isAllDay ? 23 : _endTime.hour, _isAllDay ? 59 : _endTime.minute,
-    ).toUtc().millisecondsSinceEpoch;
-
-    if (endUtc <= startUtc) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('End time must be after start time')));
-      return;
-    }
-
-    String eventTypeStr = 'event';
-    if (_eventType == CalendarItemType.birthday) eventTypeStr = 'birthday';
-    if (_eventType == CalendarItemType.holiday) eventTypeStr = 'holiday';
-
-    final entry = CalendarEventEntry(
-      id: widget.existingEvent?.id ?? const Uuid().v4(),
-      title: _titleController.text.trim(),
-      description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
-      startTimeUtc: startUtc,
-      endTimeUtc: endUtc,
-      isAllDay: _isAllDay,
-      recurrenceRule: null, 
-      location: null, // Location field removed per request
-      colorValue: _selectedColor.value,
-      isCancelled: false,
-      eventType: eventTypeStr,
-      reminderOffsets: _reminderMinutes != null ? '[$_reminderMinutes]' : null,
-      createdAtUtc: widget.existingEvent?.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
-      updatedAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-    );
-
-    final db = ref.read(databaseProvider);
-    if (widget.existingEvent != null) {
-      await db.calendarDao.updateEvent(entry);
-    } else {
-      await db.calendarDao.insertEvent(
-        CalendarEventsCompanion.insert(
-          id: entry.id,
-          title: entry.title,
-          description: entry.description == null ? const drift.Value.absent() : drift.Value(entry.description),
-          startTimeUtc: entry.startTimeUtc,
-          endTimeUtc: entry.endTimeUtc,
-          isAllDay: drift.Value(entry.isAllDay),
-          colorValue: drift.Value(entry.colorValue),
-          eventType: drift.Value(entry.eventType),
-          reminderOffsets: entry.reminderOffsets == null ? const drift.Value.absent() : drift.Value(entry.reminderOffsets),
-          createdAtUtc: entry.createdAtUtc,
-          updatedAtUtc: entry.updatedAtUtc,
-        ),
-      );
-    }
-
-    // Schedule or Cancel Notification
-    final notifId = entry.id.hashCode;
-    if (_reminderMinutes != null) {
-      final reminderTime = startUtc - (_reminderMinutes! * 60000);
-      try {
-        await NotificationService.instance.requestNotificationPermissions();
-        await NotificationService.instance.requestExactAlarmPermission();
-        await NotificationService.instance.scheduleNotification(
-          id: notifId,
-          title: entry.title,
-          body: 'Upcoming ${_eventType.name} in $_reminderMinutes minutes',
-          scheduledUtcMillis: reminderTime,
+      final db = ref.read(databaseProvider);
+      if (widget.existingEvent != null) {
+        await db.calendarDao.updateEvent(entry);
+      } else {
+        await db.calendarDao.insertEvent(
+          CalendarEventsCompanion.insert(
+            id: entry.id,
+            title: entry.title,
+            description: entry.description == null ? const drift.Value.absent() : drift.Value(entry.description),
+            startTimeUtc: entry.startTimeUtc,
+            endTimeUtc: entry.endTimeUtc,
+            isAllDay: drift.Value(entry.isAllDay),
+            colorValue: drift.Value(entry.colorValue),
+            eventType: drift.Value(entry.eventType),
+            reminderOffsets: entry.reminderOffsets == null ? const drift.Value.absent() : drift.Value(entry.reminderOffsets),
+            createdAtUtc: entry.createdAtUtc,
+            updatedAtUtc: entry.updatedAtUtc,
+          ),
         );
-      } catch (_) {}
-    } else {
-      try {
-        await NotificationService.instance.cancelNotification(notifId);
-      } catch (_) {}
-    }
+      }
 
-    if (mounted) Navigator.pop(context);
+      // Schedule or Cancel Notification
+      final notifId = entry.id.hashCode;
+      if (_reminderMinutes != null) {
+        final reminderTime = startUtc - (_reminderMinutes! * 60000);
+        try {
+          await NotificationService.instance.scheduleNotification(
+            id: notifId,
+            title: entry.title,
+            body: 'Upcoming ${_eventType.name} in $_reminderMinutes minutes',
+            scheduledUtcMillis: reminderTime,
+          );
+        } catch (_) {}
+      } else {
+        try {
+          await NotificationService.instance.cancelNotification(notifId);
+        } catch (_) {}
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Event saved successfully!'), duration: Duration(milliseconds: 1200)),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save event: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -247,10 +267,21 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                 );
               },
             ),
-          TextButton(
+          FilledButton.tonal(
             onPressed: _saveEvent,
-            child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, size: 16),
+                SizedBox(width: 4),
+                Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: Form(

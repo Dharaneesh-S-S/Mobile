@@ -52,6 +52,9 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
   }
 
   @override
+  String? _titleError;
+  bool _isSaving = false;
+
   void dispose() {
     _titleController.dispose();
     _descController.dispose();
@@ -59,32 +62,40 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
     super.dispose();
   }
 
-  void _saveTask() {
+  Future<void> _saveTask() async {
     final title = _titleController.text.trim();
-    if (title.isEmpty) return;
-
-    final service = ref.read(taskServiceProvider);
-    final lists = ref.read(taskListsStreamProvider).valueOrNull ?? [];
-
-    String? targetListId = _selectedListId;
-    if (targetListId == 'all' || targetListId == 'completed' || targetListId == null) {
-      targetListId = lists.isNotEmpty ? lists.first.id : null;
+    if (title.isEmpty) {
+      setState(() => _titleError = 'Please enter a task title');
+      return;
     }
+    if (_isSaving) return;
+    setState(() => _isSaving = true);
 
-    if (widget.task == null) {
-      service.createTask(
-        title: title,
-        description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
-        listId: targetListId,
-        parentTaskId: widget.parentTaskId,
-        dueDate: _dueDate,
-        hasTime: _hasTime,
-        recurrenceRule: _recurrenceRule,
-      ).then((createdTask) {
-        // Add pending subtasks if any
-        if (createdTask != null && _pendingSubtasks.isNotEmpty) {
+    try {
+      final service = ref.read(taskServiceProvider);
+      final lists = ref.read(taskListsStreamProvider).valueOrNull ?? [];
+
+      String? targetListId = _selectedListId;
+      if (targetListId == 'all' || targetListId == 'completed' || targetListId == null) {
+        targetListId = lists.isNotEmpty ? lists.first.id : null;
+      } else if (!lists.any((l) => l.id == targetListId)) {
+        targetListId = lists.isNotEmpty ? lists.first.id : null;
+      }
+
+      if (widget.task == null) {
+        final createdTask = await service.createTask(
+          title: title,
+          description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
+          listId: targetListId,
+          parentTaskId: widget.parentTaskId,
+          dueDate: _dueDate,
+          hasTime: _hasTime,
+          recurrenceRule: _recurrenceRule,
+        );
+
+        if (_pendingSubtasks.isNotEmpty) {
           for (final subTitle in _pendingSubtasks) {
-            service.createTask(
+            await service.createTask(
               title: subTitle,
               listId: targetListId,
               parentTaskId: createdTask.id,
@@ -93,31 +104,41 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
             );
           }
         }
-      });
-    } else {
-      service.updateTask(
-        widget.task!.copyWith(
-          title: title,
-          description: Value(_descController.text.trim().isEmpty ? null : _descController.text.trim()),
-          listId: Value(targetListId),
-          dueDateUtc: Value(_dueDate?.toUtc().millisecondsSinceEpoch),
-          hasTime: _hasTime,
-          recurrenceRule: Value(_recurrenceRule),
-        ),
-      );
-      if (_pendingSubtasks.isNotEmpty) {
-        for (final subTitle in _pendingSubtasks) {
-          service.createTask(
-            title: subTitle,
-            listId: targetListId,
-            parentTaskId: widget.task!.id,
-            dueDate: _dueDate,
+      } else {
+        await service.updateTask(
+          widget.task!.copyWith(
+            title: title,
+            description: Value(_descController.text.trim().isEmpty ? null : _descController.text.trim()),
+            listId: Value(targetListId),
+            dueDateUtc: Value(_dueDate?.toUtc().millisecondsSinceEpoch),
             hasTime: _hasTime,
-          );
+            recurrenceRule: Value(_recurrenceRule),
+          ),
+        );
+        if (_pendingSubtasks.isNotEmpty) {
+          for (final subTitle in _pendingSubtasks) {
+            await service.createTask(
+              title: subTitle,
+              listId: targetListId,
+              parentTaskId: widget.task!.id,
+              dueDate: _dueDate,
+              hasTime: _hasTime,
+            );
+          }
         }
       }
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save task: $e')),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isSaving = false);
     }
-    Navigator.of(context).pop();
   }
 
   void _showListPickerDialog(BuildContext context, List<TaskListEntry> lists) {
@@ -232,10 +253,16 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
                     widget.task == null ? 'New Task' : 'Edit Task',
                     style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
                   ),
-                  FilledButton(
-                    onPressed: _saveTask,
-                    style: FilledButton.styleFrom(backgroundColor: AppColors.accentEmerald),
-                    child: const Text('Save'),
+                  FilledButton.icon(
+                    onPressed: _isSaving ? null : _saveTask,
+                    icon: _isSaving
+                        ? const SizedBox(width: 14, height: 14, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                        : const Icon(Icons.check, size: 16),
+                    label: const Text('Save'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.accentEmerald,
+                      foregroundColor: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -245,10 +272,16 @@ class _TaskFormSheetState extends ConsumerState<TaskFormSheet> {
                 controller: _titleController,
                 autofocus: widget.task == null,
                 style: theme.textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w600),
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText: 'What needs to be done?',
                   border: InputBorder.none,
+                  errorText: _titleError,
                 ),
+                onChanged: (val) {
+                  if (_titleError != null) {
+                    setState(() => _titleError = null);
+                  }
+                },
                 onSubmitted: (_) => _saveTask(),
               ),
               // Description Field

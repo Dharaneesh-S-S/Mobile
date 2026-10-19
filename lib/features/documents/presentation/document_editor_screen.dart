@@ -250,6 +250,29 @@ class _DocumentEditorScreenState extends ConsumerState<DocumentEditorScreen> {
           },
         ),
         actions: [
+          FilledButton.tonal(
+            onPressed: () {
+              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Document changes saved successfully!'),
+                  duration: Duration(milliseconds: 1200),
+                ),
+              );
+            },
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, size: 16),
+                SizedBox(width: 4),
+                Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
+          ),
+          const SizedBox(width: 4),
           // Mode Toggle (Text Mode <-> Drawing Mode)
           IconButton(
             icon: Icon(

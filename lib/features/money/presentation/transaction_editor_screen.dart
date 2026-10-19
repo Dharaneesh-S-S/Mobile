@@ -68,7 +68,7 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
   Future<void> _saveTransaction() async {
     if (!_formKey.currentState!.validate()) return;
     if (_accountId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an account')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select an account or create a wallet first')));
       return;
     }
     if (_txType == 'transfer' && _toAccountId == null) {
@@ -82,7 +82,7 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
 
     final amtDouble = double.tryParse(_amountController.text) ?? 0.0;
     if (amtDouble <= 0) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Invalid amount')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please enter a valid amount greater than 0')));
       return;
     }
     final amountPaise = (amtDouble * 100).round();
@@ -92,39 +92,52 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
 
     final db = ref.read(databaseProvider);
 
-    final entry = MoneyTransactionEntry(
-      id: widget.existingTx?.id ?? const Uuid().v4(),
-      accountId: _accountId!,
-      toAccountId: _txType == 'transfer' ? _toAccountId : null,
-      categoryId: _txType == 'transfer' ? null : _categoryId,
-      amountPaise: amountPaise,
-      type: _txType,
-      transactionTimeUtc: utc,
-      note: _descController.text.isEmpty ? null : _descController.text,
-      linkedCalendarEventId: widget.existingTx?.linkedCalendarEventId,
-      linkedTaskId: widget.existingTx?.linkedTaskId,
-      createdAtUtc: widget.existingTx?.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
-    );
-
-    if (widget.existingTx != null) {
-      await db.moneyDao.updateTransactionRecord(entry);
-    } else {
-      await db.moneyDao.recordTransaction(
-        MoneyTransactionsCompanion.insert(
-          id: entry.id,
-          accountId: entry.accountId,
-          toAccountId: entry.toAccountId == null ? const drift.Value.absent() : drift.Value(entry.toAccountId),
-          categoryId: entry.categoryId == null ? const drift.Value.absent() : drift.Value(entry.categoryId),
-          amountPaise: entry.amountPaise,
-          type: drift.Value(entry.type),
-          transactionTimeUtc: entry.transactionTimeUtc,
-          note: entry.note == null ? const drift.Value.absent() : drift.Value(entry.note),
-          createdAtUtc: entry.createdAtUtc,
-        )
+    try {
+      final entry = MoneyTransactionEntry(
+        id: widget.existingTx?.id ?? const Uuid().v4(),
+        accountId: _accountId!,
+        toAccountId: _txType == 'transfer' ? _toAccountId : null,
+        categoryId: _txType == 'transfer' ? null : _categoryId,
+        amountPaise: amountPaise,
+        type: _txType,
+        transactionTimeUtc: utc,
+        note: _descController.text.isEmpty ? null : _descController.text,
+        linkedCalendarEventId: widget.existingTx?.linkedCalendarEventId,
+        linkedTaskId: widget.existingTx?.linkedTaskId,
+        createdAtUtc: widget.existingTx?.createdAtUtc ?? DateTime.now().toUtc().millisecondsSinceEpoch,
       );
-    }
 
-    if (mounted) Navigator.pop(context);
+      if (widget.existingTx != null) {
+        await db.moneyDao.updateTransactionRecord(entry);
+      } else {
+        await db.moneyDao.recordTransaction(
+          MoneyTransactionsCompanion.insert(
+            id: entry.id,
+            accountId: entry.accountId,
+            toAccountId: entry.toAccountId == null ? const drift.Value.absent() : drift.Value(entry.toAccountId),
+            categoryId: entry.categoryId == null ? const drift.Value.absent() : drift.Value(entry.categoryId),
+            amountPaise: entry.amountPaise,
+            type: drift.Value(entry.type),
+            transactionTimeUtc: entry.transactionTimeUtc,
+            note: entry.note == null ? const drift.Value.absent() : drift.Value(entry.note),
+            createdAtUtc: entry.createdAtUtc,
+          )
+        );
+      }
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Transaction saved successfully!'), duration: Duration(milliseconds: 1200)),
+        );
+        Navigator.pop(context);
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to save transaction: $e')),
+        );
+      }
+    }
   }
 
   @override
@@ -162,14 +175,25 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
                 if (mounted) Navigator.pop(context);
               },
             ),
-          TextButton(
+          FilledButton.tonal(
             onPressed: () {
               _accountId ??= effectiveAccountId;
               _categoryId ??= effectiveCategoryId;
               _saveTransaction();
             },
-            child: const Text('Save'),
+            style: FilledButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            ),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.check, size: 16),
+                SizedBox(width: 4),
+                Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
+          const SizedBox(width: 8),
         ],
       ),
       body: Form(

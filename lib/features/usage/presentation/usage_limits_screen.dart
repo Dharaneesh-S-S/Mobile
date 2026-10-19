@@ -451,21 +451,29 @@ class _UsageLimitsScreenState extends ConsumerState<UsageLimitsScreen> {
             ),
             actions: [
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
-              FilledButton(
-                onPressed: () async {
-                  final db = ref.read(databaseProvider);
-                  await db.usageDao.insertLimit(
-                    UsageLimitsCompanion.insert(
-                      id: 'daily_goal_limit',
-                      targetId: 'daily',
-                      limitType: 'daily_total',
-                      limitDurationMinutes: duration,
-                    ),
-                  );
-                  if (ctx.mounted) Navigator.pop(ctx);
-                },
-                child: const Text('Save Goal'),
-              ),
+                FilledButton(
+                  onPressed: () async {
+                    try {
+                      final db = ref.read(databaseProvider);
+                      await db.usageDao.insertLimit(
+                        UsageLimitsCompanion.insert(
+                          id: 'daily_goal_limit',
+                          targetId: 'daily',
+                          limitType: 'daily_total',
+                          limitDurationMinutes: duration,
+                        ),
+                      );
+                      if (ctx.mounted) Navigator.pop(ctx);
+                    } catch (e) {
+                      if (ctx.mounted) {
+                        ScaffoldMessenger.of(ctx).showSnackBar(
+                          SnackBar(content: Text('Failed to save daily goal: $e')),
+                        );
+                      }
+                    }
+                  },
+                  child: const Text('Save Goal'),
+                ),
             ],
           );
         },
@@ -501,16 +509,24 @@ class _UsageLimitsScreenState extends ConsumerState<UsageLimitsScreen> {
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
               FilledButton(
                 onPressed: () async {
-                  final db = ref.read(databaseProvider);
-                  await db.usageDao.insertLimit(
-                    UsageLimitsCompanion.insert(
-                      id: 'continuous_use_limit',
-                      targetId: 'continuous',
-                      limitType: 'continuous',
-                      limitDurationMinutes: duration,
-                    ),
-                  );
-                  if (ctx.mounted) Navigator.pop(ctx);
+                  try {
+                    final db = ref.read(databaseProvider);
+                    await db.usageDao.insertLimit(
+                      UsageLimitsCompanion.insert(
+                        id: 'continuous_use_limit',
+                        targetId: 'continuous',
+                        limitType: 'continuous',
+                        limitDurationMinutes: duration,
+                      ),
+                    );
+                    if (ctx.mounted) Navigator.pop(ctx);
+                  } catch (e) {
+                    if (ctx.mounted) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(
+                        SnackBar(content: Text('Failed to save continuous warning: $e')),
+                      );
+                    }
+                  }
                 },
                 child: const Text('Save'),
               ),
@@ -560,16 +576,24 @@ class _UsageLimitsScreenState extends ConsumerState<UsageLimitsScreen> {
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
               FilledButton(
                 onPressed: () async {
-                  final db = ref.read(databaseProvider);
-                  await db.usageDao.insertLimit(
-                    UsageLimitsCompanion.insert(
-                      id: const Uuid().v4(),
-                      targetId: selectedCat,
-                      limitType: 'category',
-                      limitDurationMinutes: duration,
-                    ),
-                  );
-                  if (ctx.mounted) Navigator.pop(ctx);
+                  try {
+                    final db = ref.read(databaseProvider);
+                    await db.usageDao.insertLimit(
+                      UsageLimitsCompanion.insert(
+                        id: const Uuid().v4(),
+                        targetId: selectedCat,
+                        limitType: 'category',
+                        limitDurationMinutes: duration,
+                      ),
+                    );
+                    if (ctx.mounted) Navigator.pop(ctx);
+                  } catch (e) {
+                    if (ctx.mounted) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(
+                        SnackBar(content: Text('Failed to save category limit: $e')),
+                      );
+                    }
+                  }
                 },
                 child: const Text('Save Limit'),
               ),
@@ -630,16 +654,24 @@ class _UsageLimitsScreenState extends ConsumerState<UsageLimitsScreen> {
               TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
               FilledButton(
                 onPressed: () async {
-                  final db = ref.read(databaseProvider);
-                  await db.usageDao.insertLimit(
-                    UsageLimitsCompanion.insert(
-                      id: const Uuid().v4(),
-                      targetId: selectedPkg,
-                      limitType: 'app',
-                      limitDurationMinutes: duration,
-                    ),
-                  );
-                  if (ctx.mounted) Navigator.pop(ctx);
+                  try {
+                    final db = ref.read(databaseProvider);
+                    await db.usageDao.insertLimit(
+                      UsageLimitsCompanion.insert(
+                        id: const Uuid().v4(),
+                        targetId: selectedPkg,
+                        limitType: 'app',
+                        limitDurationMinutes: duration,
+                      ),
+                    );
+                    if (ctx.mounted) Navigator.pop(ctx);
+                  } catch (e) {
+                    if (ctx.mounted) {
+                      ScaffoldMessenger.of(ctx).showSnackBar(
+                        SnackBar(content: Text('Failed to save app limit: $e')),
+                      );
+                    }
+                  }
                 },
                 child: const Text('Save Limit'),
               ),

@@ -54,18 +54,28 @@ class WalletsScreen extends ConsumerWidget {
     final nameController = TextEditingController(text: existing?.name ?? '');
     String selectedType = existing?.accountType ?? 'bank';
     final balanceController = TextEditingController(text: existing != null ? (existing.balancePaise / 100).toStringAsFixed(2) : '0');
+    String? nameError;
 
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setDialogState) => AlertDialog(
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (dialogContext, setDialogState) => AlertDialog(
           title: Text(existing == null ? 'New Wallet' : 'Edit Wallet'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               TextField(
                 controller: nameController,
-                decoration: const InputDecoration(labelText: 'Wallet Name (e.g. HDFC Bank, Cash)'),
+                autofocus: true,
+                decoration: InputDecoration(
+                  labelText: 'Wallet Name (e.g. HDFC Bank, Cash)',
+                  errorText: nameError,
+                ),
+                onChanged: (val) {
+                  if (nameError != null) {
+                    setDialogState(() => nameError = null);
+                  }
+                },
               ),
               const SizedBox(height: 12),
               DropdownButtonFormField<String>(
@@ -96,38 +106,49 @@ class WalletsScreen extends ConsumerWidget {
               TextButton(
                 onPressed: () async {
                   await ref.read(databaseProvider).moneyDao.deleteAccount(existing.id);
-                  if (context.mounted) Navigator.pop(context);
+                  if (dialogContext.mounted) Navigator.pop(dialogContext);
                 },
                 child: const Text('Delete', style: TextStyle(color: AppColors.lightError)),
               ),
             TextButton(
-              onPressed: () => Navigator.pop(context),
+              onPressed: () => Navigator.pop(dialogContext),
               child: const Text('Cancel'),
             ),
             FilledButton(
               onPressed: () async {
                 final name = nameController.text.trim();
-                if (name.isEmpty) return;
-
-                if (existing != null) {
-                  await ref.read(databaseProvider).moneyDao.updateAccount(
-                    existing.copyWith(name: name, accountType: selectedType),
-                  );
-                } else {
-                  final balanceDouble = double.tryParse(balanceController.text) ?? 0.0;
-                  final balancePaise = (balanceDouble * 100).round();
-                  
-                  await ref.read(databaseProvider).moneyDao.insertAccount(
-                    MoneyAccountsCompanion.insert(
-                      id: const Uuid().v4(),
-                      name: name,
-                      accountType: selectedType,
-                      balancePaise: drift.Value(balancePaise),
-                      createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
-                    ),
-                  );
+                if (name.isEmpty) {
+                  setDialogState(() => nameError = 'Please enter a wallet name');
+                  return;
                 }
-                if (context.mounted) Navigator.pop(context);
+
+                try {
+                  if (existing != null) {
+                    await ref.read(databaseProvider).moneyDao.updateAccount(
+                      existing.copyWith(name: name, accountType: selectedType),
+                    );
+                  } else {
+                    final balanceDouble = double.tryParse(balanceController.text) ?? 0.0;
+                    final balancePaise = (balanceDouble * 100).round();
+                    
+                    await ref.read(databaseProvider).moneyDao.insertAccount(
+                      MoneyAccountsCompanion.insert(
+                        id: const Uuid().v4(),
+                        name: name,
+                        accountType: selectedType,
+                        balancePaise: drift.Value(balancePaise),
+                        createdAtUtc: DateTime.now().toUtc().millisecondsSinceEpoch,
+                      ),
+                    );
+                  }
+                  if (dialogContext.mounted) Navigator.pop(dialogContext);
+                } catch (e) {
+                  if (dialogContext.mounted) {
+                    ScaffoldMessenger.of(dialogContext).showSnackBar(
+                      SnackBar(content: Text('Failed to save wallet: $e')),
+                    );
+                  }
+                }
               },
               child: const Text('Save'),
             ),
