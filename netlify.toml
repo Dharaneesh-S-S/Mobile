@@ -1,6 +1,6 @@
 [build]
   publish = "build/web"
-  command = "git clone https://github.com/flutter/flutter.git --depth 1 -b 3.35.4 _flutter && export PATH=\"$PATH:$(pwd)/_flutter/bin\" && flutter doctor -v && flutter build web --release --no-tree-shake-icons"
+  command = "if [ ! -f \"_flutter/bin/flutter\" ]; then rm -rf _flutter && git clone https://github.com/flutter/flutter.git --depth 1 -b 3.35.4 _flutter; fi && export PATH=\"$PATH:$(pwd)/_flutter/bin\" && flutter build web --release --no-tree-shake-icons"
 
 [[redirects]]
   from = "/*"
