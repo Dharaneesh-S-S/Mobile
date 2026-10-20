@@ -6,6 +6,7 @@ import '../../domain/models/calendar_display_item.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../calendar_item_handler.dart';
 import '../event_editor_screen.dart';
+import '../quick_create_sheet.dart';
 import '../../../tasks/presentation/pages/task_form_sheet.dart';
 import '../../../tasks/providers/tasks_providers.dart';
 
@@ -294,14 +295,14 @@ class _MonthViewState extends ConsumerState<MonthView> {
                   },
                 ),
                 IconButton(
-                  tooltip: 'Add Event for this day',
-                  icon: const Icon(Icons.event_available_rounded, color: AppColors.accentCyan),
+                  tooltip: 'Create item for this day',
+                  icon: const Icon(Icons.add_circle_outline_rounded, color: AppColors.accentCyan),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => EventEditorScreen(initialDate: selectedDate, initialType: CalendarItemType.event),
-                      ),
+                    showModalBottomSheet(
+                      context: context,
+                      isScrollControlled: true,
+                      backgroundColor: Colors.transparent,
+                      builder: (_) => QuickCreateSheet(initialDate: selectedDate),
                     );
                   },
                 ),
@@ -329,59 +330,65 @@ class _MonthViewState extends ConsumerState<MonthView> {
                     itemCount: items.length,
                     itemBuilder: (context, idx) {
                       final item = items[idx];
-                      return Card(
-                        margin: const EdgeInsets.symmetric(vertical: 4),
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          side: BorderSide(color: theme.dividerColor.withOpacity(0.4)),
-                        ),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                          leading: item.type == CalendarItemType.task
-                              ? Checkbox(
-                                  value: item.isCompleted,
-                                  activeColor: AppColors.accentEmerald,
-                                  shape: const CircleBorder(),
-                                  onChanged: (val) {
-                                    if (val != null) {
-                                      ref.read(taskServiceProvider).toggleTaskCompletion(item.sourceId, val);
-                                    }
-                                  },
-                                )
-                              : Container(
-                                  width: 14,
-                                  height: 14,
-                                  decoration: BoxDecoration(color: item.color, shape: BoxShape.circle),
-                                ),
-                          title: Text(
-                            item.title,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              decoration: item.isCompleted ? TextDecoration.lineThrough : null,
-                              color: item.isCompleted
-                                  ? theme.colorScheme.onSurface.withOpacity(0.4)
-                                  : theme.colorScheme.onSurface,
-                            ),
+                      final dimPast = ref.watch(dimPastEventsProvider);
+                      final isPast = dimPast && item.endTime.isBefore(DateTime.now());
+
+                      return Opacity(
+                        opacity: isPast ? 0.45 : 1.0,
+                        child: Card(
+                          margin: const EdgeInsets.symmetric(vertical: 4),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            side: BorderSide(color: theme.dividerColor.withOpacity(0.4)),
                           ),
-                          subtitle: Text(
-                            item.isAllDay
-                                ? 'All Day'
-                                : '${DateFormat('h:mm a').format(item.startTime)} - ${DateFormat('h:mm a').format(item.endTime)}',
-                            style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withOpacity(0.6)),
-                          ),
-                          trailing: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: item.color.withOpacity(0.15),
-                              borderRadius: BorderRadius.circular(8),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                            leading: item.type == CalendarItemType.task
+                                ? Checkbox(
+                                    value: item.isCompleted,
+                                    activeColor: AppColors.accentEmerald,
+                                    shape: const CircleBorder(),
+                                    onChanged: (val) {
+                                      if (val != null) {
+                                        ref.read(taskServiceProvider).toggleTaskCompletion(item.sourceId, val);
+                                      }
+                                    },
+                                  )
+                                : Container(
+                                    width: 14,
+                                    height: 14,
+                                    decoration: BoxDecoration(color: item.color, shape: BoxShape.circle),
+                                  ),
+                            title: Text(
+                              item.title,
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                decoration: item.isCompleted ? TextDecoration.lineThrough : null,
+                                color: item.isCompleted
+                                    ? theme.colorScheme.onSurface.withOpacity(0.4)
+                                    : theme.colorScheme.onSurface,
+                              ),
                             ),
-                            child: Text(
-                              item.type.name.toUpperCase(),
-                              style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: item.color),
+                            subtitle: Text(
+                              item.isAllDay
+                                  ? 'All Day'
+                                  : '${DateFormat('h:mm a').format(item.startTime)} - ${DateFormat('h:mm a').format(item.endTime)}',
+                              style: TextStyle(fontSize: 12, color: theme.colorScheme.onSurface.withOpacity(0.6)),
                             ),
+                            trailing: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: item.color.withOpacity(0.15),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                              child: Text(
+                                item.type.name.toUpperCase(),
+                                style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: item.color),
+                              ),
+                            ),
+                            onTap: () => openCalendarItem(context, ref, item),
                           ),
-                          onTap: () => openCalendarItem(context, ref, item),
                         ),
                       );
                     },

@@ -30,17 +30,22 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _titleController;
   late TextEditingController _descController;
-  
+  late TextEditingController _locationController;
+
   bool _isAllDay = false;
   late DateTime _startDate;
   late TimeOfDay _startTime;
   late DateTime _endDate;
   late TimeOfDay _endTime;
-  
+
   CalendarItemType _eventType = CalendarItemType.event;
   Color _selectedColor = AppColors.accentCyan;
   int? _reminderMinutes;
   String? _selectedTaskListId;
+  String _recurrenceRule = 'Does not repeat';
+  bool _hasVideoCall = false;
+  String _workingLocationChoice = 'Office';
+  bool _autoDeclineOoo = true;
 
   final List<Color> _availableColors = [
     AppColors.accentCyan,
@@ -49,6 +54,10 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
     AppColors.lightError,
     Colors.orange,
     Colors.pink,
+    Colors.indigo,
+    Colors.teal,
+    Colors.amber,
+    Colors.purple,
   ];
 
   @override
@@ -57,9 +66,15 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
     final e = widget.existingEvent;
     _titleController = TextEditingController(text: e?.title ?? '');
     _descController = TextEditingController(text: e?.description ?? '');
-    
+    _locationController = TextEditingController(text: e?.location ?? '');
+
     _isAllDay = e?.isAllDay ?? false;
-    
+    _recurrenceRule = e?.recurrenceRule ?? 'Does not repeat';
+
+    if (e?.description != null && e!.description!.contains('meet.chronos.io')) {
+      _hasVideoCall = true;
+    }
+
     final baseDate = widget.initialDate ?? DateTime.now();
     if (e != null) {
       final start = DateTime.fromMillisecondsSinceEpoch(e.startTimeUtc, isUtc: true).toLocal();
@@ -69,11 +84,22 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
       _endDate = end;
       _endTime = TimeOfDay.fromDateTime(end);
       _selectedColor = e.colorValue != null ? Color(e.colorValue!) : AppColors.accentCyan;
-      
+
       if (e.eventType == 'birthday') {
         _eventType = CalendarItemType.birthday;
       } else if (e.eventType == 'holiday') {
         _eventType = CalendarItemType.holiday;
+      } else if (e.eventType == 'out_of_office') {
+        _eventType = CalendarItemType.outOfOffice;
+      } else if (e.eventType == 'focus_time') {
+        _eventType = CalendarItemType.focusTime;
+      } else if (e.eventType == 'working_location') {
+        _eventType = CalendarItemType.workingLocation;
+        if (e.location != null && ['Office', 'Home', 'Elsewhere'].contains(e.location)) {
+          _workingLocationChoice = e.location!;
+        }
+      } else if (e.eventType == 'appointment_schedule') {
+        _eventType = CalendarItemType.appointmentSchedule;
       } else {
         _eventType = CalendarItemType.event;
       }
@@ -96,7 +122,28 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
       _endTime = TimeOfDay(hour: end.hour, minute: 0);
       if (widget.initialType != null) {
         _eventType = widget.initialType!;
+        _applyTypeDefaults(_eventType);
       }
+    }
+  }
+
+  void _applyTypeDefaults(CalendarItemType type) {
+    switch (type) {
+      case CalendarItemType.outOfOffice:
+        _selectedColor = Colors.purple;
+        break;
+      case CalendarItemType.focusTime:
+        _selectedColor = Colors.indigo;
+        break;
+      case CalendarItemType.workingLocation:
+        _selectedColor = Colors.teal;
+        _isAllDay = true;
+        break;
+      case CalendarItemType.appointmentSchedule:
+        _selectedColor = Colors.pink;
+        break;
+      default:
+        break;
     }
   }
 
@@ -104,6 +151,7 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
   void dispose() {
     _titleController.dispose();
     _descController.dispose();
+    _locationController.dispose();
     super.dispose();
   }
 
@@ -112,7 +160,6 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
 
     try {
       if (_eventType == CalendarItemType.task) {
-        // Map directly to Tasks feature!
         final dueDateTime = DateTime(
           _startDate.year,
           _startDate.month,
@@ -145,33 +192,71 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
       }
 
       final startUtc = DateTime(
-        _startDate.year, _startDate.month, _startDate.day,
-        _isAllDay ? 0 : _startTime.hour, _isAllDay ? 0 : _startTime.minute,
+        _startDate.year,
+        _startDate.month,
+        _startDate.day,
+        _isAllDay ? 0 : _startTime.hour,
+        _isAllDay ? 0 : _startTime.minute,
       ).toUtc().millisecondsSinceEpoch;
 
       final endUtc = DateTime(
-        _endDate.year, _endDate.month, _endDate.day,
-        _isAllDay ? 23 : _endTime.hour, _isAllDay ? 59 : _endTime.minute,
+        _endDate.year,
+        _endDate.month,
+        _endDate.day,
+        _isAllDay ? 23 : _endTime.hour,
+        _isAllDay ? 59 : _endTime.minute,
       ).toUtc().millisecondsSinceEpoch;
 
-      if (endUtc <= startUtc) {
+      if (endUtc <= startUtc && !_isAllDay) {
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('End time must be after start time')));
         return;
       }
 
       String eventTypeStr = 'event';
-      if (_eventType == CalendarItemType.birthday) eventTypeStr = 'birthday';
-      if (_eventType == CalendarItemType.holiday) eventTypeStr = 'holiday';
+      switch (_eventType) {
+        case CalendarItemType.outOfOffice:
+          eventTypeStr = 'out_of_office';
+          break;
+        case CalendarItemType.focusTime:
+          eventTypeStr = 'focus_time';
+          break;
+        case CalendarItemType.workingLocation:
+          eventTypeStr = 'working_location';
+          break;
+        case CalendarItemType.appointmentSchedule:
+          eventTypeStr = 'appointment_schedule';
+          break;
+        case CalendarItemType.birthday:
+          eventTypeStr = 'birthday';
+          break;
+        case CalendarItemType.holiday:
+          eventTypeStr = 'holiday';
+          break;
+        default:
+          eventTypeStr = 'event';
+      }
+
+      String? fullDescription = _descController.text.trim();
+      if (_hasVideoCall && !fullDescription.contains('meet.chronos.io')) {
+        final meetId = const Uuid().v4().substring(0, 8);
+        final meetUrl = 'https://meet.chronos.io/$meetId';
+        fullDescription = fullDescription.isEmpty ? 'Video Call: $meetUrl' : '$fullDescription\nVideo Call: $meetUrl';
+      }
+
+      String? finalLocation = _locationController.text.trim();
+      if (_eventType == CalendarItemType.workingLocation) {
+        finalLocation = _workingLocationChoice;
+      }
 
       final entry = CalendarEventEntry(
         id: widget.existingEvent?.id ?? const Uuid().v4(),
         title: _titleController.text.trim(),
-        description: _descController.text.trim().isEmpty ? null : _descController.text.trim(),
+        description: fullDescription.isEmpty ? null : fullDescription,
         startTimeUtc: startUtc,
         endTimeUtc: endUtc,
         isAllDay: _isAllDay,
-        recurrenceRule: null, 
-        location: null,
+        recurrenceRule: _recurrenceRule == 'Does not repeat' ? null : _recurrenceRule,
+        location: finalLocation.isEmpty ? null : finalLocation,
         colorValue: _selectedColor.value,
         isCancelled: false,
         eventType: eventTypeStr,
@@ -192,6 +277,8 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
             startTimeUtc: entry.startTimeUtc,
             endTimeUtc: entry.endTimeUtc,
             isAllDay: drift.Value(entry.isAllDay),
+            recurrenceRule: entry.recurrenceRule == null ? const drift.Value.absent() : drift.Value(entry.recurrenceRule),
+            location: entry.location == null ? const drift.Value.absent() : drift.Value(entry.location),
             colorValue: drift.Value(entry.colorValue),
             eventType: drift.Value(entry.eventType),
             reminderOffsets: entry.reminderOffsets == null ? const drift.Value.absent() : drift.Value(entry.reminderOffsets),
@@ -221,14 +308,14 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Event saved successfully!'), duration: Duration(milliseconds: 1200)),
+          const SnackBar(content: Text('Saved successfully!'), duration: Duration(milliseconds: 1200)),
         );
         Navigator.pop(context);
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save event: $e')),
+          SnackBar(content: Text('Failed to save: $e')),
         );
       }
     }
@@ -246,8 +333,8 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
           onPressed: () => Navigator.pop(context),
         ),
         title: Text(widget.existingEvent == null
-            ? (_eventType == CalendarItemType.task ? 'New Task' : 'New Event')
-            : 'Edit ${_eventType.name.toUpperCase()}'),
+            ? 'New ${_eventType.name}'
+            : 'Edit ${_eventType.name}'),
         actions: [
           if (widget.existingEvent != null)
             IconButton(
@@ -267,19 +354,13 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                 );
               },
             ),
-          FilledButton.tonal(
+          FilledButton(
             onPressed: _saveEvent,
             style: FilledButton.styleFrom(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              backgroundColor: AppColors.accentCyan,
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             ),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.check, size: 16),
-                SizedBox(width: 4),
-                Text('Save', style: TextStyle(fontWeight: FontWeight.bold)),
-              ],
-            ),
+            child: const Text('Save', style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white)),
           ),
           const SizedBox(width: 8),
         ],
@@ -289,31 +370,44 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
         child: ListView(
           padding: const EdgeInsets.all(16),
           children: [
+            // Title
             TextFormField(
               controller: _titleController,
               decoration: InputDecoration(
                 labelText: _eventType == CalendarItemType.task ? 'Task Title' : 'Title',
                 border: const OutlineInputBorder(),
+                prefixIcon: const Icon(Icons.title),
               ),
               validator: (v) => v!.trim().isEmpty ? 'Required' : null,
             ),
             const SizedBox(height: 16),
+
+            // Item Type Selector
             DropdownButtonFormField<CalendarItemType>(
               value: _eventType,
-              decoration: const InputDecoration(labelText: 'Type', border: OutlineInputBorder()),
+              decoration: const InputDecoration(labelText: 'Type', border: OutlineInputBorder(), prefixIcon: Icon(Icons.category_outlined)),
               items: const [
-                DropdownMenuItem(value: CalendarItemType.event, child: Text('Event')),
-                DropdownMenuItem(value: CalendarItemType.task, child: Text('Task (Mapped to Tasks)')),
+                DropdownMenuItem(value: CalendarItemType.event, child: Text('Event / Meeting')),
+                DropdownMenuItem(value: CalendarItemType.task, child: Text('Task')),
+                DropdownMenuItem(value: CalendarItemType.outOfOffice, child: Text('Out of Office')),
+                DropdownMenuItem(value: CalendarItemType.focusTime, child: Text('Focus Time')),
+                DropdownMenuItem(value: CalendarItemType.workingLocation, child: Text('Working Location')),
+                DropdownMenuItem(value: CalendarItemType.appointmentSchedule, child: Text('Appointment Schedule')),
                 DropdownMenuItem(value: CalendarItemType.birthday, child: Text('Birthday')),
                 DropdownMenuItem(value: CalendarItemType.holiday, child: Text('Holiday')),
               ],
               onChanged: (v) {
                 if (v != null) {
-                  setState(() => _eventType = v);
+                  setState(() {
+                    _eventType = v;
+                    _applyTypeDefaults(v);
+                  });
                 }
               },
             ),
             const SizedBox(height: 16),
+
+            // Task List selector (if Task)
             if (_eventType == CalendarItemType.task && taskLists.isNotEmpty) ...[
               DropdownButtonFormField<String>(
                 value: _selectedTaskListId ?? taskLists.first.id,
@@ -336,16 +430,23 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
               ),
               const SizedBox(height: 16),
             ],
+
+            // All-day Switch
             SwitchListTile(
+              contentPadding: EdgeInsets.zero,
               title: Text(_eventType == CalendarItemType.task ? 'All-day / No specific time' : 'All-day'),
               value: _isAllDay,
+              activeColor: AppColors.accentCyan,
               onChanged: (v) => setState(() => _isAllDay = v),
             ),
+
+            // Start Date / Time
             ListTile(
+              contentPadding: EdgeInsets.zero,
               title: Text(_eventType == CalendarItemType.task ? 'Due Date' : 'Start Date'),
               subtitle: Text(DateFormat('EEE, MMM d, yyyy').format(_startDate)),
               trailing: _isAllDay ? null : Text(_startTime.format(context), style: const TextStyle(fontWeight: FontWeight.bold)),
-              leading: const Icon(Icons.calendar_today_rounded),
+              leading: const Icon(Icons.calendar_today_rounded, color: AppColors.accentCyan),
               onTap: () async {
                 final d = await showDatePicker(
                   context: context,
@@ -362,12 +463,15 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                 }
               },
             ),
+
+            // End Date / Time
             if (_eventType != CalendarItemType.task) ...[
               ListTile(
+                contentPadding: EdgeInsets.zero,
                 title: const Text('End Date'),
                 subtitle: Text(DateFormat('EEE, MMM d, yyyy').format(_endDate)),
                 trailing: _isAllDay ? null : Text(_endTime.format(context), style: const TextStyle(fontWeight: FontWeight.bold)),
-                leading: const Icon(Icons.event_available_rounded),
+                leading: const Icon(Icons.event_available_rounded, color: AppColors.accentCyan),
                 onTap: () async {
                   final d = await showDatePicker(
                     context: context,
@@ -385,9 +489,85 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                 },
               ),
               const Divider(),
+            ],
+
+            // Recurrence Dropdown
+            if (_eventType != CalendarItemType.task) ...[
+              DropdownButtonFormField<String>(
+                value: _recurrenceRule,
+                decoration: const InputDecoration(labelText: 'Repeat', prefixIcon: Icon(Icons.repeat_rounded)),
+                items: const [
+                  DropdownMenuItem(value: 'Does not repeat', child: Text('Does not repeat')),
+                  DropdownMenuItem(value: 'Daily', child: Text('Daily')),
+                  DropdownMenuItem(value: 'Weekly', child: Text('Weekly')),
+                  DropdownMenuItem(value: 'Monthly', child: Text('Monthly')),
+                  DropdownMenuItem(value: 'Annually', child: Text('Annually')),
+                ],
+                onChanged: (v) => setState(() => _recurrenceRule = v ?? 'Does not repeat'),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Video Conferencing Toggle (for Events)
+            if (_eventType == CalendarItemType.event) ...[
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Add Google Meet / Video Conference'),
+                subtitle: const Text('Generate a secure virtual meeting link'),
+                value: _hasVideoCall,
+                activeColor: AppColors.accentCyan,
+                onChanged: (v) => setState(() => _hasVideoCall = v),
+              ),
+              const SizedBox(height: 12),
+            ],
+
+            // Working Location Segmented Selector
+            if (_eventType == CalendarItemType.workingLocation) ...[
+              const Text('Working Location', style: TextStyle(fontWeight: FontWeight.w600)),
+              const SizedBox(height: 8),
+              SegmentedButton<String>(
+                segments: const [
+                  ButtonSegment(value: 'Office', label: Text('Office'), icon: Icon(Icons.business)),
+                  ButtonSegment(value: 'Home', label: Text('Home'), icon: Icon(Icons.home)),
+                  ButtonSegment(value: 'Elsewhere', label: Text('Elsewhere'), icon: Icon(Icons.place)),
+                ],
+                selected: {_workingLocationChoice},
+                onSelectionChanged: (set) => setState(() => _workingLocationChoice = set.first),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Out of Office Auto Decline Toggle
+            if (_eventType == CalendarItemType.outOfOffice) ...[
+              SwitchListTile(
+                contentPadding: EdgeInsets.zero,
+                title: const Text('Automatically decline meetings'),
+                subtitle: const Text('Decline new and existing meetings during this period'),
+                value: _autoDeclineOoo,
+                activeColor: Colors.purple,
+                onChanged: (v) => setState(() => _autoDeclineOoo = v),
+              ),
+              const SizedBox(height: 12),
+            ],
+
+            // Location Input (if not workingLocation)
+            if (_eventType != CalendarItemType.workingLocation && _eventType != CalendarItemType.task) ...[
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Location / Room',
+                  prefixIcon: Icon(Icons.location_on_outlined),
+                  border: OutlineInputBorder(),
+                ),
+              ),
+              const SizedBox(height: 16),
+            ],
+
+            // Reminder Dropdown
+            if (_eventType != CalendarItemType.task) ...[
               DropdownButtonFormField<int?>(
                 value: _reminderMinutes,
-                decoration: const InputDecoration(labelText: 'Reminder', prefixIcon: Icon(Icons.notifications)),
+                decoration: const InputDecoration(labelText: 'Notification Reminder', prefixIcon: Icon(Icons.notifications_outlined)),
                 items: const [
                   DropdownMenuItem(value: null, child: Text('None')),
                   DropdownMenuItem(value: 0, child: Text('At time of event')),
@@ -399,26 +579,31 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
               ),
               const SizedBox(height: 16),
             ],
+
+            // Description / Notes
             TextFormField(
               controller: _descController,
               decoration: const InputDecoration(
                 labelText: 'Description / Notes',
-                prefixIcon: Icon(Icons.description),
+                prefixIcon: Icon(Icons.description_outlined),
                 border: OutlineInputBorder(),
               ),
               maxLines: 3,
             ),
+            const SizedBox(height: 16),
+
+            // Color Swatches
             if (_eventType != CalendarItemType.task) ...[
-              const SizedBox(height: 16),
               const Text('Color', style: TextStyle(fontWeight: FontWeight.w600)),
               const SizedBox(height: 8),
               Wrap(
-                spacing: 8,
+                spacing: 10,
+                runSpacing: 10,
                 children: _availableColors.map((c) => GestureDetector(
                   onTap: () => setState(() => _selectedColor = c),
                   child: Container(
-                    width: 36,
-                    height: 36,
+                    width: 38,
+                    height: 38,
                     decoration: BoxDecoration(
                       color: c,
                       shape: BoxShape.circle,
@@ -428,15 +613,21 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                           BoxShadow(color: c.withOpacity(0.5), blurRadius: 6, spreadRadius: 1),
                       ],
                     ),
+                    child: _selectedColor == c ? const Icon(Icons.check, color: Colors.white, size: 20) : null,
                   ),
                 )).toList(),
               ),
             ],
+
             if (widget.existingEvent != null) ...[
               const SizedBox(height: 32),
-              ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(backgroundColor: AppColors.lightError, foregroundColor: Colors.white),
-                icon: const Icon(Icons.delete),
+              OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  foregroundColor: AppColors.lightError,
+                  side: const BorderSide(color: AppColors.lightError),
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                ),
+                icon: const Icon(Icons.delete_outline),
                 label: const Text('Delete Event'),
                 onPressed: () async {
                   await ref.read(databaseProvider).calendarDao.deleteEvent(widget.existingEvent!.id);
@@ -445,6 +636,7 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
                 },
               ),
             ],
+            const SizedBox(height: 24),
           ],
         ),
       ),

@@ -75,6 +75,14 @@ class AgendaView extends ConsumerWidget {
         return const Icon(Icons.flag, color: Colors.green, size: 20);
       case CalendarItemType.task:
         return const Icon(Icons.check_circle_outline, color: AppColors.accentEmerald, size: 20);
+      case CalendarItemType.outOfOffice:
+        return const Icon(Icons.do_not_disturb_on_outlined, color: Colors.purple, size: 20);
+      case CalendarItemType.focusTime:
+        return const Icon(Icons.self_improvement_rounded, color: Colors.indigo, size: 20);
+      case CalendarItemType.workingLocation:
+        return const Icon(Icons.location_city_rounded, color: Colors.teal, size: 20);
+      case CalendarItemType.appointmentSchedule:
+        return const Icon(Icons.schedule_send_rounded, color: Colors.pink, size: 20);
       case CalendarItemType.transaction:
         return const Icon(Icons.attach_money, color: Colors.blueGrey, size: 20);
       case CalendarItemType.event:
