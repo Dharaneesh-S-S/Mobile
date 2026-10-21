@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
@@ -7,12 +8,20 @@ import '../../../core/database/app_database.dart';
 import '../../../core/providers/core_providers.dart';
 import '../../../core/database/daos/note_dao.dart';
 import 'widgets/note_card.dart';
+import 'notes_web_view.dart';
 
 class NotesDashboardScreen extends ConsumerWidget {
   const NotesDashboardScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb) {
+      return const Scaffold(
+        body: SafeArea(
+          child: AuraNotesWebView(),
+        ),
+      );
+    }
     final searchController = TextEditingController(text: ref.read(notesSearchQueryProvider));
     final viewMode = ref.watch(notesViewModeProvider);
     final pinnedNotes = ref.watch(pinnedNotesProvider);
