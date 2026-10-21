@@ -51,16 +51,16 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
 
   return (
     <div className="flex flex-col pb-12">
-      {/* Tab Bar */}
-      <div className="sticky top-[68px] z-20 bg-white/95 dark:bg-[#121316]/95 backdrop-blur-md px-4 py-2 border-b border-gray-100 dark:border-neutral-800 flex gap-1 overflow-x-auto no-scrollbar">
+      {/* Sub Tab Bar */}
+      <div className="sticky top-[68px] z-20 bg-slate-50/90 dark:bg-[#090D16]/90 backdrop-blur-xl px-4 py-2.5 border-b border-slate-200/70 dark:border-white/[0.06] flex gap-1.5 overflow-x-auto no-scrollbar">
         {tabs.map((tab) => (
           <button
             key={tab.id}
             onClick={() => setActiveTab(tab.id)}
-            className={`px-3 py-1.5 rounded-2xl text-xs font-bold transition-all shrink-0 ${
+            className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all shrink-0 active:scale-95 ${
               activeTab === tab.id
-                ? 'bg-emerald-500 text-neutral-950 shadow-sm'
-                : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-neutral-800'
+                ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25 font-extrabold'
+                : 'text-slate-600 dark:text-slate-400 hover:bg-slate-200/60 dark:hover:bg-slate-800/60'
             }`}
           >
             {tab.label}
@@ -132,8 +132,8 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               last30Days={usages.slice(-30)}
             />
 
-            <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm text-xs text-gray-500 leading-relaxed mb-4">
-              <span className="font-bold text-gray-800 dark:text-gray-200 block mb-1">
+            <div className="p-4 rounded-[26px] glass-card shadow-sm text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+              <span className="font-bold text-slate-900 dark:text-white block mb-1">
                 About Phone Unlocks
               </span>
               Checking your phone frequently creates cognitive fragmentation. Setting app timers
@@ -152,8 +152,8 @@ export const InsightsView: React.FC<InsightsViewProps> = ({
               onSelectApp={onSelectApp}
             />
 
-            <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm text-xs text-gray-500 leading-relaxed mb-4">
-              <span className="font-bold text-gray-800 dark:text-gray-200 block mb-1">
+            <div className="p-4 rounded-[26px] glass-card shadow-sm text-xs text-slate-500 dark:text-slate-400 leading-relaxed mb-4">
+              <span className="font-bold text-slate-900 dark:text-white block mb-1">
                 Notification Fatigue Tip
               </span>
               Batching communication alerts (WhatsApp, Slack) into 2-3 specific check-in times during the day significantly lowers background anxiety and interruption frequency.

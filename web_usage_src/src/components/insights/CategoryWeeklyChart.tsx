@@ -51,18 +51,19 @@ export const CategoryWeeklyChart: React.FC<CategoryWeeklyChartProps> = ({
   const activeDay = selectedDayIndex !== null ? days[selectedDayIndex] : null
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Weekly Breakdown by Category
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Weekly Breakdown by Category</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Mon–Sun stacked columns. Tap bar to inspect day.
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-[11px] text-gray-500 dark:text-gray-400">
+        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/70 px-2.5 py-1 rounded-full border border-slate-200/60 dark:border-white/[0.06]">
           <span className="w-3 border-b-2 border-dashed border-amber-500" />
           <span>Avg ({formatDuration(averageDailyMinutes)})</span>
         </div>
@@ -70,11 +71,11 @@ export const CategoryWeeklyChart: React.FC<CategoryWeeklyChartProps> = ({
 
       {/* Selected Day Tooltip */}
       {activeDay && (
-        <div className="mb-3 p-2.5 rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700/80 flex items-center justify-between text-xs animate-fade-in">
+        <div className="mb-3.5 p-3 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-emerald-500/30 shadow-md flex items-center justify-between text-xs animate-fade-in backdrop-blur-md">
           <div>
-            <div className="font-bold text-gray-900 dark:text-gray-100 flex items-center gap-1.5">
+            <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <span>{activeDay.dayLabel} ({activeDay.date})</span>
-              <span className="text-emerald-600 dark:text-emerald-400 font-extrabold">
+              <span className="text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-500/15 dark:bg-emerald-400/20 px-2 py-0.5 rounded-full text-[11px] border border-emerald-500/30">
                 {formatDuration(activeDay.totalMinutes)}
               </span>
             </div>

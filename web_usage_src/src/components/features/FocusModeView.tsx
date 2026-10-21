@@ -62,21 +62,21 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
       </div>
 
       {/* Quick Settings Tile Mockup */}
-      <div className="mb-4 p-4 rounded-3xl bg-neutral-900 text-white flex items-center justify-between shadow-md">
-        <div className="flex items-center gap-3">
+      <div className="mb-4 p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between">
+        <div className="flex items-center gap-3.5">
           <div
             onClick={toggleFocusActive}
             className={`w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer transition-all ${
-              focusConfig.enabled ? 'bg-purple-600 text-white shadow-lg' : 'bg-neutral-800 text-neutral-400'
+              focusConfig.enabled ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
             }`}
           >
-            <Zap size={22} />
+            <Zap size={22} strokeWidth={2.4} />
           </div>
           <div>
-            <span className="text-[11px] text-neutral-400 uppercase font-bold tracking-wider block">
+            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
               Quick Settings Tile
             </span>
-            <span className="text-sm font-bold">
+            <span className="text-sm font-bold text-slate-900 dark:text-white">
               {focusConfig.enabled ? 'Focus Mode Active' : 'Focus Mode Off'}
             </span>
           </div>
@@ -84,10 +84,10 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
 
         <button
           onClick={toggleFocusActive}
-          className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+          className={`px-4 py-2 rounded-full text-xs font-bold transition-all active:scale-95 shadow-sm ${
             focusConfig.enabled
-              ? 'bg-rose-500/20 text-rose-300 hover:bg-rose-500/30'
-              : 'bg-purple-600 text-white hover:bg-purple-500'
+              ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/25'
+              : 'bg-purple-600 text-white hover:bg-purple-500 shadow-purple-500/25'
           }`}
         >
           {focusConfig.enabled ? 'Turn Off' : 'Turn On'}
@@ -96,7 +96,7 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
 
       {/* Active Session & Break Controls */}
       {focusConfig.enabled && (
-        <div className="p-4 rounded-3xl bg-purple-500/10 border border-purple-500/20 mb-4 animate-slide-up">
+        <div className="p-5 rounded-[28px] bg-purple-500/10 border border-purple-500/25 mb-4 animate-slide-up shadow-sm">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <Zap size={18} className="text-purple-500" />
@@ -105,8 +105,8 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
               </span>
             </div>
 
-            <div className="flex items-center gap-1 text-xs font-bold text-amber-500">
-              <Flame size={14} />
+            <div className="flex items-center gap-1 text-xs font-bold text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+              <Flame size={14} className="animate-pulse" />
               <span>{focusConfig.streakDays} Day Streak</span>
             </div>
           </div>
@@ -120,7 +120,7 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
               <button
                 key={m}
                 onClick={() => takeBreak(m)}
-                className="px-2.5 py-1 rounded-xl bg-purple-500/20 hover:bg-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-bold transition-colors"
+                className="px-3 py-1 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-bold transition-all active:scale-95 border border-purple-500/30"
               >
                 {m}m
               </button>
@@ -130,8 +130,8 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
       )}
 
       {/* History of Focus Sessions Chart */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
           Focus History (Minutes / Day)
         </h4>
         <div className="relative w-full h-[80px] select-none">
@@ -147,13 +147,13 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
                   width="22"
                   height={h}
                   fill="#8b5cf6"
-                  rx="4"
+                  rx="6"
                 />
               )
             })}
           </svg>
         </div>
-        <div className="flex justify-between text-[10px] text-gray-400 mt-2 px-3">
+        <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 px-3">
           <span>Mon</span>
           <span>Tue</span>
           <span>Wed</span>
@@ -165,9 +165,9 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
       </div>
 
       {/* Pick Distracting Apps */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm">
         <div className="flex items-center justify-between mb-3">
-          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Distracting Apps ({focusConfig.distractingAppIds.length})
           </h4>
         </div>

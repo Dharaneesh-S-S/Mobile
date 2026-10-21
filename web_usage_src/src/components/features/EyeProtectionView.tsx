@@ -40,16 +40,16 @@ export const EyeProtectionView: React.FC<EyeProtectionViewProps> = ({
       </div>
 
       {/* Main Switch Card */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-            <Eye size={22} />
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between mb-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center justify-center shrink-0 shadow-sm">
+            <Eye size={22} strokeWidth={2.4} />
           </div>
           <div>
-            <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+            <span className="text-sm font-bold text-slate-900 dark:text-white">
               Blue Light Filter
             </span>
-            <p className="text-xs text-gray-400 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               {config.enabled ? 'Filter active' : 'Filter turned off'}
             </p>
           </div>
@@ -58,7 +58,7 @@ export const EyeProtectionView: React.FC<EyeProtectionViewProps> = ({
         <button
           onClick={handleToggle}
           className={`w-12 h-7 rounded-full transition-colors relative ${
-            config.enabled ? 'bg-amber-500' : 'bg-gray-300 dark:bg-neutral-700'
+            config.enabled ? 'bg-amber-500' : 'bg-slate-300 dark:bg-slate-700'
           }`}
         >
           <div
@@ -70,12 +70,12 @@ export const EyeProtectionView: React.FC<EyeProtectionViewProps> = ({
       </div>
 
       {/* Warmth Intensity Slider */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
             Warmth Intensity ({config.intensity}%)
           </span>
-          <span className="text-xs font-bold text-amber-500">
+          <span className="text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2 py-0.5 rounded-md">
             {config.intensity > 70 ? 'Very Warm' : config.intensity > 40 ? 'Moderate' : 'Mild'}
           </span>
         </div>
@@ -86,10 +86,10 @@ export const EyeProtectionView: React.FC<EyeProtectionViewProps> = ({
           max="90"
           value={config.intensity}
           onChange={(e) => handleIntensityChange(parseInt(e.target.value))}
-          className="w-full accent-amber-500 h-2 bg-gray-200 dark:bg-neutral-700 rounded-lg cursor-pointer my-3"
+          className="w-full accent-amber-500 h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer my-3"
         />
 
-        <div className="flex justify-between text-xs text-gray-400">
+        <div className="flex justify-between text-xs text-slate-400 font-medium">
           <span>Natural</span>
           <span>Warm Amber</span>
           <span>Deep Candlelight</span>
@@ -97,8 +97,8 @@ export const EyeProtectionView: React.FC<EyeProtectionViewProps> = ({
       </div>
 
       {/* Schedule Selector */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
           Automatic Schedule
         </h4>
 

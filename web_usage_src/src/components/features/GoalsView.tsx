@@ -53,17 +53,17 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
       </div>
 
       {/* Streak Counter Card */}
-      <div className="p-5 rounded-3xl bg-gradient-to-br from-amber-500/15 via-orange-500/10 to-transparent border border-amber-500/20 shadow-sm mb-4">
+      <div className="p-5 rounded-[28px] bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/30 shadow-md shadow-amber-500/10 mb-4 backdrop-blur-xl">
         <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500 flex items-center justify-center text-white shadow-md shadow-amber-500/20">
+          <div className="flex items-center gap-2.5">
+            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/30">
               <Flame size={22} className="animate-pulse" />
             </div>
             <div>
-              <span className="text-xl font-extrabold text-gray-900 dark:text-gray-100 block">
+              <span className="text-xl font-display font-extrabold text-slate-900 dark:text-white block">
                 {streakDays} Day Streak!
               </span>
-              <span className="text-[11px] text-gray-500 dark:text-gray-400">
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 Days consecutively under your screen goal
               </span>
             </div>
@@ -71,20 +71,20 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
         </div>
 
         {/* 7-Day Streak Chip Row */}
-        <div className="flex justify-between gap-1 mt-2">
+        <div className="flex justify-between gap-1.5 mt-2">
           {daysLabels.map((dayName, idx) => {
             const isCompleted = last7DaysUnder[idx]
             return (
               <div
                 key={dayName}
-                className={`flex-1 py-2 rounded-2xl flex flex-col items-center justify-center text-xs transition-all ${
+                className={`flex-1 py-2.5 rounded-2xl flex flex-col items-center justify-center text-xs transition-all ${
                   isCompleted
-                    ? 'bg-amber-500 text-white font-bold shadow-xs'
-                    : 'bg-white/60 dark:bg-neutral-800/60 text-gray-400'
+                    ? 'bg-amber-500 text-slate-950 font-bold shadow-sm shadow-amber-500/30'
+                    : 'bg-slate-200/60 dark:bg-slate-800/60 text-slate-400'
                 }`}
               >
-                <span className="text-[10px] mb-0.5">{dayName}</span>
-                {isCompleted ? <Check size={14} strokeWidth={2.6} /> : <div className="w-1.5 h-1.5 rounded-full bg-gray-300 dark:bg-neutral-600" />}
+                <span className="text-[10px] font-semibold mb-0.5">{dayName}</span>
+                {isCompleted ? <Check size={14} strokeWidth={2.8} /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />}
               </div>
             )
           })}
@@ -92,7 +92,7 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
       </div>
 
       {/* Monday Weekly Summary Card */}
-      <div className="p-4 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 shadow-sm mb-4">
+      <div className="p-5 rounded-[28px] bg-emerald-500/10 border border-emerald-500/25 shadow-sm mb-4">
         <div className="flex items-center gap-2 mb-2">
           <Lightbulb size={16} className="text-emerald-500" />
           <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
@@ -104,19 +104,19 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
           <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0 mt-0.5">
             <TrendingDown size={16} />
           </div>
-          <div className="text-xs text-gray-700 dark:text-gray-300">
+          <div className="text-xs text-slate-700 dark:text-slate-300">
             <strong>Biggest win:</strong> Instagram usage dropped by <strong>45m</strong> this past week!
           </div>
         </div>
 
-        <div className="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs text-gray-600 dark:text-gray-400">
+        <div className="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs text-slate-600 dark:text-slate-400">
           💡 <em>Tip for next week:</em> Schedule Bedtime Grayscale at 22:30 to avoid midnight YouTube loops.
         </div>
       </div>
 
       {/* Goal Targets Config Card */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4 flex flex-col gap-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4 flex flex-col gap-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
           Daily Targets
         </h4>
 
@@ -163,8 +163,8 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
       </div>
 
       {/* Achievement Badges Grid */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
           Milestone Badges ({goalConfig.badges.filter((b) => b.unlockedAt).length}/{goalConfig.badges.length})
         </h4>
 
@@ -177,10 +177,10 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
               <div
                 key={badge.id}
                 onClick={() => handleBadgeClick(badge)}
-                className={`p-3 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center ${
+                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center active:scale-95 ${
                   isUnlocked
-                    ? 'border-emerald-500/30 bg-emerald-500/5 hover:scale-102 shadow-xs'
-                    : 'border-gray-200 dark:border-neutral-800 opacity-50 bg-gray-50 dark:bg-neutral-900/40'
+                    ? 'border-emerald-500/30 bg-emerald-500/10 hover:scale-[1.02] shadow-sm'
+                    : 'border-slate-200 dark:border-white/[0.06] opacity-50 bg-slate-100/50 dark:bg-white/[0.02]'
                 }`}
               >
                 <div

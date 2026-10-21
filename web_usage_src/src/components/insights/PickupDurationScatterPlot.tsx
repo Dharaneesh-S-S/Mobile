@@ -55,13 +55,14 @@ export const PickupDurationScatterPlot: React.FC<PickupDurationScatterPlotProps>
   const padding = 30
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Session Duration vs. Open Frequency
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-teal-500" />
+            <span>Session Duration vs. Open Frequency</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Bubble size = notifications. Spots quick-check vs long-session apps.
           </p>
         </div>
@@ -69,7 +70,7 @@ export const PickupDurationScatterPlot: React.FC<PickupDurationScatterPlotProps>
 
       {/* Active App Tooltip Card */}
       {activeApp && (
-        <div className="mb-2 p-2.5 rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 text-xs flex items-center justify-between animate-fade-in">
+        <div className="mb-3 p-3 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-teal-500/30 text-xs flex items-center justify-between animate-fade-in shadow-sm backdrop-blur-md">
           <div className="flex items-center gap-2">
             <AppIcon
               name={activeApp.app.name}

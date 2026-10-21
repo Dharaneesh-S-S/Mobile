@@ -53,14 +53,14 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
       </div>
 
       {/* 24-Hour Circular Dial */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col items-center mb-4">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col items-center mb-4">
         <div className="flex items-center justify-between w-full mb-2">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-500">
-            <Moon size={15} />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-full border border-indigo-500/20">
+            <Moon size={14} strokeWidth={2.4} />
             <span>Bedtime: {bedtimeHour}:00</span>
           </div>
-          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500">
-            <Sun size={15} />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+            <Sun size={14} strokeWidth={2.4} />
             <span>Wake: {wakeHour}:00</span>
           </div>
         </div>
@@ -74,20 +74,20 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
               r={r}
               fill="none"
               stroke="currentColor"
-              className="text-gray-200 dark:text-neutral-700"
+              className="text-slate-200/60 dark:text-slate-800/60"
               strokeWidth="12"
             />
 
             {/* Bedtime Hour Marker */}
-            <circle cx={bedX} cy={bedY} r="14" fill="#6366f1" className="cursor-pointer" />
+            <circle cx={bedX} cy={bedY} r="14" fill="#6366f1" className="cursor-pointer shadow-md" />
             {/* Wake Hour Marker */}
-            <circle cx={wakeX} cy={wakeY} r="14" fill="#f59e0b" className="cursor-pointer" />
+            <circle cx={wakeX} cy={wakeY} r="14" fill="#f59e0b" className="cursor-pointer shadow-md" />
           </svg>
 
           {/* Center Info */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center pointer-events-none">
-            <span className="text-xs font-bold text-gray-500">Target Sleep</span>
-            <span className="text-base font-extrabold text-indigo-500">
+            <span className="text-xs font-bold text-slate-400">Target Sleep</span>
+            <span className="text-xl font-display font-extrabold text-indigo-600 dark:text-indigo-400 mt-0.5">
               {(24 - bedtimeHour + wakeHour) % 24} Hours
             </span>
           </div>
@@ -95,33 +95,33 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
 
         {/* Quick Stepper for Bedtime and Wake */}
         <div className="grid grid-cols-2 gap-3 w-full mt-2">
-          <div className="p-2.5 rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700/60 flex items-center justify-between">
+          <div className="p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between">
             <button
               onClick={() => setBedtimeHour((bedtimeHour - 1 + 24) % 24)}
-              className="w-7 h-7 rounded-lg bg-gray-200 dark:bg-neutral-800 font-bold text-xs"
+              className="w-7 h-7 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold text-xs active:scale-95 transition-transform"
             >
               -
             </button>
-            <span className="text-xs font-bold">{bedtimeHour}:00 PM</span>
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{bedtimeHour}:00</span>
             <button
               onClick={() => setBedtimeHour((bedtimeHour + 1) % 24)}
-              className="w-7 h-7 rounded-lg bg-gray-200 dark:bg-neutral-800 font-bold text-xs"
+              className="w-7 h-7 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold text-xs active:scale-95 transition-transform"
             >
               +
             </button>
           </div>
 
-          <div className="p-2.5 rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700/60 flex items-center justify-between">
+          <div className="p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/[0.08] flex items-center justify-between">
             <button
               onClick={() => setWakeHour((wakeHour - 1 + 24) % 24)}
-              className="w-7 h-7 rounded-lg bg-gray-200 dark:bg-neutral-800 font-bold text-xs"
+              className="w-7 h-7 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold text-xs active:scale-95 transition-transform"
             >
               -
             </button>
-            <span className="text-xs font-bold">{wakeHour}:00 AM</span>
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{wakeHour}:00</span>
             <button
               onClick={() => setWakeHour((wakeHour + 1) % 24)}
-              className="w-7 h-7 rounded-lg bg-gray-200 dark:bg-neutral-800 font-bold text-xs"
+              className="w-7 h-7 rounded-xl bg-slate-200 dark:bg-slate-800 font-bold text-xs active:scale-95 transition-transform"
             >
               +
             </button>
@@ -131,7 +131,7 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
 
       {/* Days of Week Chips */}
       <div className="mb-4">
-        <label className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2 block">
+        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2 block">
           Schedule Days
         </label>
         <div className="flex justify-between gap-1">
@@ -141,10 +141,10 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
               <button
                 key={idx}
                 onClick={() => toggleDay(idx)}
-                className={`w-10 h-10 rounded-2xl text-xs font-bold transition-all ${
+                className={`w-10 h-10 rounded-2xl text-xs font-bold transition-all active:scale-95 ${
                   isSelected
-                    ? 'bg-indigo-600 text-white shadow-sm'
-                    : 'bg-gray-100 dark:bg-neutral-800 text-gray-500 hover:bg-gray-200'
+                    ? 'bg-indigo-600 text-white shadow-md shadow-indigo-500/25'
+                    : 'bg-slate-200/60 dark:bg-slate-800/80 text-slate-500 hover:bg-slate-200'
                 }`}
               >
                 {lbl}
@@ -155,32 +155,32 @@ export const BedtimeModeView: React.FC<BedtimeModeViewProps> = ({
       </div>
 
       {/* Grayscale Screen Filter Live Preview Switch */}
-      <div className="p-4 rounded-3xl bg-neutral-900 text-white flex items-center justify-between shadow-md mb-4">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between mb-4 border border-indigo-500/30">
         <div>
-          <span className="text-xs font-bold flex items-center gap-1.5 text-indigo-400">
+          <span className="text-xs font-bold flex items-center gap-1.5 text-indigo-500 dark:text-indigo-400">
             <Sliders size={14} />
             <span>Grayscale Screen Filter</span>
           </span>
-          <p className="text-[11px] text-neutral-400 mt-0.5">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Removes all screen color to make apps boring before sleep.
           </p>
         </div>
 
         <button
           onClick={() => onToggleGlobalGrayscale(!isGrayscaleActive)}
-          className={`px-3 py-1.5 rounded-xl font-bold text-xs transition-all ${
+          className={`px-3.5 py-1.5 rounded-full font-bold text-xs transition-all active:scale-95 shadow-sm ${
             isGrayscaleActive
-              ? 'bg-white text-neutral-950 font-extrabold'
-              : 'bg-neutral-800 text-neutral-300 hover:bg-neutral-700'
+              ? 'bg-indigo-600 text-white font-extrabold shadow-indigo-500/25'
+              : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-300'
           }`}
         >
-          {isGrayscaleActive ? 'Grayscale ON' : 'Preview Grayscale'}
+          {isGrayscaleActive ? 'Grayscale ON' : 'Preview'}
         </button>
       </div>
 
       {/* Sleep Summary Chart (last 7 days after bedtime) */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
           Phone Use After Bedtime (Last 7 Days)
         </h4>
         <div className="relative w-full h-[70px] select-none">

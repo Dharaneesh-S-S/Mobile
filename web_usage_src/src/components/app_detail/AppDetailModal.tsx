@@ -54,24 +54,24 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
   const timeLeft = timerLimit ? Math.max(0, timerLimit - todayMinutes) : null
 
   return (
-    <div className="fixed inset-0 z-50 bg-white dark:bg-[#121316] text-gray-900 dark:text-gray-100 flex flex-col overflow-y-auto animate-fade-in">
+    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#070A11] text-slate-900 dark:text-slate-100 flex flex-col overflow-y-auto animate-fade-in no-scrollbar">
       {/* Top App Bar */}
-      <div className="sticky top-0 z-40 bg-white/95 dark:bg-[#121316]/95 backdrop-blur-md px-4 py-3 flex items-center justify-between border-b border-gray-100 dark:border-neutral-800">
+      <div className="sticky top-0 z-40 bg-slate-50/90 dark:bg-[#070A11]/90 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-slate-200/70 dark:border-white/[0.06]">
         <button
           onClick={onClose}
-          className="p-2 -ml-2 rounded-2xl hover:bg-gray-100 dark:hover:bg-neutral-800 text-gray-700 dark:text-gray-300 transition-colors flex items-center gap-1 text-sm font-semibold"
+          className="p-2 -ml-2 rounded-2xl hover:bg-slate-200/60 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300 transition-all flex items-center gap-1 text-sm font-bold active:scale-95"
           aria-label="Back"
         >
-          <ChevronLeft size={20} />
+          <ChevronLeft size={20} strokeWidth={2.4} />
           <span>Back</span>
         </button>
 
-        <span className="text-sm font-bold truncate max-w-[180px]">{app.name}</span>
+        <span className="text-sm font-display font-extrabold truncate max-w-[180px]">{app.name}</span>
 
         {/* Simulate Usage Test Button */}
         <button
           onClick={() => onSimulateAppUsage(app.id, 15)}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold text-xs hover:bg-emerald-500/20 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-bold text-xs hover:bg-emerald-500/25 border border-emerald-500/30 transition-all active:scale-95 shadow-sm"
           title="Simulate 15 min of app usage to test timers"
         >
           <Play size={12} fill="currentColor" />
@@ -81,7 +81,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
 
       <div className="px-4 py-4 flex-1 max-w-[430px] mx-auto w-full pb-16">
         {/* App Header Card */}
-        <div className="p-5 rounded-3xl bg-gray-50 dark:bg-neutral-800/50 border border-gray-100 dark:border-neutral-800 flex items-center justify-between mb-4">
+        <div className="p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between mb-4">
           <div className="flex items-center gap-3.5">
             <AppIcon
               name={app.name}
@@ -90,31 +90,31 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
               size={24}
             />
             <div>
-              <h2 className="text-lg font-bold text-gray-900 dark:text-gray-100 leading-tight">
+              <h2 className="text-lg font-display font-extrabold text-slate-900 dark:text-white leading-tight">
                 {app.name}
               </h2>
-              <span className="text-xs text-gray-400">{app.category}</span>
+              <span className="text-xs font-semibold text-slate-400 dark:text-slate-500">{app.category}</span>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 block">
+            <span className="text-2xl font-display font-extrabold text-emerald-600 dark:text-emerald-400 block">
               {formatDuration(todayMinutes)}
             </span>
-            <span className="text-[10px] text-gray-400">Used today</span>
+            <span className="text-[10px] font-semibold text-slate-400">Used today</span>
           </div>
         </div>
 
         {/* Blocked or Timed Out Status Banner */}
         {isBlockedToday && (
-          <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center justify-between mb-4">
+          <div className="p-3.5 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs font-semibold flex items-center justify-between mb-4 shadow-sm">
             <div className="flex items-center gap-2">
               <ShieldAlert size={16} />
               <span>App is paused/blocked for the rest of today</span>
             </div>
             <button
               onClick={() => onToggleBlockAppToday(app.id)}
-              className="px-2 py-0.5 rounded-lg bg-rose-500 text-white text-[11px] font-bold"
+              className="px-2.5 py-1 rounded-xl bg-rose-500 text-white text-[11px] font-bold shadow-sm active:scale-95"
             >
               Unpause
             </button>
@@ -122,13 +122,13 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
         )}
 
         {/* Day / Week segmented toggle */}
-        <div className="flex items-center justify-center bg-gray-100 dark:bg-neutral-800/80 p-1 rounded-2xl text-xs font-semibold mb-4">
+        <div className="flex items-center justify-center bg-slate-200/60 dark:bg-[#121929]/70 backdrop-blur-md p-1 rounded-2xl text-xs font-bold mb-4 border border-slate-300/50 dark:border-white/[0.06]">
           <button
             onClick={() => setViewMode('day')}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               viewMode === 'day'
-                ? 'bg-white dark:bg-neutral-700 text-emerald-600 dark:text-emerald-400 shadow-sm font-bold'
-                : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm font-bold border border-transparent dark:border-emerald-500/30'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Hourly (Today)
@@ -137,8 +137,8 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
             onClick={() => setViewMode('week')}
             className={`flex-1 py-1.5 rounded-xl transition-all ${
               viewMode === 'week'
-                ? 'bg-white dark:bg-neutral-700 text-emerald-600 dark:text-emerald-400 shadow-sm font-bold'
-                : 'text-gray-500 hover:text-gray-800 dark:hover:text-gray-200'
+                ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm font-bold border border-transparent dark:border-emerald-500/30'
+                : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
             }`}
           >
             Weekly (Last 7 Days)
@@ -147,8 +147,8 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
 
         {/* 1. Hourly Bar Chart */}
         {viewMode === 'day' ? (
-          <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
-            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
+          <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
               Today's Hourly Usage
             </h4>
             <div className="relative w-full h-[120px] select-none">
@@ -166,7 +166,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                         width={barW}
                         height={120}
                         fill="currentColor"
-                        className="text-gray-100 dark:text-neutral-700/30"
+                        className="text-slate-200/60 dark:text-slate-800/40"
                         rx="3"
                       />
                       {mins > 0 && (
@@ -184,7 +184,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                 })}
               </svg>
             </div>
-            <div className="flex justify-between text-[10px] text-gray-400 mt-2">
+            <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 px-1">
               <span>00:00</span>
               <span>06:00</span>
               <span>12:00</span>
@@ -194,12 +194,12 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
           </div>
         ) : (
           /* 2. Weekly Bar Chart with average line */
-          <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
-            <div className="flex items-center justify-between mb-2">
-              <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+          <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
+            <div className="flex items-center justify-between mb-2.5">
+              <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
                 Daily Usage (Last 7 Days)
               </h4>
-              <span className="text-[11px] text-amber-500 font-semibold">
+              <span className="text-[11px] text-amber-600 dark:text-amber-400 font-bold bg-amber-500/10 px-2 py-0.5 rounded-md">
                 Daily Avg: {formatDuration(summary.dailyAverageMinutes)}
               </span>
             </div>
@@ -229,7 +229,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                         width={barW}
                         height={120}
                         fill="currentColor"
-                        className="text-gray-100 dark:text-neutral-700/30"
+                        className="text-slate-200/60 dark:text-slate-800/40"
                         rx="4"
                       />
                       <rect
@@ -245,7 +245,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                 })}
               </svg>
             </div>
-            <div className="flex justify-between text-[11px] font-semibold text-gray-400 mt-2 px-3">
+            <div className="flex justify-between text-[11px] font-bold text-slate-400 mt-2 px-3">
               {summary.dailyLast7Days.map((d) => {
                 const [, , dayNum] = d.date.split('-')
                 return <span key={d.date}>{dayNum}</span>
@@ -255,13 +255,13 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
         )}
 
         {/* 3. 30-Day Line Chart with limit reference */}
-        <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm mb-4">
+        <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
           <div className="flex items-center justify-between mb-2">
-            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
               30-Day Trend & Limit
             </h4>
             {timerLimit && (
-              <span className="text-[11px] text-rose-500 font-semibold">
+              <span className="text-[11px] text-rose-600 dark:text-rose-400 font-bold bg-rose-500/10 px-2 py-0.5 rounded-md">
                 Limit: {formatDuration(timerLimit)}
               </span>
             )}
@@ -283,7 +283,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
               <polyline
                 fill="none"
                 stroke={app.accentColor}
-                strokeWidth="2.2"
+                strokeWidth="2.4"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 points={summary.dailyLast30Days
@@ -300,60 +300,60 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
 
         {/* Stats Tiles (6 Key Metrics) */}
         <div className="grid grid-cols-3 gap-2 mb-4">
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">Opened</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
-              {summary.openCount} times
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Opened</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
+              {summary.openCount}x
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">Alerts</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Alerts</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
               {summary.notificationCount}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">Avg Session</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Avg Session</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
               {formatDuration(summary.averageSessionMinutes)}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">Max Session</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Max Session</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
               {formatDuration(summary.longestSessionMinutes)}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">First Used</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">First Used</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
               {summary.firstUseTime}
             </span>
           </div>
 
-          <div className="p-3 rounded-2xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 text-center">
-            <span className="text-[10px] text-gray-400 font-semibold block">Last Used</span>
-            <span className="text-base font-bold text-gray-900 dark:text-gray-100">
+          <div className="p-3 rounded-2xl glass-card text-center">
+            <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider block">Last Used</span>
+            <span className="text-base font-display font-extrabold text-slate-900 dark:text-white mt-0.5 block">
               {summary.lastUseTime}
             </span>
           </div>
         </div>
 
         {/* App Timer Card */}
-        <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex items-center justify-between mb-4">
+        <div className="p-4 rounded-[26px] glass-card shadow-sm flex items-center justify-between mb-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center">
-              <Hourglass size={20} />
+            <div className="w-10 h-10 rounded-2xl bg-amber-500/15 text-amber-500 border border-amber-500/30 flex items-center justify-center shrink-0 shadow-sm">
+              <Hourglass size={20} strokeWidth={2.4} />
             </div>
             <div>
-              <h4 className="text-xs font-bold text-gray-900 dark:text-gray-100">
+              <h4 className="text-xs font-bold text-slate-900 dark:text-white">
                 {timerLimit ? `${formatDuration(timerLimit)} daily timer` : 'No timer set'}
               </h4>
-              <p className="text-[11px] text-gray-400 mt-0.5">
+              <p className="text-[11px] font-medium text-slate-400 mt-0.5">
                 {timeLeft !== null
                   ? `${formatDuration(timeLeft)} remaining today`
                   : 'Set a limit to curb usage'}
@@ -363,52 +363,52 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
 
           <button
             onClick={() => setIsTimerPickerOpen(true)}
-            className="px-3 py-1.5 rounded-xl bg-amber-500 text-neutral-950 font-bold text-xs hover:bg-amber-600 transition-colors"
+            className="px-3.5 py-1.5 rounded-full bg-amber-500 text-slate-950 font-bold text-xs hover:bg-amber-400 transition-all active:scale-95 shadow-sm shadow-amber-500/25"
           >
             {timerLimit ? 'Edit Timer' : 'Set Timer'}
           </button>
         </div>
 
         {/* Per-App Notification & Focus Toggles */}
-        <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col gap-3 mb-4">
+        <div className="p-4 rounded-[26px] glass-card shadow-sm flex flex-col gap-3 mb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
               <Bell size={16} className="text-blue-500" />
-              <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                 App Notifications
               </span>
             </div>
             <button
               onClick={() => setNotificationsMock(!notificationsMock)}
               className={`w-11 h-6 rounded-full transition-colors relative ${
-                notificationsMock ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-neutral-700'
+                notificationsMock ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
               }`}
             >
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
                   notificationsMock ? 'translate-x-6' : 'translate-x-1'
-                } top-1 absolute`}
+                } top-1 absolute shadow-sm`}
               />
             </button>
           </div>
 
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-neutral-800">
+          <div className="flex items-center justify-between pt-2.5 border-t border-slate-100 dark:border-white/[0.06]">
             <div className="flex items-center gap-2.5">
               <Zap size={16} className="text-purple-500" />
-              <span className="text-xs font-bold text-gray-800 dark:text-gray-200">
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
                 Include in Focus Mode Blocklist
               </span>
             </div>
             <button
               onClick={() => onToggleFocusModeApp(app.id)}
               className={`w-11 h-6 rounded-full transition-colors relative ${
-                isInFocusMode ? 'bg-purple-600' : 'bg-gray-300 dark:bg-neutral-700'
+                isInFocusMode ? 'bg-purple-600' : 'bg-slate-300 dark:bg-slate-700'
               }`}
             >
               <div
                 className={`w-4 h-4 rounded-full bg-white transition-transform ${
                   isInFocusMode ? 'translate-x-6' : 'translate-x-1'
-                } top-1 absolute`}
+                } top-1 absolute shadow-sm`}
               />
             </button>
           </div>
@@ -417,9 +417,9 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
         {/* Action: Block/Pause App Today */}
         <button
           onClick={() => onToggleBlockAppToday(app.id)}
-          className={`w-full py-3.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 transition-all mb-4 ${
+          className={`w-full py-3.5 rounded-2xl font-bold text-xs flex items-center justify-center gap-2 transition-all mb-4 active:scale-98 ${
             isBlockedToday
-              ? 'bg-emerald-500 text-neutral-950 hover:bg-emerald-600'
+              ? 'bg-emerald-500 text-slate-950 hover:bg-emerald-400 shadow-md shadow-emerald-500/25'
               : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-500/20 hover:bg-rose-500/20'
           }`}
         >
@@ -428,24 +428,24 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
         </button>
 
         {/* Sessions List */}
-        <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm">
-          <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider mb-3">
+        <div className="p-4 rounded-[26px] glass-card shadow-sm">
+          <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
             Today's Sessions ({summary.sessions.length})
           </h4>
-          <div className="flex flex-col gap-2.5 max-h-56 overflow-y-auto pr-1">
+          <div className="flex flex-col gap-2 max-h-56 overflow-y-auto pr-1 no-scrollbar">
             {summary.sessions.map((s) => (
               <div
                 key={s.id}
-                className="flex items-center justify-between p-2 rounded-xl bg-gray-50 dark:bg-neutral-900/60 text-xs"
+                className="flex items-center justify-between p-2.5 rounded-2xl bg-slate-100/70 dark:bg-slate-850/60 dark:bg-white/[0.03] text-xs border border-transparent dark:border-white/[0.04]"
               >
-                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
-                  <Clock size={12} className="text-gray-400" />
+                <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300 font-medium">
+                  <Clock size={12} className="text-slate-400" />
                   <span>
                     {s.startTime} – {s.endTime}
                   </span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <div className="w-16 h-1.5 rounded-full bg-gray-200 dark:bg-neutral-700 overflow-hidden">
+                  <div className="w-16 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
                     <div
                       className="h-full rounded-full"
                       style={{
@@ -454,7 +454,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
                       }}
                     />
                   </div>
-                  <span className="font-bold text-gray-900 dark:text-gray-100">
+                  <span className="font-bold text-slate-900 dark:text-white">
                     {formatDuration(s.durationMinutes)}
                   </span>
                 </div>

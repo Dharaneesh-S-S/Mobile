@@ -69,23 +69,23 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Appearance Section */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col gap-3 mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col gap-3.5 mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
           Appearance & Accessibility
         </h4>
 
         {/* Theme */}
         <div className="flex items-center justify-between text-xs py-1">
-          <span className="font-semibold text-gray-800 dark:text-gray-200">App Theme</span>
-          <div className="flex bg-gray-100 dark:bg-neutral-700/60 p-1 rounded-xl">
+          <span className="font-bold text-slate-800 dark:text-slate-200">App Theme</span>
+          <div className="flex bg-slate-200/60 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-300/40 dark:border-white/[0.06]">
             {(['light', 'dark', 'system'] as const).map((t) => (
               <button
                 key={t}
                 onClick={() => onUpdateSettings({ ...settings, theme: t })}
                 className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all ${
                   settings.theme === t
-                    ? 'bg-white dark:bg-neutral-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                    : 'text-gray-500 hover:text-gray-900'
+                    ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-500/30'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
                 }`}
               >
                 {t}
@@ -95,25 +95,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* Chart Color Palette */}
-        <div className="flex items-center justify-between text-xs py-1 border-t border-gray-100 dark:border-neutral-800">
+        <div className="flex items-center justify-between text-xs py-1 border-t border-slate-100 dark:border-white/[0.06]">
           <div>
-            <span className="font-semibold text-gray-800 dark:text-gray-200 block">
+            <span className="font-bold text-slate-800 dark:text-slate-200 block">
               Chart Palette
             </span>
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] text-slate-400">
               Colorblind-safe Okabe-Ito accessible tones
             </span>
           </div>
 
-          <div className="flex bg-gray-100 dark:bg-neutral-700/60 p-1 rounded-xl">
+          <div className="flex bg-slate-200/60 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-300/40 dark:border-white/[0.06]">
             {(['default', 'colorblind'] as const).map((p) => (
               <button
                 key={p}
                 onClick={() => onUpdateSettings({ ...settings, palette: p })}
                 className={`px-3 py-1 rounded-lg text-xs font-bold capitalize transition-all ${
                   settings.palette === p
-                    ? 'bg-white dark:bg-neutral-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                    : 'text-gray-500 hover:text-gray-900'
+                    ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-500/30'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
                 }`}
               >
                 {p === 'colorblind' ? 'Safe' : 'Default'}
@@ -123,17 +123,17 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* Time Format */}
-        <div className="flex items-center justify-between text-xs py-1 border-t border-gray-100 dark:border-neutral-800">
-          <span className="font-semibold text-gray-800 dark:text-gray-200">Time Format</span>
-          <div className="flex bg-gray-100 dark:bg-neutral-700/60 p-1 rounded-xl">
+        <div className="flex items-center justify-between text-xs py-1 border-t border-slate-100 dark:border-white/[0.06]">
+          <span className="font-bold text-slate-800 dark:text-slate-200">Time Format</span>
+          <div className="flex bg-slate-200/60 dark:bg-slate-800/80 p-1 rounded-xl border border-slate-300/40 dark:border-white/[0.06]">
             {(['12h', '24h'] as const).map((tf) => (
               <button
                 key={tf}
                 onClick={() => onUpdateSettings({ ...settings, timeFormat: tf })}
                 className={`px-3 py-1 rounded-lg text-xs font-bold transition-all ${
                   settings.timeFormat === tf
-                    ? 'bg-white dark:bg-neutral-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                    : 'text-gray-500 hover:text-gray-900'
+                    ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-500/30'
+                    : 'text-slate-500 hover:text-slate-900 dark:hover:text-slate-100'
                 }`}
               >
                 {tf}
@@ -143,12 +143,12 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         </div>
 
         {/* Desktop Phone Frame Mode */}
-        <div className="flex items-center justify-between text-xs py-1 border-t border-gray-100 dark:border-neutral-800">
+        <div className="flex items-center justify-between text-xs py-1 border-t border-slate-100 dark:border-white/[0.06]">
           <div>
-            <span className="font-semibold text-gray-800 dark:text-gray-200 block">
+            <span className="font-bold text-slate-800 dark:text-slate-200 block">
               Smartphone Frame Mockup
             </span>
-            <span className="text-[10px] text-gray-400">
+            <span className="text-[10px] text-slate-400">
               Show phone bezel & status bar on desktop screens
             </span>
           </div>
@@ -158,25 +158,25 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onUpdateSettings({ ...settings, phoneFrameMode: !settings.phoneFrameMode })
             }
             className={`w-11 h-6 rounded-full transition-colors relative ${
-              settings.phoneFrameMode ? 'bg-emerald-500' : 'bg-gray-300 dark:bg-neutral-700'
+              settings.phoneFrameMode ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-700'
             }`}
           >
             <div
               className={`w-4 h-4 rounded-full bg-white transition-transform ${
                 settings.phoneFrameMode ? 'translate-x-6' : 'translate-x-1'
-              } top-1 absolute shadow-xs`}
+              } top-1 absolute shadow-sm`}
             />
           </button>
         </div>
       </div>
 
       {/* Demo Profile Selector */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col gap-2.5 mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col gap-2.5 mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
           <RefreshCw size={13} className="text-emerald-500" />
           <span>Regenerate Demo Data Profile</span>
         </h4>
-        <p className="text-xs text-gray-400">
+        <p className="text-xs text-slate-400">
           Select a usage pattern to populate realistic 90-day history:
         </p>
 
@@ -191,20 +191,20 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
               onClick={() => onRegenerateData(prof.id)}
               className={`p-2.5 rounded-2xl border text-center transition-all ${
                 settings.demoProfile === prof.id
-                  ? 'border-emerald-500 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 font-bold'
-                  : 'border-gray-200 dark:border-neutral-700 text-gray-600 dark:text-gray-300 hover:bg-gray-50'
+                  ? 'border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 font-bold shadow-sm'
+                  : 'border-slate-200/80 dark:border-white/[0.08] text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-white/[0.04]'
               }`}
             >
               <span className="text-xs font-bold block">{prof.label}</span>
-              <span className="text-[10px] text-gray-400 mt-0.5">{prof.desc}</span>
+              <span className="text-[10px] text-slate-400 mt-0.5">{prof.desc}</span>
             </button>
           ))}
         </div>
       </div>
 
       {/* Data Export Card */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col gap-2 mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col gap-2 mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
           <Download size={13} className="text-blue-500" />
           <span>Export Usage History ({usages.length} Days)</span>
         </h4>
@@ -212,13 +212,13 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         <div className="grid grid-cols-2 gap-2 mt-1">
           <button
             onClick={handleExportCSV}
-            className="p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-700 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700/40 transition-colors flex items-center justify-center gap-1.5"
+            className="p-3 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-center gap-1.5"
           >
             <span>Download CSV</span>
           </button>
           <button
             onClick={handleExportJSON}
-            className="p-2.5 rounded-2xl border border-gray-200 dark:border-neutral-700 text-xs font-bold text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-neutral-700/40 transition-colors flex items-center justify-center gap-1.5"
+            className="p-3 rounded-2xl border border-slate-200/80 dark:border-white/[0.08] text-xs font-bold text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-white/[0.04] transition-colors flex items-center justify-center gap-1.5"
           >
             <span>Download JSON</span>
           </button>
@@ -226,7 +226,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
       </div>
 
       {/* Danger Zone */}
-      <div className="p-4 rounded-3xl bg-rose-500/10 border border-rose-500/20 shadow-sm flex flex-col gap-2">
+      <div className="p-5 rounded-[28px] bg-rose-500/10 border border-rose-500/20 shadow-sm flex flex-col gap-2">
         <h4 className="text-xs font-bold text-rose-600 dark:text-rose-400 uppercase tracking-wider flex items-center gap-1.5">
           <Trash2 size={13} />
           <span>Danger Zone</span>
@@ -235,7 +235,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {!showConfirmDelete ? (
           <button
             onClick={() => setShowConfirmDelete(true)}
-            className="w-full py-2.5 rounded-2xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-colors"
+            className="w-full py-3 rounded-2xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 transition-colors shadow-sm"
           >
             Clear All Usage & Settings Data
           </button>
@@ -243,7 +243,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
           <div className="flex gap-2">
             <button
               onClick={() => setShowConfirmDelete(false)}
-              className="flex-1 py-2.5 rounded-2xl bg-gray-200 dark:bg-neutral-700 text-xs font-bold text-gray-700 dark:text-gray-300"
+              className="flex-1 py-3 rounded-2xl bg-slate-200 dark:bg-slate-800 text-xs font-bold text-slate-700 dark:text-slate-300"
             >
               Cancel
             </button>
@@ -252,7 +252,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
                 onDeleteAllData()
                 setShowConfirmDelete(false)
               }}
-              className="flex-1 py-2.5 rounded-2xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700"
+              className="flex-1 py-3 rounded-2xl bg-rose-600 text-white font-bold text-xs hover:bg-rose-700 shadow-sm"
             >
               Confirm Clear
             </button>

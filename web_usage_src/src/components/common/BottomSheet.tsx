@@ -38,43 +38,43 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/50 backdrop-blur-sm animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-md animate-fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className={`w-full max-w-[440px] bg-white dark:bg-neutral-900 rounded-t-3xl shadow-sheet flex flex-col ${maxHeight} overflow-hidden animate-slide-up`}
+        className={`w-full max-w-[440px] bg-white/95 dark:bg-[#0D1322]/95 backdrop-blur-2xl rounded-t-[36px] shadow-[0_-15px_50px_rgba(0,0,0,0.45)] border-t border-slate-200/80 dark:border-white/10 flex flex-col ${maxHeight} overflow-hidden animate-slide-up`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Drag Pill Handle */}
         <div className="pt-3 pb-1 flex justify-center shrink-0">
-          <div className="w-12 h-1.5 bg-gray-300 dark:bg-neutral-700 rounded-full" />
+          <div className="w-12 h-1.5 bg-slate-300 dark:bg-white/20 rounded-full" />
         </div>
 
         {/* Header */}
         {(title || subtitle) && (
-          <div className="px-6 py-3 flex items-center justify-between border-b border-gray-100 dark:border-neutral-800 shrink-0">
+          <div className="px-6 py-3.5 flex items-center justify-between border-b border-slate-100 dark:border-white/[0.06] shrink-0">
             <div>
               {title && (
-                <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">{title}</h3>
+                <h3 className="text-lg font-display font-extrabold text-slate-900 dark:text-white">{title}</h3>
               )}
               {subtitle && (
-                <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">{subtitle}</p>
+                <p className="text-xs font-medium text-slate-500 dark:text-slate-400 mt-0.5">{subtitle}</p>
               )}
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 rounded-full text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+              className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
               aria-label="Close"
             >
-              <X size={20} />
+              <X size={18} strokeWidth={2.4} />
             </button>
           </div>
         )}
 
         {/* Scrollable Content */}
-        <div className="px-6 py-4 overflow-y-auto flex-1">{children}</div>
+        <div className="px-6 py-4 overflow-y-auto flex-1 no-scrollbar">{children}</div>
       </div>
     </div>
   )

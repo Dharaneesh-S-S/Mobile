@@ -21,37 +21,41 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ]
 
   return (
-    <nav
-      className="sticky bottom-0 z-40 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-lg border-t border-gray-200/60 dark:border-neutral-800/80 px-2 py-1.5 transition-colors"
-      aria-label="Bottom Navigation"
-    >
-      <div className="flex items-center justify-around">
-        {tabs.map((tab) => {
-          const Icon = tab.icon
-          const isActive = currentTab === tab.id
+    <div className="sticky bottom-0 z-40 px-3 pb-2 pt-1 pointer-events-none">
+      <nav
+        className="pointer-events-auto bg-white/85 dark:bg-[#101726]/85 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.1] px-2 py-1.5 rounded-full shadow-[0_12px_36px_-6px_rgba(0,0,0,0.2)] dark:shadow-[0_16px_45px_-8px_rgba(0,0,0,0.75)] transition-all"
+        aria-label="Bottom Navigation"
+      >
+        <div className="flex items-center justify-around">
+          {tabs.map((tab) => {
+            const Icon = tab.icon
+            const isActive = currentTab === tab.id
 
-          return (
-            <button
-              key={tab.id}
-              onClick={() => onSelectTab(tab.id)}
-              className={`flex flex-col items-center justify-center py-1 px-3 rounded-2xl relative transition-all duration-150 ${
-                isActive
-                  ? 'text-emerald-600 dark:text-emerald-400 font-semibold'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200'
-              }`}
-            >
-              <div
-                className={`p-1 rounded-full transition-all ${
-                  isActive ? 'bg-emerald-100/70 dark:bg-emerald-950/60 scale-105' : ''
+            return (
+              <button
+                key={tab.id}
+                onClick={() => onSelectTab(tab.id)}
+                className={`flex flex-col items-center justify-center py-1.5 px-3 rounded-full relative transition-all duration-200 active:scale-95 ${
+                  isActive
+                    ? 'text-emerald-600 dark:text-emerald-400 font-bold'
+                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
                 }`}
               >
-                <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
-              </div>
-              <span className="text-[11px] mt-0.5 tracking-tight">{tab.label}</span>
-            </button>
-          )
-        })}
-      </div>
-    </nav>
+                <div
+                  className={`p-1 rounded-full transition-all ${
+                    isActive
+                      ? 'bg-emerald-500/15 dark:bg-emerald-400/20 text-emerald-600 dark:text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+                      : ''
+                  }`}
+                >
+                  <Icon size={19} strokeWidth={isActive ? 2.5 : 2} />
+                </div>
+                <span className="text-[10px] mt-0.5 tracking-tight">{tab.label}</span>
+              </button>
+            )
+          })}
+        </div>
+      </nav>
+    </div>
   )
 }

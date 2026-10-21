@@ -52,26 +52,27 @@ export const NotificationsChart: React.FC<NotificationsChartProps> = ({
   const chartWidth = 400
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Notifications Received
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-blue-500" />
+            <span>Notifications Received</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Hourly volume and ranked notification drivers
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs font-bold text-blue-500 bg-blue-500/10 px-2.5 py-1 rounded-full">
-          <Bell size={13} />
+        <div className="flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-500/10 px-2.5 py-1 rounded-full border border-blue-500/20">
+          <Bell size={13} strokeWidth={2.4} />
           <span>{totalNotifications} alerts</span>
         </div>
       </div>
 
       {/* Selected Hour Details */}
       {selectedHour !== null && (
-        <div className="mb-2 p-2 rounded-xl bg-blue-500/10 border border-blue-500/20 text-xs flex items-center justify-between text-blue-700 dark:text-blue-300">
+        <div className="mb-3 p-2.5 rounded-2xl bg-blue-500/10 border border-blue-500/20 text-xs flex items-center justify-between text-blue-700 dark:text-blue-300">
           <span className="font-semibold">
             {formatTimeOfDay(selectedHour)} – {formatTimeOfDay(selectedHour + 1)}:
           </span>

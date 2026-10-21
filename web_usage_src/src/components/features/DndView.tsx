@@ -40,20 +40,20 @@ export const DndView: React.FC<DndViewProps> = ({
       </div>
 
       {/* Main Switch */}
-      <div className="p-4 rounded-3xl bg-neutral-900 text-white flex items-center justify-between shadow-md mb-4">
-        <div className="flex items-center gap-3">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between mb-4 border border-pink-500/25">
+        <div className="flex items-center gap-3.5">
           <div
-            className={`w-11 h-11 rounded-2xl flex items-center justify-center ${
-              config.enabled ? 'bg-pink-600 text-white' : 'bg-neutral-800 text-neutral-400'
+            className={`w-11 h-11 rounded-2xl flex items-center justify-center transition-all ${
+              config.enabled ? 'bg-pink-600 text-white shadow-lg shadow-pink-500/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
             }`}
           >
-            <BellOff size={20} />
+            <BellOff size={20} strokeWidth={2.4} />
           </div>
           <div>
-            <span className="text-sm font-bold">
+            <span className="text-sm font-bold text-slate-900 dark:text-white">
               {config.enabled ? 'Do Not Disturb ON' : 'Do Not Disturb Off'}
             </span>
-            <p className="text-xs text-neutral-400 mt-0.5">
+            <p className="text-xs text-slate-400 mt-0.5">
               {config.enabled ? 'Notifications are currently muted' : 'Alerts will sound normally'}
             </p>
           </div>
@@ -61,10 +61,10 @@ export const DndView: React.FC<DndViewProps> = ({
 
         <button
           onClick={toggleDnd}
-          className={`px-3 py-1.5 rounded-xl font-bold text-xs transition-colors ${
+          className={`px-3.5 py-1.5 rounded-full font-bold text-xs transition-all active:scale-95 shadow-sm ${
             config.enabled
-              ? 'bg-rose-500 text-white'
-              : 'bg-white text-neutral-950 hover:bg-neutral-200'
+              ? 'bg-rose-500 text-white hover:bg-rose-600 shadow-rose-500/25'
+              : 'bg-pink-600 text-white hover:bg-pink-500 shadow-pink-500/25'
           }`}
         >
           {config.enabled ? 'Turn Off' : 'Turn On'}
@@ -72,8 +72,8 @@ export const DndView: React.FC<DndViewProps> = ({
       </div>
 
       {/* Exceptions Card */}
-      <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col gap-3 mb-4">
-        <h4 className="text-xs font-bold text-gray-500 uppercase tracking-wider">
+      <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col gap-3 mb-4">
+        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
           Exceptions (What Can Interrupt)
         </h4>
 
@@ -81,7 +81,7 @@ export const DndView: React.FC<DndViewProps> = ({
         <div className="flex items-center justify-between text-xs py-1">
           <div className="flex items-center gap-2">
             <Phone size={16} className="text-emerald-500" />
-            <span className="font-semibold text-gray-800 dark:text-gray-200">Calls from</span>
+            <span className="font-semibold text-slate-800 dark:text-slate-200">Calls from</span>
           </div>
           <select
             value={config.allowCalls}

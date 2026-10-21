@@ -59,13 +59,14 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
   const dayLabels = ['M', 'T', 'W', 'T', 'F', 'S', 'S']
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Activity Heatmap
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Activity Heatmap</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             12-week screen time intensity. Tap cell to open day.
           </p>
         </div>
@@ -73,12 +74,12 @@ export const CalendarHeatmap: React.FC<CalendarHeatmapProps> = ({
 
       {/* Selected Cell Preview */}
       {activeCell && (
-        <div className="mb-2 p-2 rounded-xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 text-xs flex items-center justify-between animate-fade-in">
+        <div className="mb-3 p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-emerald-500/30 text-xs flex items-center justify-between animate-fade-in shadow-sm backdrop-blur-md">
           <div>
-            <span className="font-semibold text-gray-800 dark:text-gray-200">
+            <span className="font-semibold text-slate-800 dark:text-slate-200">
               {formatDateLabel(activeCell.date)} ({activeCell.date}):{' '}
             </span>
-            <span className="font-bold text-emerald-600 dark:text-emerald-400">
+            <span className="font-extrabold text-emerald-700 dark:text-emerald-300 bg-emerald-500/10 px-2 py-0.5 rounded-md">
               {formatDuration(activeCell.minutes)}
             </span>
           </div>

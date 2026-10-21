@@ -36,28 +36,29 @@ export const UnlocksChart: React.FC<UnlocksChartProps> = ({
   const chartWidth = 400
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Unlocks & Pickups
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-amber-500" />
+            <span>Unlocks & Pickups</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Hourly unlocks vs 30-day daily average baseline
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-500 bg-amber-500/10 px-2.5 py-1 rounded-full">
-          <Unlock size={13} />
+        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-600 dark:text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-full border border-amber-500/20">
+          <Unlock size={13} strokeWidth={2.4} />
           <span>{todayTotalUnlocks} unlocks</span>
         </div>
       </div>
 
       {/* Metric Summary Tiles */}
-      <div className="grid grid-cols-2 gap-2 mb-3">
-        <div className="p-2.5 rounded-2xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700/60">
-          <span className="text-[10px] text-gray-400 font-semibold block">Peak Hour</span>
-          <span className="text-sm font-bold text-gray-900 dark:text-gray-100">
+      <div className="grid grid-cols-2 gap-2 mb-3.5">
+        <div className="p-3 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/[0.08]">
+          <span className="text-[10px] text-slate-400 font-bold block uppercase tracking-wider">Peak Hour</span>
+          <span className="text-sm font-display font-bold text-slate-900 dark:text-white mt-0.5 block">
             {formatTimeOfDay(peakHour)} ({peakCount} unlocks)
           </span>
         </div>

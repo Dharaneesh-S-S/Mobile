@@ -95,10 +95,10 @@ export const AppTimersView: React.FC<AppTimersViewProps> = ({
           return (
             <div
               key={app.id}
-              className={`p-3.5 rounded-3xl bg-white dark:bg-neutral-800/60 border transition-all flex items-center justify-between ${
+              className={`p-3.5 rounded-[24px] glass-card transition-all flex items-center justify-between ${
                 isExpired
-                  ? 'border-rose-500/30 bg-rose-500/5'
-                  : 'border-gray-100 dark:border-neutral-800'
+                  ? 'border-rose-500/40 bg-rose-500/10'
+                  : ''
               }`}
             >
               <div

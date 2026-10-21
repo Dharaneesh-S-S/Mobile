@@ -20,19 +20,20 @@ export const SleepWindowChart: React.FC<SleepWindowChartProps> = ({
   const nightsPastBedtime = sorted.filter((d) => d.bedtimeUseMinutes > 10).length
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Sleep Window & Night Usage
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-indigo-500" />
+            <span>Sleep Window & Night Usage</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Target sleep: {bedtimeTarget} – {wakeTarget}
           </p>
         </div>
 
-        <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-500 bg-indigo-500/10 px-2.5 py-1 rounded-full">
-          <Moon size={13} />
+        <div className="flex items-center gap-1.5 text-xs font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-500/10 px-2.5 py-1 rounded-full border border-indigo-500/20">
+          <Moon size={13} strokeWidth={2.4} />
           <span>{7 - nightsPastBedtime}/7 on track</span>
         </div>
       </div>

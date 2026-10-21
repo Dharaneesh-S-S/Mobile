@@ -35,23 +35,24 @@ export const WeekOverWeekCard: React.FC<WeekOverWeekCardProps> = ({
   const chartHeight = 120
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Week-over-Week Comparison
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Week-over-Week Comparison</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Paired daily comparison vs previous 7-day period
           </p>
         </div>
 
         {/* Delta Tag */}
         <div
-          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold ${
+          className={`flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-bold border ${
             overallDelta.isBetter
-              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
-              : 'bg-rose-500/10 text-rose-600 dark:text-rose-400'
+              ? 'bg-emerald-500/10 text-emerald-700 dark:text-emerald-300 border-emerald-500/30'
+              : 'bg-rose-500/10 text-rose-700 dark:text-rose-300 border-rose-500/30'
           }`}
         >
           {overallDelta.diff < 0 ? (

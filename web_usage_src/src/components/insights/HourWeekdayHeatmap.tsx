@@ -42,13 +42,14 @@ export const HourWeekdayHeatmap: React.FC<HourWeekdayHeatmapProps> = ({ usages }
   }
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Hour-by-Weekday Heatmap
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-purple-500" />
+            <span>Hour-by-Weekday Heatmap</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             7 days x 24 hours. Reveals peak daily usage periods.
           </p>
         </div>
@@ -56,8 +57,8 @@ export const HourWeekdayHeatmap: React.FC<HourWeekdayHeatmapProps> = ({ usages }
 
       {/* Tooltip */}
       {activeCell && (
-        <div className="mb-2 p-2 rounded-xl bg-gray-50 dark:bg-neutral-900 border border-gray-200 dark:border-neutral-700 text-xs animate-fade-in flex items-center justify-between">
-          <span className="font-semibold text-gray-800 dark:text-gray-200">
+        <div className="mb-3 p-2.5 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-purple-500/30 text-xs animate-fade-in flex items-center justify-between shadow-sm backdrop-blur-md">
+          <span className="font-semibold text-slate-800 dark:text-slate-200">
             {activeCell.dayName} at {formatTimeOfDay(activeCell.hour)}:
           </span>
           <span className="font-bold text-purple-600 dark:text-purple-400">

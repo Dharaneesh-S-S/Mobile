@@ -47,19 +47,20 @@ export const TrendAreaChart: React.FC<TrendAreaChartProps> = ({
   const activeMA = hoverIndex !== null ? movingAverages[hoverIndex] : null
 
   return (
-    <div className="p-4 rounded-3xl bg-white dark:bg-neutral-800/60 border border-gray-100 dark:border-neutral-800 shadow-sm flex flex-col mb-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col mb-4">
+      <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h4 className="text-sm font-bold text-gray-900 dark:text-gray-100">
-            Screen Time Trend
+          <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+            <span>Screen Time Trend</span>
           </h4>
-          <p className="text-[11px] text-gray-500 dark:text-gray-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
             Gradient area with 7-day moving average overlay
           </p>
         </div>
 
         {/* 7 / 30 / 90 Days Toggle */}
-        <div className="flex items-center bg-gray-100 dark:bg-neutral-700/60 p-0.5 rounded-xl text-[11px] font-bold">
+        <div className="flex items-center bg-slate-200/60 dark:bg-slate-800/80 p-0.5 rounded-xl text-[11px] font-bold border border-slate-300/40 dark:border-white/[0.06]">
           {([7, 30, 90] as const).map((r) => (
             <button
               key={r}
@@ -69,8 +70,8 @@ export const TrendAreaChart: React.FC<TrendAreaChartProps> = ({
               }}
               className={`px-2.5 py-1 rounded-lg transition-all ${
                 rangeDays === r
-                  ? 'bg-white dark:bg-neutral-900 text-emerald-600 dark:text-emerald-400 shadow-xs'
-                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100'
+                  ? 'bg-white dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 shadow-sm border border-transparent dark:border-emerald-500/30'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100'
               }`}
             >
               {r}d
