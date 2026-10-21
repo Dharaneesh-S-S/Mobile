@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../features/app_shell/presentation/app_shell.dart';
 import '../features/calendar/presentation/calendar_screen.dart';
 import '../features/money/presentation/money_screen.dart';
-import '../features/documents/presentation/documents_dashboard_screen.dart';
-import '../features/documents/presentation/document_editor_screen.dart';
 import '../features/music/presentation/music_dashboard_screen.dart';
 import '../features/notes/presentation/notes_dashboard_screen.dart';
 import '../features/notes/presentation/note_editor_screen.dart';
@@ -126,21 +124,6 @@ final routerProvider = Provider<GoRouter>((ref) {
             pageBuilder: (context, state) => const NoTransitionPage(
               child: MusicDashboardScreen(),
             ),
-          ),
-          GoRoute(
-            path: '/documents',
-            pageBuilder: (context, state) => const NoTransitionPage(
-              child: DocumentsDashboardScreen(),
-            ),
-            routes: [
-              GoRoute(
-                path: 'edit/:id',
-                builder: (context, state) {
-                  final id = state.pathParameters['id']!;
-                  return DocumentEditorScreen(documentId: id);
-                },
-              ),
-            ],
           ),
           GoRoute(
             path: '/settings',

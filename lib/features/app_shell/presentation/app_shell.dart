@@ -52,12 +52,6 @@ const List<NavDestinationItem> allNavDestinations = [
     icon: Icons.music_note_outlined,
     selectedIcon: Icons.music_note_rounded,
   ),
-  NavDestinationItem(
-    path: '/documents',
-    label: 'Documents',
-    icon: Icons.description_outlined,
-    selectedIcon: Icons.description_rounded,
-  ),
 ];
 
 /// Adaptive App Shell with persistent navigation across all seven modules and settings.
