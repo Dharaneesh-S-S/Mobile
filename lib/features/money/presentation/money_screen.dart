@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -7,12 +8,19 @@ import 'transaction_editor_screen.dart';
 import 'wallets_screen.dart';
 import 'statistics_screen.dart';
 import 'categories_screen.dart';
+import 'money_web_view.dart';
 
 class MoneyScreen extends ConsumerWidget {
   const MoneyScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (kIsWeb) {
+      return const Scaffold(
+        body: RupeeFlowMoneyWebView(),
+      );
+    }
+
     final selectedMonth = ref.watch(selectedMonthProvider);
     final stats = ref.watch(monthlyStatsProvider);
     final totalBalance = ref.watch(totalBalanceProvider);
