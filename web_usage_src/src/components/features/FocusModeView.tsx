@@ -51,169 +51,176 @@ export const FocusModeView: React.FC<FocusModeViewProps> = ({
   const daysLabels = ['S', 'M', 'T', 'W', 'T', 'F', 'S']
 
   return (
-    <div className="flex flex-col px-4 pb-16 animate-fade-in">
+    <div className="flex flex-col px-2 sm:px-4 pb-16 animate-fade-in max-w-6xl mx-auto w-full">
       <div className="py-4">
-        <h2 className="text-xl font-extrabold text-gray-900 dark:text-gray-100">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
           Focus Mode
         </h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
           Silence distracting apps and stay in the zone.
         </p>
       </div>
 
-      {/* Quick Settings Tile Mockup */}
-      <div className="mb-4 p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between">
-        <div className="flex items-center gap-3.5">
-          <div
-            onClick={toggleFocusActive}
-            className={`w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer transition-all ${
-              focusConfig.enabled ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
-            }`}
-          >
-            <Zap size={22} strokeWidth={2.4} />
-          </div>
-          <div>
-            <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
-              Quick Settings Tile
-            </span>
-            <span className="text-sm font-bold text-slate-900 dark:text-white">
-              {focusConfig.enabled ? 'Focus Mode Active' : 'Focus Mode Off'}
-            </span>
-          </div>
-        </div>
-
-        <button
-          onClick={toggleFocusActive}
-          className={`px-4 py-2 rounded-full text-xs font-bold transition-all active:scale-95 shadow-sm ${
-            focusConfig.enabled
-              ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/25'
-              : 'bg-purple-600 text-white hover:bg-purple-500 shadow-purple-500/25'
-          }`}
-        >
-          {focusConfig.enabled ? 'Turn Off' : 'Turn On'}
-        </button>
-      </div>
-
-      {/* Active Session & Break Controls */}
-      {focusConfig.enabled && (
-        <div className="p-5 rounded-[28px] bg-purple-500/10 border border-purple-500/25 mb-4 animate-slide-up shadow-sm">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Zap size={18} className="text-purple-500" />
-              <span className="text-xs font-bold text-purple-700 dark:text-purple-300">
-                {focusConfig.distractingAppIds.length} distracting apps blocked
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1 text-xs font-bold text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
-              <Flame size={14} className="animate-pulse" />
-              <span>{focusConfig.streakDays} Day Streak</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-1">
-              <Coffee size={14} />
-              Take a break:
-            </span>
-            {[5, 10, 15].map((m) => (
-              <button
-                key={m}
-                onClick={() => takeBreak(m)}
-                className="px-3 py-1 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-bold transition-all active:scale-95 border border-purple-500/30"
-              >
-                {m}m
-              </button>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* History of Focus Sessions Chart */}
-      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4">
-        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
-          Focus History (Minutes / Day)
-        </h4>
-        <div className="relative w-full h-[80px] select-none">
-          <svg viewBox="0 0 300 80" className="w-full h-full overflow-visible">
-            {[45, 60, 30, 90, 75, 50, 45].map((mins, i) => {
-              const x = i * 42 + 10
-              const h = (mins / 100) * 80
-              return (
-                <rect
-                  key={i}
-                  x={x}
-                  y={80 - h}
-                  width="22"
-                  height={h}
-                  fill="#8b5cf6"
-                  rx="6"
-                />
-              )
-            })}
-          </svg>
-        </div>
-        <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 px-3">
-          <span>Mon</span>
-          <span>Tue</span>
-          <span>Wed</span>
-          <span>Thu</span>
-          <span>Fri</span>
-          <span>Sat</span>
-          <span>Sun</span>
-        </div>
-      </div>
-
-      {/* Pick Distracting Apps */}
-      <div className="p-5 rounded-[28px] glass-card shadow-sm">
-        <div className="flex items-center justify-between mb-3">
-          <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-            Distracting Apps ({focusConfig.distractingAppIds.length})
-          </h4>
-        </div>
-
-        {/* Search */}
-        <div className="flex items-center gap-2 p-2.5 rounded-2xl bg-gray-100 dark:bg-neutral-700/60 mb-3 text-xs">
-          <Search size={14} className="text-gray-400" />
-          <input
-            type="text"
-            placeholder="Search apps..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="bg-transparent text-xs text-gray-800 dark:text-gray-100 focus:outline-none flex-1"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 max-h-56 overflow-y-auto pr-1">
-          {filteredApps.map((app) => {
-            const isSelected = focusConfig.distractingAppIds.includes(app.id)
-
-            return (
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+        {/* Left Column: Controls & History */}
+        <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Quick Settings Tile Mockup */}
+          <div className="p-5 rounded-[28px] glass-card shadow-sm flex items-center justify-between">
+            <div className="flex items-center gap-3.5">
               <div
-                key={app.id}
-                onClick={() => toggleApp(app.id)}
-                className={`p-2.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                  isSelected
-                    ? 'border-purple-500 bg-purple-500/10 text-purple-700 dark:text-purple-300'
-                    : 'border-gray-200 dark:border-neutral-700 hover:bg-gray-50 dark:hover:bg-neutral-700/30 text-gray-700 dark:text-gray-300'
+                onClick={toggleFocusActive}
+                className={`w-12 h-12 rounded-2xl flex items-center justify-center cursor-pointer transition-all ${
+                  focusConfig.enabled ? 'bg-purple-600 text-white shadow-lg shadow-purple-500/30' : 'bg-slate-200 dark:bg-slate-800 text-slate-500'
                 }`}
               >
-                <div className="flex items-center gap-2 min-w-0">
-                  <AppIcon
-                    name={app.name}
-                    iconName={app.icon}
-                    color={app.accentColor}
-                    size={13}
-                  />
-                  <span className="text-xs font-bold truncate">{app.name}</span>
+                <Zap size={22} strokeWidth={2.4} />
+              </div>
+              <div>
+                <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider block">
+                  Quick Settings Tile
+                </span>
+                <span className="text-sm font-bold text-slate-900 dark:text-white">
+                  {focusConfig.enabled ? 'Focus Mode Active' : 'Focus Mode Off'}
+                </span>
+              </div>
+            </div>
+
+            <button
+              onClick={toggleFocusActive}
+              className={`px-4 py-2 rounded-full text-xs font-bold transition-all active:scale-95 shadow-sm ${
+                focusConfig.enabled
+                  ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30 hover:bg-rose-500/25'
+                  : 'bg-purple-600 text-white hover:bg-purple-500 shadow-purple-500/25'
+              }`}
+            >
+              {focusConfig.enabled ? 'Turn Off' : 'Turn On'}
+            </button>
+          </div>
+
+          {/* Active Session & Break Controls */}
+          {focusConfig.enabled && (
+            <div className="p-5 rounded-[28px] bg-purple-500/10 border border-purple-500/25 animate-slide-up shadow-sm">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2">
+                  <Zap size={18} className="text-purple-500" />
+                  <span className="text-xs font-bold text-purple-700 dark:text-purple-300">
+                    {focusConfig.distractingAppIds.length} distracting apps blocked
+                  </span>
                 </div>
 
-                {isSelected && (
-                  <Check size={14} className="text-purple-600 shrink-0" />
-                )}
+                <div className="flex items-center gap-1 text-xs font-bold text-amber-500 bg-amber-500/10 px-2.5 py-0.5 rounded-full border border-amber-500/20">
+                  <Flame size={14} className="animate-pulse" />
+                  <span>{focusConfig.streakDays} Day Streak</span>
+                </div>
               </div>
-            )
-          })}
+
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-purple-600 dark:text-purple-400 font-semibold flex items-center gap-1">
+                  <Coffee size={14} />
+                  Take a break:
+                </span>
+                {[5, 10, 15].map((m) => (
+                  <button
+                    key={m}
+                    onClick={() => takeBreak(m)}
+                    className="px-3 py-1 rounded-full bg-purple-500/20 hover:bg-purple-500/30 text-purple-700 dark:text-purple-300 text-xs font-bold transition-all active:scale-95 border border-purple-500/30"
+                  >
+                    {m}m
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* History of Focus Sessions Chart */}
+          <div className="p-5 rounded-[28px] glass-card shadow-sm">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2.5">
+              Focus History (Minutes / Day)
+            </h4>
+            <div className="relative w-full h-[80px] select-none">
+              <svg viewBox="0 0 300 80" className="w-full h-full overflow-visible">
+                {[45, 60, 30, 90, 75, 50, 45].map((mins, i) => {
+                  const x = i * 42 + 10
+                  const h = (mins / 100) * 80
+                  return (
+                    <rect
+                      key={i}
+                      x={x}
+                      y={80 - h}
+                      width="22"
+                      height={h}
+                      fill="#8b5cf6"
+                      rx="6"
+                    />
+                  )
+                })}
+              </svg>
+            </div>
+            <div className="flex justify-between text-[10px] font-bold text-slate-400 mt-2 px-3">
+              <span>Mon</span>
+              <span>Tue</span>
+              <span>Wed</span>
+              <span>Thu</span>
+              <span>Fri</span>
+              <span>Sat</span>
+              <span>Sun</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Pick Distracting Apps */}
+        <div className="lg:col-span-7">
+          <div className="p-5 rounded-[28px] glass-card shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                Distracting Apps ({focusConfig.distractingAppIds.length})
+              </h4>
+            </div>
+
+            {/* Search */}
+            <div className="flex items-center gap-2 p-2.5 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/80 dark:border-white/[0.08] mb-3 text-xs">
+              <Search size={14} className="text-slate-400" />
+              <input
+                type="text"
+                placeholder="Search apps..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-xs text-slate-800 dark:text-slate-100 focus:outline-none flex-1 font-semibold"
+              />
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-[380px] overflow-y-auto pr-1 no-scrollbar">
+              {filteredApps.map((app) => {
+                const isSelected = focusConfig.distractingAppIds.includes(app.id)
+
+                return (
+                  <div
+                    key={app.id}
+                    onClick={() => toggleApp(app.id)}
+                    className={`p-2.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                      isSelected
+                        ? 'border-purple-500 bg-purple-500/10 text-purple-700 dark:text-purple-300'
+                        : 'border-slate-200/80 dark:border-white/[0.08] hover:bg-slate-50 dark:hover:bg-white/[0.04] text-slate-700 dark:text-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <AppIcon
+                        name={app.name}
+                        iconName={app.icon}
+                        color={app.accentColor}
+                        size={14}
+                      />
+                      <span className="text-xs font-bold truncate">{app.name}</span>
+                    </div>
+
+                    {isSelected && (
+                      <Check size={14} className="text-purple-600 dark:text-purple-400 shrink-0" />
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

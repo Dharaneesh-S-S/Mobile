@@ -298,8 +298,20 @@ export function App() {
           saveUserSettings(updated)
         }}
       >
-        {/* Android Native Large Header */}
+        {/* Responsive Header with Desktop Tabs & Device Switcher */}
         <Header
+          currentTab={currentTab}
+          onSelectTab={(tab) => {
+            setCurrentTab(tab)
+            setActiveSubView('none')
+          }}
+          phoneFrameMode={userSettings.phoneFrameMode}
+          onToggleFrame={() => {
+            const next = !userSettings.phoneFrameMode
+            const updated = { ...userSettings, phoneFrameMode: next }
+            setUserSettings(updated)
+            saveUserSettings(updated)
+          }}
           onOpenSettings={() => setActiveSubView('settings')}
           onOpenGoals={() => {
             setCurrentTab('goals')
@@ -317,11 +329,11 @@ export function App() {
 
         {/* SUB-VIEW MODAL / PAGES (e.g. Bedtime, Eye care, DND, Settings, Goals) */}
         {activeSubView !== 'none' ? (
-          <div className="flex-1 pb-14">
+          <div className="flex-1 pb-14 max-w-4xl mx-auto w-full">
             <div className="px-4 pt-2">
               <button
                 onClick={() => setActiveSubView('none')}
-                className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1"
+                className="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1 hover:underline"
               >
                 ← Back to Dashboard
               </button>
@@ -414,64 +426,73 @@ export function App() {
                   maxDate={getTodayDateStr()}
                 />
 
-                {/* Hero Card */}
-                <HeroCard
-                  totalMinutes={todayUsage.totalScreenTimeMinutes}
-                  previousMinutes={prevUsage?.totalScreenTimeMinutes || 240}
-                  comparisonLabel="vs yesterday"
-                  goalMinutes={goalConfig.dailyScreenTimeGoal}
-                />
+                {/* Responsive Bento Grid: single column on mobile, 12-column on laptop/desktop */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+                  {/* Left Column (Primary Analytics: 7 cols on lg, 8 cols on xl) */}
+                  <div className="lg:col-span-7 xl:col-span-8 flex flex-col gap-4 sm:gap-5">
+                    {/* Hero Card */}
+                    <HeroCard
+                      totalMinutes={todayUsage.totalScreenTimeMinutes}
+                      previousMinutes={prevUsage?.totalScreenTimeMinutes || 240}
+                      comparisonLabel="vs yesterday"
+                      goalMinutes={goalConfig.dailyScreenTimeGoal}
+                    />
 
-                {/* Daily Stacked Hourly Bar Chart */}
-                <HourlyStackedBarChart
-                  hourly={todayUsage.hourly}
-                  apps={apps}
-                  goalMinutes={goalConfig.dailyScreenTimeGoal}
-                  isColorblindSafe={userSettings.palette === 'colorblind'}
-                />
+                    {/* Daily Stacked Hourly Bar Chart */}
+                    <HourlyStackedBarChart
+                      hourly={todayUsage.hourly}
+                      apps={apps}
+                      goalMinutes={goalConfig.dailyScreenTimeGoal}
+                      isColorblindSafe={userSettings.palette === 'colorblind'}
+                    />
 
-                {/* 3 Stat Sparkline Tiles */}
-                <StatSparklineTiles
-                  screenTimeMinutes={todayUsage.totalScreenTimeMinutes}
-                  prevScreenTimeMinutes={prevUsage?.totalScreenTimeMinutes || 240}
-                  screenTime7Days={screenTime7Days}
-                  notifications={todayUsage.notifications}
-                  prevNotifications={prevUsage?.notifications || 120}
-                  notifications7Days={notifications7Days}
-                  unlocks={todayUsage.unlocks}
-                  prevUnlocks={prevUsage?.unlocks || 50}
-                  unlocks7Days={unlocks7Days}
-                />
+                    {/* 3 Stat Sparkline Tiles */}
+                    <StatSparklineTiles
+                      screenTimeMinutes={todayUsage.totalScreenTimeMinutes}
+                      prevScreenTimeMinutes={prevUsage?.totalScreenTimeMinutes || 240}
+                      screenTime7Days={screenTime7Days}
+                      notifications={todayUsage.notifications}
+                      prevNotifications={prevUsage?.notifications || 120}
+                      notifications7Days={notifications7Days}
+                      unlocks={todayUsage.unlocks}
+                      prevUnlocks={prevUsage?.unlocks || 50}
+                      unlocks7Days={unlocks7Days}
+                    />
 
-                {/* Goal Ring Card */}
-                <GoalRingCard
-                  currentMinutes={todayUsage.totalScreenTimeMinutes}
-                  goalMinutes={goalConfig.dailyScreenTimeGoal}
-                  streakDays={streakInfo.currentStreak}
-                  onUpdateGoal={(newGoal) => {
-                    const updated = { ...goalConfig, dailyScreenTimeGoal: newGoal }
-                    setGoalConfig(updated)
-                    saveGoalConfig(updated)
-                  }}
-                />
+                    {/* Most Used Apps List */}
+                    <MostUsedAppsList
+                      apps={apps}
+                      appTotals={todayUsage.appTotals}
+                      onSelectApp={(appId) => setSelectedAppId(appId)}
+                    />
+                  </div>
 
-                {/* Most Used Apps List */}
-                <MostUsedAppsList
-                  apps={apps}
-                  appTotals={todayUsage.appTotals}
-                  onSelectApp={(appId) => setSelectedAppId(appId)}
-                />
+                  {/* Right Column (Goals & Quick Actions: 5 cols on lg, 4 cols on xl) */}
+                  <div className="lg:col-span-5 xl:col-span-4 flex flex-col gap-4 sm:gap-5 lg:sticky lg:top-20">
+                    {/* Goal Ring Card */}
+                    <GoalRingCard
+                      currentMinutes={todayUsage.totalScreenTimeMinutes}
+                      goalMinutes={goalConfig.dailyScreenTimeGoal}
+                      streakDays={streakInfo.currentStreak}
+                      onUpdateGoal={(newGoal) => {
+                        const updated = { ...goalConfig, dailyScreenTimeGoal: newGoal }
+                        setGoalConfig(updated)
+                        saveGoalConfig(updated)
+                      }}
+                    />
 
-                {/* Quick Action Cards */}
-                <QuickActionCards
-                  onSelectAction={handleSelectQuickAction}
-                  isFocusActive={focusConfig.enabled}
-                  isBedtimeActive={bedtimeConfig.enabled}
-                  timersCount={timers.filter((t) => t.enabled).length}
-                  isEyeCareActive={eyeCareConfig.enabled}
-                  isDndActive={dndConfig.enabled}
-                  streakDays={streakInfo.currentStreak}
-                />
+                    {/* Quick Action Cards */}
+                    <QuickActionCards
+                      onSelectAction={handleSelectQuickAction}
+                      isFocusActive={focusConfig.enabled}
+                      isBedtimeActive={bedtimeConfig.enabled}
+                      timersCount={timers.filter((t) => t.enabled).length}
+                      isEyeCareActive={eyeCareConfig.enabled}
+                      isDndActive={dndConfig.enabled}
+                      streakDays={streakInfo.currentStreak}
+                    />
+                  </div>
+                </div>
               </div>
             )}
 
@@ -591,9 +612,10 @@ export function App() {
           />
         )}
 
-        {/* Native Android Bottom Navigation Bar */}
+        {/* Navigation Bar (Bottom on mobile/phone mockup, Top tabs on laptop) */}
         <BottomNavigation
           currentTab={currentTab}
+          phoneFrameMode={userSettings.phoneFrameMode}
           onSelectTab={(tab) => {
             setCurrentTab(tab)
             setActiveSubView('none')

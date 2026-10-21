@@ -84,7 +84,7 @@ export const AppTimersView: React.FC<AppTimersViewProps> = ({
         </p>
       </div>
 
-      <div className="flex flex-col gap-2.5">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
         {apps.map((app) => {
           const timer = timers.find((t) => t.appId === app.id)
           const usedMins = todayUsageMinutes[app.id] || 0

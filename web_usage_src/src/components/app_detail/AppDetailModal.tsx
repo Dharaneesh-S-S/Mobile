@@ -54,9 +54,16 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
   const timeLeft = timerLimit ? Math.max(0, timerLimit - todayMinutes) : null
 
   return (
-    <div className="fixed inset-0 z-50 bg-slate-50 dark:bg-[#070A11] text-slate-900 dark:text-slate-100 flex flex-col overflow-y-auto animate-fade-in no-scrollbar">
-      {/* Top App Bar */}
-      <div className="sticky top-0 z-40 bg-slate-50/90 dark:bg-[#070A11]/90 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-slate-200/70 dark:border-white/[0.06]">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center p-0 sm:p-4 sm:py-8 bg-black/60 backdrop-blur-md animate-fade-in"
+      onClick={onClose}
+    >
+      <div
+        className="w-full max-w-2xl sm:max-h-[90vh] bg-slate-50 dark:bg-[#070A11] text-slate-900 dark:text-slate-100 flex flex-col overflow-y-auto sm:rounded-[36px] sm:border border-slate-200/80 dark:border-white/10 sm:shadow-2xl no-scrollbar animate-slide-up sm:animate-fade-in"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Top App Bar */}
+        <div className="sticky top-0 z-40 bg-slate-50/90 dark:bg-[#070A11]/90 backdrop-blur-xl px-4 py-3 flex items-center justify-between border-b border-slate-200/70 dark:border-white/[0.06]">
         <button
           onClick={onClose}
           className="p-2 -ml-2 rounded-2xl hover:bg-slate-200/60 dark:hover:bg-slate-800/60 text-slate-700 dark:text-slate-300 transition-all flex items-center gap-1 text-sm font-bold active:scale-95"
@@ -519,6 +526,7 @@ export const AppDetailModal: React.FC<AppDetailModalProps> = ({
           </div>
         </div>
       </BottomSheet>
+      </div>
     </div>
   )
 }

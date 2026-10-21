@@ -42,172 +42,179 @@ export const GoalsView: React.FC<GoalsViewProps> = ({
   }
 
   return (
-    <div className="flex flex-col px-4 pb-16 animate-fade-in">
+    <div className="flex flex-col px-2 sm:px-4 pb-16 animate-fade-in max-w-6xl mx-auto w-full">
       <div className="py-4">
-        <h2 className="text-xl font-extrabold text-gray-900 dark:text-gray-100">
+        <h2 className="text-xl sm:text-2xl font-extrabold text-slate-900 dark:text-white">
           Goals & Achievements
         </h2>
-        <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+        <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
           Build healthier habits and earn milestone wellness badges.
         </p>
       </div>
 
-      {/* Streak Counter Card */}
-      <div className="p-5 rounded-[28px] bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/30 shadow-md shadow-amber-500/10 mb-4 backdrop-blur-xl">
-        <div className="flex items-center justify-between mb-3">
-          <div className="flex items-center gap-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/30">
-              <Flame size={22} className="animate-pulse" />
-            </div>
-            <div>
-              <span className="text-xl font-display font-extrabold text-slate-900 dark:text-white block">
-                {streakDays} Day Streak!
-              </span>
-              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
-                Days consecutively under your screen goal
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* 7-Day Streak Chip Row */}
-        <div className="flex justify-between gap-1.5 mt-2">
-          {daysLabels.map((dayName, idx) => {
-            const isCompleted = last7DaysUnder[idx]
-            return (
-              <div
-                key={dayName}
-                className={`flex-1 py-2.5 rounded-2xl flex flex-col items-center justify-center text-xs transition-all ${
-                  isCompleted
-                    ? 'bg-amber-500 text-slate-950 font-bold shadow-sm shadow-amber-500/30'
-                    : 'bg-slate-200/60 dark:bg-slate-800/60 text-slate-400'
-                }`}
-              >
-                <span className="text-[10px] font-semibold mb-0.5">{dayName}</span>
-                {isCompleted ? <Check size={14} strokeWidth={2.8} /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />}
-              </div>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* Monday Weekly Summary Card */}
-      <div className="p-5 rounded-[28px] bg-emerald-500/10 border border-emerald-500/25 shadow-sm mb-4">
-        <div className="flex items-center gap-2 mb-2">
-          <Lightbulb size={16} className="text-emerald-500" />
-          <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
-            Monday Wellness Report
-          </h4>
-        </div>
-
-        <div className="flex items-start gap-3 my-1">
-          <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0 mt-0.5">
-            <TrendingDown size={16} />
-          </div>
-          <div className="text-xs text-slate-700 dark:text-slate-300">
-            <strong>Biggest win:</strong> Instagram usage dropped by <strong>45m</strong> this past week!
-          </div>
-        </div>
-
-        <div className="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs text-slate-600 dark:text-slate-400">
-          💡 <em>Tip for next week:</em> Schedule Bedtime Grayscale at 22:30 to avoid midnight YouTube loops.
-        </div>
-      </div>
-
-      {/* Goal Targets Config Card */}
-      <div className="p-5 rounded-[28px] glass-card shadow-sm mb-4 flex flex-col gap-4">
-        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-          Daily Targets
-        </h4>
-
-        {/* Screen Time Goal */}
-        <div>
-          <div className="flex items-center justify-between text-xs font-bold mb-1">
-            <span>Daily Screen Time</span>
-            <span className="text-emerald-500">{screenTimeHours} Hours</span>
-          </div>
-          <input
-            type="range"
-            min="1"
-            max="8"
-            value={screenTimeHours}
-            onChange={(e) => {
-              const h = parseInt(e.target.value)
-              setScreenTimeHours(h)
-              onUpdateGoalConfig({ ...goalConfig, dailyScreenTimeGoal: h * 60 })
-            }}
-            className="w-full accent-emerald-500 cursor-pointer"
-          />
-        </div>
-
-        {/* Unlocks Goal */}
-        <div>
-          <div className="flex items-center justify-between text-xs font-bold mb-1">
-            <span>Unlocks Limit</span>
-            <span className="text-amber-500">{unlocksGoal} unlocks/day</span>
-          </div>
-          <input
-            type="range"
-            min="20"
-            max="120"
-            step="5"
-            value={unlocksGoal}
-            onChange={(e) => {
-              const u = parseInt(e.target.value)
-              setUnlocksGoal(u)
-              onUpdateGoalConfig({ ...goalConfig, unlocksGoal: u })
-            }}
-            className="w-full accent-amber-500 cursor-pointer"
-          />
-        </div>
-      </div>
-
-      {/* Achievement Badges Grid */}
-      <div className="p-5 rounded-[28px] glass-card shadow-sm">
-        <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
-          Milestone Badges ({goalConfig.badges.filter((b) => b.unlockedAt).length}/{goalConfig.badges.length})
-        </h4>
-
-        <div className="grid grid-cols-2 gap-2.5">
-          {goalConfig.badges.map((badge) => {
-            const Icon = badgeIcons[badge.icon] || Award
-            const isUnlocked = Boolean(badge.unlockedAt)
-
-            return (
-              <div
-                key={badge.id}
-                onClick={() => handleBadgeClick(badge)}
-                className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center active:scale-95 ${
-                  isUnlocked
-                    ? 'border-emerald-500/30 bg-emerald-500/10 hover:scale-[1.02] shadow-sm'
-                    : 'border-slate-200 dark:border-white/[0.06] opacity-50 bg-slate-100/50 dark:bg-white/[0.02]'
-                }`}
-              >
-                <div
-                  className={`w-10 h-10 rounded-2xl flex items-center justify-center mb-2 ${
-                    isUnlocked
-                      ? 'bg-emerald-500 text-neutral-950 shadow-sm'
-                      : 'bg-gray-200 dark:bg-neutral-800 text-gray-400'
-                  }`}
-                >
-                  <Icon size={20} />
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+        {/* Left Column: Streaks, Summary & Target Sliders */}
+        <div className="lg:col-span-5 flex flex-col gap-4">
+          {/* Streak Counter Card */}
+          <div className="p-5 rounded-[28px] bg-gradient-to-br from-amber-500/20 via-orange-500/10 to-transparent border border-amber-500/30 shadow-md shadow-amber-500/10 backdrop-blur-xl">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2.5">
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-slate-950 shadow-md shadow-amber-500/30">
+                  <Flame size={22} className="animate-pulse" />
                 </div>
-
-                <span className="text-xs font-bold text-gray-900 dark:text-gray-100 block">
-                  {badge.title}
-                </span>
-                <span className="text-[10px] text-gray-500 dark:text-gray-400 mt-1 leading-tight line-clamp-2">
-                  {badge.description}
-                </span>
-
-                {isUnlocked && (
-                  <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 mt-2">
-                    Unlocked {badge.unlockedAt}
+                <div>
+                  <span className="text-xl font-display font-extrabold text-slate-900 dark:text-white block">
+                    {streakDays} Day Streak!
                   </span>
-                )}
+                  <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
+                    Days consecutively under your screen goal
+                  </span>
+                </div>
               </div>
-            )
-          })}
+            </div>
+
+            {/* 7-Day Streak Chip Row */}
+            <div className="flex justify-between gap-1.5 mt-2">
+              {daysLabels.map((dayName, idx) => {
+                const isCompleted = last7DaysUnder[idx]
+                return (
+                  <div
+                    key={dayName}
+                    className={`flex-1 py-2.5 rounded-2xl flex flex-col items-center justify-center text-xs transition-all ${
+                      isCompleted
+                        ? 'bg-amber-500 text-slate-950 font-bold shadow-sm shadow-amber-500/30'
+                        : 'bg-slate-200/60 dark:bg-slate-800/60 text-slate-400'
+                    }`}
+                  >
+                    <span className="text-[10px] font-semibold mb-0.5">{dayName}</span>
+                    {isCompleted ? <Check size={14} strokeWidth={2.8} /> : <div className="w-1.5 h-1.5 rounded-full bg-slate-300 dark:bg-slate-700" />}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Monday Weekly Summary Card */}
+          <div className="p-5 rounded-[28px] bg-emerald-500/10 border border-emerald-500/25 shadow-sm">
+            <div className="flex items-center gap-2 mb-2">
+              <Lightbulb size={16} className="text-emerald-500" />
+              <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider">
+                Monday Wellness Report
+              </h4>
+            </div>
+
+            <div className="flex items-start gap-3 my-1">
+              <div className="p-2 rounded-xl bg-emerald-500/20 text-emerald-700 dark:text-emerald-300 shrink-0 mt-0.5">
+                <TrendingDown size={16} />
+              </div>
+              <div className="text-xs text-slate-700 dark:text-slate-300">
+                <strong>Biggest win:</strong> Instagram usage dropped by <strong>45m</strong> this past week!
+              </div>
+            </div>
+
+            <div className="mt-2.5 pt-2 border-t border-emerald-500/20 text-xs text-slate-600 dark:text-slate-400">
+              💡 <em>Tip for next week:</em> Schedule Bedtime Grayscale at 22:30 to avoid midnight YouTube loops.
+            </div>
+          </div>
+
+          {/* Goal Targets Config Card */}
+          <div className="p-5 rounded-[28px] glass-card shadow-sm flex flex-col gap-4">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+              Daily Targets
+            </h4>
+
+            {/* Screen Time Goal */}
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold mb-1">
+                <span>Daily Screen Time</span>
+                <span className="text-emerald-500">{screenTimeHours} Hours</span>
+              </div>
+              <input
+                type="range"
+                min="1"
+                max="8"
+                value={screenTimeHours}
+                onChange={(e) => {
+                  const h = parseInt(e.target.value)
+                  setScreenTimeHours(h)
+                  onUpdateGoalConfig({ ...goalConfig, dailyScreenTimeGoal: h * 60 })
+                }}
+                className="w-full accent-emerald-500 cursor-pointer"
+              />
+            </div>
+
+            {/* Unlocks Goal */}
+            <div>
+              <div className="flex items-center justify-between text-xs font-bold mb-1">
+                <span>Unlocks Limit</span>
+                <span className="text-amber-500">{unlocksGoal} unlocks/day</span>
+              </div>
+              <input
+                type="range"
+                min="20"
+                max="120"
+                step="5"
+                value={unlocksGoal}
+                onChange={(e) => {
+                  const u = parseInt(e.target.value)
+                  setUnlocksGoal(u)
+                  onUpdateGoalConfig({ ...goalConfig, unlocksGoal: u })
+                }}
+                className="w-full accent-amber-500 cursor-pointer"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column: Milestone Badges Grid */}
+        <div className="lg:col-span-7">
+          <div className="p-5 rounded-[28px] glass-card shadow-sm">
+            <h4 className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-3">
+              Milestone Badges ({goalConfig.badges.filter((b) => b.unlockedAt).length}/{goalConfig.badges.length})
+            </h4>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+              {goalConfig.badges.map((badge) => {
+                const Icon = badgeIcons[badge.icon] || Award
+                const isUnlocked = Boolean(badge.unlockedAt)
+
+                return (
+                  <div
+                    key={badge.id}
+                    onClick={() => handleBadgeClick(badge)}
+                    className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex flex-col items-center text-center active:scale-95 ${
+                      isUnlocked
+                        ? 'border-emerald-500/30 bg-emerald-500/10 hover:scale-[1.02] shadow-sm'
+                        : 'border-slate-200 dark:border-white/[0.06] opacity-50 bg-slate-100/50 dark:bg-white/[0.02]'
+                    }`}
+                  >
+                    <div
+                      className={`w-10 h-10 rounded-2xl flex items-center justify-center mb-2 ${
+                        isUnlocked
+                          ? 'bg-emerald-500 text-neutral-950 shadow-sm'
+                          : 'bg-slate-200 dark:bg-slate-800 text-slate-400'
+                      }`}
+                    >
+                      <Icon size={20} />
+                    </div>
+
+                    <span className="text-xs font-bold text-slate-900 dark:text-white block">
+                      {badge.title}
+                    </span>
+                    <span className="text-[10px] text-slate-500 dark:text-slate-400 mt-1 leading-tight line-clamp-2">
+                      {badge.description}
+                    </span>
+
+                    {isUnlocked && (
+                      <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400 mt-2">
+                        Unlocked {badge.unlockedAt}
+                      </span>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
       </div>
     </div>

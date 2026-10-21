@@ -38,17 +38,17 @@ export const BottomSheet: React.FC<BottomSheetProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-black/60 backdrop-blur-md animate-fade-in"
+      className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/60 backdrop-blur-md animate-fade-in"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
     >
       <div
-        className={`w-full max-w-[440px] bg-white/95 dark:bg-[#0D1322]/95 backdrop-blur-2xl rounded-t-[36px] shadow-[0_-15px_50px_rgba(0,0,0,0.45)] border-t border-slate-200/80 dark:border-white/10 flex flex-col ${maxHeight} overflow-hidden animate-slide-up`}
+        className={`w-full max-w-lg sm:rounded-[36px] rounded-t-[36px] bg-white/95 dark:bg-[#0D1322]/95 backdrop-blur-2xl shadow-[0_-15px_50px_rgba(0,0,0,0.45)] sm:shadow-[0_25px_60px_rgba(0,0,0,0.5)] border border-slate-200/80 dark:border-white/10 flex flex-col ${maxHeight} overflow-hidden animate-slide-up sm:animate-fade-in`}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Drag Pill Handle */}
-        <div className="pt-3 pb-1 flex justify-center shrink-0">
+        {/* Drag Pill Handle (Mobile Only) */}
+        <div className="sm:hidden pt-3 pb-1 flex justify-center shrink-0">
           <div className="w-12 h-1.5 bg-slate-300 dark:bg-white/20 rounded-full" />
         </div>
 

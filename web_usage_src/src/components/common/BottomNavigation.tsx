@@ -6,11 +6,13 @@ export type NavigationTab = 'dashboard' | 'insights' | 'focus' | 'timers' | 'goa
 interface BottomNavigationProps {
   currentTab: NavigationTab
   onSelectTab: (tab: NavigationTab) => void
+  phoneFrameMode?: boolean
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   currentTab,
   onSelectTab,
+  phoneFrameMode = false,
 }) => {
   const tabs = [
     { id: 'dashboard' as const, label: 'Home', icon: LayoutDashboard },
@@ -21,7 +23,11 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   ]
 
   return (
-    <div className="sticky bottom-0 z-40 px-3 pb-2 pt-1 pointer-events-none">
+    <div
+      className={`${
+        phoneFrameMode ? 'block' : 'md:hidden'
+      } sticky bottom-0 z-40 px-3 pb-2 pt-1 pointer-events-none transition-all`}
+    >
       <nav
         className="pointer-events-auto bg-white/85 dark:bg-[#101726]/85 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.1] px-2 py-1.5 rounded-full shadow-[0_12px_36px_-6px_rgba(0,0,0,0.2)] dark:shadow-[0_16px_45px_-8px_rgba(0,0,0,0.75)] transition-all"
         aria-label="Bottom Navigation"
