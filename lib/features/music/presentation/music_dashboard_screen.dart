@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:on_audio_query/on_audio_query.dart';
@@ -8,6 +9,7 @@ import '../providers/music_library_provider.dart';
 import '../providers/music_player_provider.dart';
 import 'mini_player.dart';
 import 'playlist_dialogs.dart';
+import 'music_web_view.dart';
 
 class MusicDashboardScreen extends ConsumerStatefulWidget {
   const MusicDashboardScreen({super.key});
@@ -57,6 +59,13 @@ class _MusicDashboardScreenState extends ConsumerState<MusicDashboardScreen>
 
   @override
   Widget build(BuildContext context) {
+    if (kIsWeb) {
+      return const Scaffold(
+        body: SafeArea(
+          child: AuraBeatMusicWebView(),
+        ),
+      );
+    }
     final theme = Theme.of(context);
     final folderPath = ref.watch(musicFolderPathProvider);
     final songsAsync = ref.watch(songsProvider);

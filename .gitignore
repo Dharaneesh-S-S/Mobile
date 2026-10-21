@@ -58,4 +58,6 @@ web_usage_src/node_modules/
 web_usage_src/dist/
 web_notes_src/node_modules/
 web_notes_src/dist/
+web_music_src/node_modules/
+web_music_src/dist/
 .vscode/
