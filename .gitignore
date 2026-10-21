@@ -52,3 +52,5 @@ calendar-web/node_modules/
 calendar-web/dist/
 web_calendar_src/node_modules/
 web_calendar_src/dist/
+web_tasks_src/node_modules/
+web_tasks_src/dist/
