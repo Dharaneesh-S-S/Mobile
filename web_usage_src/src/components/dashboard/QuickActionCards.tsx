@@ -3,7 +3,7 @@ import {
   Zap,
   Moon,
   Hourglass,
-  ShieldCheck,
+  Award,
   Eye,
   BellOff,
   ChevronRight,
@@ -13,7 +13,7 @@ export type QuickActionKey =
   | 'focus'
   | 'bedtime'
   | 'timers'
-  | 'parental'
+  | 'goals'
   | 'eyecare'
   | 'dnd'
 
@@ -24,7 +24,7 @@ interface QuickActionCardsProps {
   timersCount?: number
   isEyeCareActive?: boolean
   isDndActive?: boolean
-  isParentalLocked?: boolean
+  streakDays?: number
 }
 
 export const QuickActionCards: React.FC<QuickActionCardsProps> = ({
@@ -34,7 +34,7 @@ export const QuickActionCards: React.FC<QuickActionCardsProps> = ({
   timersCount = 3,
   isEyeCareActive = false,
   isDndActive = false,
-  isParentalLocked = false,
+  streakDays = 5,
 }) => {
   const actions = [
     {
@@ -62,12 +62,12 @@ export const QuickActionCards: React.FC<QuickActionCardsProps> = ({
       active: timersCount > 0,
     },
     {
-      key: 'parental' as QuickActionKey,
-      title: 'Parental controls',
-      subtitle: isParentalLocked ? 'Device locked' : 'Family controls',
-      icon: ShieldCheck,
+      key: 'goals' as QuickActionKey,
+      title: 'Goals & streaks',
+      subtitle: `${streakDays} day streak active`,
+      icon: Award,
       color: '#10b981', // emerald
-      active: isParentalLocked,
+      active: true,
     },
     {
       key: 'eyecare' as QuickActionKey,

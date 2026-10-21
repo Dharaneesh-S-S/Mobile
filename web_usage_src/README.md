@@ -1,21 +1,21 @@
 # ZenPulse Wellbeing
 
-> **Mobile-First Digital Wellbeing & Parental Controls Application**  
-> Inspired by the native Android Digital Wellbeing & Family Safety experience. Built with React 19, TypeScript, Vite, Tailwind CSS, and custom SVG / Recharts data visualizations.
+> **Mobile-First Digital Wellbeing Application**  
+> Inspired by the native Android Digital Wellbeing experience. Built with React 19, TypeScript, Vite, Tailwind CSS, and custom SVG / Recharts data visualizations.
 
 ---
 
 ## 📱 Live Features Overview
 
 ### 1. Home Dashboard
-- **Android Settings Style Header**: Clean header with branding, theme switcher, quick parental controls shortcut, and subtle collapse-on-scroll behavior.
+- **Android Settings Style Header**: Clean header with branding, theme switcher, quick goals shortcut, and subtle collapse-on-scroll behavior.
 - **Date Navigator**: Previous / next day switcher with smart labels ("Today", "Yesterday", "Mon, 19 Oct"), a Day / Week segmented toggle, and a **Calendar Bottom Sheet** to jump directly to any date in the last 90 days.
 - **Screen Time Hero Card**: Bold headline showing total usage (e.g. `4h 32m`) with a delta chip versus the previous day or 7-day baseline (green down arrow = healthier/less, red up arrow = higher screen time).
 - **24-Hour Stacked Hourly Bar Chart (Main Graph)**: 24 bars (00:00 to 23:00) stacked by the top 5 apps plus an "Other" segment. Tapping any bar reveals a detailed tooltip showing the exact hour range, minutes spent, top app, unlocks, and notifications. Features a dashed horizontal pace line showing the hourly goal pace.
 - **Three Stat Sparkline Tiles**: Screen time, Notifications received, and Times unlocked with 7-day SVG sparklines and deltas.
 - **Goal Ring Card**: Circular progress ring comparing today's usage against the daily goal (e.g. 4h), dynamically shifting colors from **Green (< 75%)** to **Amber (75-95%)** to **Red (> 95% / exceeded)**. Tapping opens a slider bottom sheet to edit the goal. Includes a live streak badge.
 - **Most Used Apps List**: Displays app icons, names, categories, formatted usage times, and a relative thin progress bar proportional to the top app. "Show all apps" button expands the full list. Tapping any app navigates to its App Detail view.
-- **Quick Action Cards**: Shortcuts for Focus Mode, Bedtime Mode, App Timers, Parental Controls, Protect Your Eyes, and Do Not Disturb.
+- **Quick Action Cards**: Shortcuts for Focus Mode, Bedtime Mode, App Timers, Goals & Streaks, Protect Your Eyes, and Do Not Disturb.
 
 ---
 
@@ -57,7 +57,7 @@ Tapping any application opens its dedicated usage page:
 ### 4. App Timers & Simulation
 - List of all apps with their timer status ("No timer" or "45m daily").
 - Set Timer bottom sheet with hour/minute selectors, active day-of-week chips (S M T W T F S), and daily reset time.
-- **Time's Up Full-Screen Overlay**: When time expires (or during simulation), a full-screen overlay appears with "Close App" and "Ignore for 15 min" (unless parental locked).
+- **Time's Up Full-Screen Overlay**: When time expires (or during simulation), a full-screen overlay appears with "Close App" and "Ignore for 15 min".
 - **5-Minute Warning Toast**: Triggers automatically as the timer approaches the limit.
 - Timers reset daily at the configured reset time (default midnight).
 
@@ -95,18 +95,7 @@ Tapping any application opens its dedicated usage page:
 
 ---
 
-### 9. Parental Controls (Family Section)
-- **PIN-Protected Parent Area**: Requires a 4-digit PIN (default: `1234`) to unlock.
-- **Child Profiles**: Create profiles with custom names, ages, avatar colors, and daily limits.
-- **Downtime & Restrictions**: Configure downtime schedules, approve educational apps, and block categories (e.g. Social, Games).
-- **Emergency Device Lock**: Instantly locks child devices remotely.
-- **Add Bonus Time**: Quick buttons (+15m, +30m, +1h).
-- **Weekly Report Card**: Printable/exportable summary showing overall wellness score (e.g. `A- (88%)`), top learning apps vs leisure apps, and goals met.
-- **Activity Alerts**: Alert inbox and toast notifications when limits are hit.
-
----
-
-### 10. Goals, Streaks & Achievements
+### 9. Goals, Streaks & Achievements
 - Set daily screen time goal and daily unlocks limit.
 - Streak counter for days under goal with a 7-day streak chip row.
 - Milestone Badges (Goal Pioneer, 7-Day Champion, Night Owl Cured, Focus Master). Tapping an unlocked badge triggers a **confetti burst** (`canvas-confetti`).
@@ -114,7 +103,7 @@ Tapping any application opens its dedicated usage page:
 
 ---
 
-### 11. Settings & Customization
+### 10. Settings & Customization
 - Theme switcher: Light / Dark / System.
 - Chart Palette: Default / Colorblind-Safe.
 - 12h / 24h time format.
@@ -175,7 +164,6 @@ export interface UsageProvider {
        @JavascriptInterface
        fun queryUsageStats(beginTime: Long, endTime: Long): String {
            val stats = usageStatsManager.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, beginTime, endTime)
-           // Map to JSON matching DailyUsage schema
            return Gson().toJson(stats)
        }
    }
@@ -190,7 +178,6 @@ export interface UsageProvider {
        }
        return mockUsageProvider.getDailyUsage(date)
      }
-     // ...
    }
    ```
 4. **Swap in Application**: In `src/App.tsx`, instantiate `new AndroidUsageStatsProvider()` in place of `mockUsageProvider`.

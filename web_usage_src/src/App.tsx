@@ -6,7 +6,6 @@ import {
   DailyUsage,
   FocusMode,
   GoalConfig,
-  ParentalControlsConfig,
   UserSettings,
 } from './types'
 import { mockUsageProvider } from './services/MockUsageProvider'
@@ -17,7 +16,6 @@ import {
   loadEyeProtection,
   loadFocusMode,
   loadGoalConfig,
-  loadParentalControls,
   loadTimers,
   loadUserSettings,
   saveBedtimeConfig,
@@ -26,7 +24,6 @@ import {
   saveEyeProtection,
   saveFocusMode,
   saveGoalConfig,
-  saveParentalControls,
   saveTimers,
   saveUserSettings,
 } from './services/storage'
@@ -56,7 +53,6 @@ import { FocusModeView } from './components/features/FocusModeView'
 import { BedtimeModeView } from './components/features/BedtimeModeView'
 import { EyeProtectionView } from './components/features/EyeProtectionView'
 import { DndView } from './components/features/DndView'
-import { ParentalControlsView } from './components/features/ParentalControlsView'
 import { GoalsView } from './components/features/GoalsView'
 import { SettingsView } from './components/features/SettingsView'
 import { AppDetailModal } from './components/app_detail/AppDetailModal'
@@ -66,7 +62,7 @@ export function App() {
   const [currentDate, setCurrentDate] = useState<string>(getTodayDateStr())
   const [viewMode, setViewMode] = useState<'day' | 'week'>('day')
 
-  // Sub-features routing (e.g. Bedtime, Eye care, Goals, Settings modal)
+  // Sub-features routing (e.g. Bedtime, Eye care, DND, Settings, Goals)
   const [activeSubView, setActiveSubView] = useState<
     'none' | 'bedtime' | 'eyecare' | 'dnd' | 'goals' | 'settings'
   >('none')
@@ -87,7 +83,6 @@ export function App() {
   const [bedtimeConfig, setBedtimeConfig] = useState(loadBedtimeConfig)
   const [eyeCareConfig, setEyeCareConfig] = useState(loadEyeProtection)
   const [dndConfig, setDndConfig] = useState(loadDndConfig)
-  const [parentalConfig, setParentalConfig] = useState<ParentalControlsConfig>(loadParentalControls)
   const [goalConfig, setGoalConfig] = useState<GoalConfig>(loadGoalConfig)
   const [userSettings, setUserSettings] = useState<UserSettings>(loadUserSettings)
   const [blockedAppsToday, setBlockedAppsToday] = useState<string[]>(loadBlockedAppsToday)
@@ -232,8 +227,8 @@ export function App() {
     } else if (key === 'timers') {
       setCurrentTab('timers')
       setActiveSubView('none')
-    } else if (key === 'parental') {
-      setCurrentTab('parental')
+    } else if (key === 'goals') {
+      setCurrentTab('goals')
       setActiveSubView('none')
     } else if (key === 'bedtime') {
       setActiveSubView('bedtime')
@@ -291,7 +286,6 @@ export function App() {
           }
           setExpiredApp(null)
         }}
-        isParentalLocked={parentalConfig.children[0]?.locked || false}
       />
 
       {/* Main Responsive Phone Wrapper */}
@@ -307,8 +301,8 @@ export function App() {
         {/* Android Native Large Header */}
         <Header
           onOpenSettings={() => setActiveSubView('settings')}
-          onOpenParental={() => {
-            setCurrentTab('parental')
+          onOpenGoals={() => {
+            setCurrentTab('goals')
             setActiveSubView('none')
           }}
           theme={userSettings.theme}
@@ -476,7 +470,7 @@ export function App() {
                   timersCount={timers.filter((t) => t.enabled).length}
                   isEyeCareActive={eyeCareConfig.enabled}
                   isDndActive={dndConfig.enabled}
-                  isParentalLocked={parentalConfig.children[0]?.locked || false}
+                  streakDays={streakInfo.currentStreak}
                 />
               </div>
             )}
@@ -532,16 +526,16 @@ export function App() {
               />
             )}
 
-            {/* TAB 5: PARENTAL & FAMILY */}
-            {currentTab === 'parental' && (
-              <ParentalControlsView
-                config={parentalConfig}
-                apps={apps}
-                onUpdateConfig={(cfg) => {
-                  setParentalConfig(cfg)
-                  saveParentalControls(cfg)
+            {/* TAB 5: GOALS & ACHIEVEMENTS */}
+            {currentTab === 'goals' && (
+              <GoalsView
+                goalConfig={goalConfig}
+                streakDays={streakInfo.currentStreak}
+                last7DaysUnder={streakInfo.last7DaysUnder}
+                onUpdateGoalConfig={(cfg) => {
+                  setGoalConfig(cfg)
+                  saveGoalConfig(cfg)
                 }}
-                onTriggerAlert={(title, msg) => showToast('warning', title, msg)}
               />
             )}
           </main>
@@ -604,7 +598,6 @@ export function App() {
             setCurrentTab(tab)
             setActiveSubView('none')
           }}
-          hasActiveAlerts={parentalConfig.alerts.some((a) => !a.read)}
         />
       </PhoneFrame>
     </div>

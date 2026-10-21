@@ -1,25 +1,23 @@
 import React from 'react'
-import { LayoutDashboard, BarChart2, Moon, Hourglass, ShieldAlert } from 'lucide-react'
+import { LayoutDashboard, BarChart2, Moon, Hourglass, Award } from 'lucide-react'
 
-export type NavigationTab = 'dashboard' | 'insights' | 'focus' | 'timers' | 'parental'
+export type NavigationTab = 'dashboard' | 'insights' | 'focus' | 'timers' | 'goals'
 
 interface BottomNavigationProps {
   currentTab: NavigationTab
   onSelectTab: (tab: NavigationTab) => void
-  hasActiveAlerts?: boolean
 }
 
 export const BottomNavigation: React.FC<BottomNavigationProps> = ({
   currentTab,
   onSelectTab,
-  hasActiveAlerts = false,
 }) => {
   const tabs = [
     { id: 'dashboard' as const, label: 'Home', icon: LayoutDashboard },
     { id: 'insights' as const, label: 'Insights', icon: BarChart2 },
     { id: 'focus' as const, label: 'Modes', icon: Moon },
     { id: 'timers' as const, label: 'Timers', icon: Hourglass },
-    { id: 'parental' as const, label: 'Family', icon: ShieldAlert, badge: hasActiveAlerts },
+    { id: 'goals' as const, label: 'Goals', icon: Award },
   ]
 
   return (
@@ -50,10 +48,6 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 <Icon size={20} strokeWidth={isActive ? 2.5 : 2} />
               </div>
               <span className="text-[11px] mt-0.5 tracking-tight">{tab.label}</span>
-
-              {tab.badge && (
-                <span className="absolute top-1 right-2.5 w-2 h-2 rounded-full bg-rose-500 ring-2 ring-white dark:ring-neutral-900 animate-pulse" />
-              )}
             </button>
           )
         })}

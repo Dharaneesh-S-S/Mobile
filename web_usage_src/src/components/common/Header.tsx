@@ -1,11 +1,11 @@
 import React from 'react'
-import { Settings, ShieldCheck, HeartPulse, Sun, Moon } from 'lucide-react'
+import { Settings, HeartPulse, Sun, Moon, Award } from 'lucide-react'
 
 interface HeaderProps {
   title?: string
   subtitle?: string
   onOpenSettings: () => void
-  onOpenParental: () => void
+  onOpenGoals?: () => void
   theme: 'light' | 'dark' | 'system'
   onToggleTheme: () => void
   isScrolled?: boolean
@@ -13,9 +13,9 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({
   title = 'Digital Wellbeing',
-  subtitle = 'ZenPulse & Parental Controls',
+  subtitle = 'ZenPulse Wellness & Balance',
   onOpenSettings,
-  onOpenParental,
+  onOpenGoals,
   theme,
   onToggleTheme,
   isScrolled = false,
@@ -51,6 +51,17 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Quick action buttons */}
         <div className="flex items-center gap-1">
+          {onOpenGoals && (
+            <button
+              onClick={onOpenGoals}
+              className="p-2.5 rounded-2xl text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40 transition-colors"
+              title="Goals & Achievements"
+              aria-label="Goals & Achievements"
+            >
+              <Award size={20} />
+            </button>
+          )}
+
           <button
             onClick={onToggleTheme}
             className="p-2.5 rounded-2xl text-gray-600 dark:text-gray-300 hover:bg-gray-200/60 dark:hover:bg-neutral-800 transition-colors"
@@ -58,15 +69,6 @@ export const Header: React.FC<HeaderProps> = ({
             aria-label="Toggle Theme"
           >
             {theme === 'dark' ? <Sun size={19} /> : <Moon size={19} />}
-          </button>
-
-          <button
-            onClick={onOpenParental}
-            className="p-2.5 rounded-2xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 transition-colors"
-            title="Parental Controls"
-            aria-label="Parental Controls"
-          >
-            <ShieldCheck size={20} />
           </button>
 
           <button

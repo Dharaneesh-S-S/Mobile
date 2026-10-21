@@ -1,5 +1,5 @@
 import React from 'react'
-import { Hourglass, Lock, AlertTriangle } from 'lucide-react'
+import { Hourglass } from 'lucide-react'
 import { AppInfo } from '../../types'
 
 interface TimeLimitOverlayProps {
@@ -7,7 +7,6 @@ interface TimeLimitOverlayProps {
   isOpen: boolean
   onCloseApp: () => void
   onIgnore15Min: () => void
-  isParentalLocked?: boolean
 }
 
 export const TimeLimitOverlay: React.FC<TimeLimitOverlayProps> = ({
@@ -15,7 +14,6 @@ export const TimeLimitOverlay: React.FC<TimeLimitOverlayProps> = ({
   isOpen,
   onCloseApp,
   onIgnore15Min,
-  isParentalLocked = false,
 }) => {
   if (!isOpen || !app) return null
 
@@ -29,7 +27,7 @@ export const TimeLimitOverlay: React.FC<TimeLimitOverlayProps> = ({
       <div className="w-full max-w-sm bg-neutral-900 border border-neutral-800 rounded-4xl p-6 text-center shadow-2xl animate-slide-up flex flex-col items-center">
         {/* Animated Hourglass Icon */}
         <div className="w-20 h-20 rounded-full bg-amber-500/15 border-2 border-amber-500/30 flex items-center justify-center text-amber-400 mb-5 animate-pulse">
-          {isParentalLocked ? <Lock size={36} /> : <Hourglass size={36} />}
+          <Hourglass size={36} />
         </div>
 
         <span className="text-xs font-semibold tracking-wider uppercase text-amber-400 bg-amber-950/60 px-3 py-1 rounded-full mb-3">
@@ -41,17 +39,8 @@ export const TimeLimitOverlay: React.FC<TimeLimitOverlayProps> = ({
         </h2>
 
         <p className="text-sm text-neutral-400 mb-6 px-2">
-          {isParentalLocked
-            ? `Your parent or guardian has locked ${app.name} for the remainder of today.`
-            : `You've reached your daily screen time limit for ${app.name}. Take a breather or focus on other tasks.`}
+          You've reached your daily screen time limit for {app.name}. Take a breather or focus on other tasks.
         </p>
-
-        {isParentalLocked && (
-          <div className="flex items-center gap-2 p-3 mb-6 bg-rose-950/40 border border-rose-800/40 rounded-2xl text-xs text-rose-300 text-left">
-            <AlertTriangle size={18} className="shrink-0" />
-            <span>Parental control lock is active. Extension requires parent PIN.</span>
-          </div>
-        )}
 
         {/* Action Buttons */}
         <div className="w-full flex flex-col gap-3">
@@ -62,14 +51,12 @@ export const TimeLimitOverlay: React.FC<TimeLimitOverlayProps> = ({
             Close App
           </button>
 
-          {!isParentalLocked && (
-            <button
-              onClick={onIgnore15Min}
-              className="w-full py-3 px-4 rounded-2xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-medium transition-colors"
-            >
-              Ignore for 15 minutes
-            </button>
-          )}
+          <button
+            onClick={onIgnore15Min}
+            className="w-full py-3 px-4 rounded-2xl bg-neutral-800 hover:bg-neutral-700 text-neutral-200 text-xs font-medium transition-colors"
+          >
+            Ignore for 15 minutes
+          </button>
         </div>
       </div>
     </div>
