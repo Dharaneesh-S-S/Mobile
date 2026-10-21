@@ -39,6 +39,17 @@ interface TasksContextType {
   setEditingTaskId: (id: string | null) => void;
   isAddingTask: boolean;
   setIsAddingTask: (val: boolean) => void;
+  isSidebarCollapsed: boolean;
+  toggleSidebar: () => void;
+  visibleListIds: Set<string>;
+  toggleListVisibility: (listId: string) => void;
+  showAllLists: () => void;
+  activeNavTab: 'all' | 'starred';
+  setActiveNavTab: (tab: 'all' | 'starred') => void;
+  inlineAddingListId: string | null;
+  setInlineAddingListId: (val: string | null) => void;
+  moveTaskToAnotherList: (taskId: string, targetListId: string, overTaskId?: string) => void;
+
   toasts: ToastMessage[];
   showToast: (message: string, actionLabel?: string, onAction?: () => void) => void;
   removeToast: (id: string) => void;
@@ -106,7 +117,11 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [tasks, setTasks] = useState<Task[]>(() => loadTasks());
   const [settings, setSettings] = useState<TaskSettings>(() => loadSettings());
   const [activeListId, setActiveListId] = useState<string>('list_default');
-  const [layoutMode, setLayoutMode] = useState<LayoutMode>('sidepanel');
+  const [layoutMode, setLayoutMode] = useState<LayoutMode>('fullscreen');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [activeNavTab, setActiveNavTab] = useState<'all' | 'starred'>('all');
+  const [visibleListIds, setVisibleListIds] = useState<Set<string>>(() => new Set(loadLists().map(l => l.id)));
+  const [inlineAddingListId, setInlineAddingListId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedTaskIds, setSelectedTaskIds] = useState<Set<string>>(new Set());
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
@@ -120,6 +135,46 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [listToRename, setListToRename] = useState<TaskList | null>(null);
   const [listToDelete, setListToDelete] = useState<TaskList | null>(null);
   const [showDeleteCompletedModal, setShowDeleteCompletedModal] = useState(false);
+
+  const toggleSidebar = useCallback(() => {
+    setIsSidebarCollapsed(prev => !prev);
+  }, []);
+
+  const toggleListVisibility = useCallback((listId: string) => {
+    setVisibleListIds(prev => {
+      const next = new Set(prev);
+      if (next.has(listId)) {
+        if (next.size > 1) {
+          next.delete(listId);
+        }
+      } else {
+        next.add(listId);
+      }
+      return next;
+    });
+  }, []);
+
+  const showAllLists = useCallback(() => {
+    setVisibleListIds(new Set(lists.map(l => l.id)));
+  }, [lists]);
+
+  const moveTaskToAnotherList = useCallback((taskId: string, targetListId: string, overTaskId?: string) => {
+    setTasks(prev => {
+      const taskIndex = prev.findIndex(t => t.id === taskId);
+      if (taskIndex === -1) return prev;
+      const targetTasks = prev.filter(t => t.listId === targetListId && t.id !== taskId);
+      let targetOrder = 0;
+      if (overTaskId) {
+        const overTask = prev.find(t => t.id === overTaskId);
+        if (overTask) {
+          targetOrder = overTask.order;
+        }
+      } else if (targetTasks.length > 0) {
+        targetOrder = Math.max(...targetTasks.map(t => t.order)) + 1;
+      }
+      return prev.map(t => (t.id === taskId ? { ...t, listId: targetListId, order: targetOrder, updatedAt: new Date().toISOString() } : t));
+    });
+  }, []);
 
   // Auto-detect responsive layout mode
   useEffect(() => {
@@ -699,6 +754,16 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         setEditingTaskId,
         isAddingTask,
         setIsAddingTask,
+        isSidebarCollapsed,
+        toggleSidebar,
+        visibleListIds,
+        toggleListVisibility,
+        showAllLists,
+        activeNavTab,
+        setActiveNavTab,
+        inlineAddingListId,
+        setInlineAddingListId,
+        moveTaskToAnotherList,
         toasts,
         showToast,
         removeToast,

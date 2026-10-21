@@ -4,27 +4,29 @@
 
 @layer base {
   :root {
-    --color-bg-primary: #ffffff;
-    --color-bg-secondary: #f8fafc;
+    --color-bg-primary: #f0f4f9;
+    --color-bg-secondary: #ffffff;
+    --color-card: #ffffff;
     --color-border: #e2e8f0;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
+    --color-text-primary: #1f1f1f;
+    --color-text-secondary: #444746;
   }
 
   .dark {
-    --color-bg-primary: #0f172a;
-    --color-bg-secondary: #1e293b;
-    --color-border: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
+    --color-bg-primary: #131314;
+    --color-bg-secondary: #1e1f20;
+    --color-card: #1e1f20;
+    --color-border: #282a2c;
+    --color-text-primary: #e3e3e3;
+    --color-text-secondary: #c4c7c5;
   }
 
   body {
-    @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans antialiased;
+    @apply bg-[#f0f4f9] dark:bg-[#131314] text-slate-800 dark:text-[#e3e3e3] font-sans antialiased;
     margin: 0;
     padding: 0;
-    overflow-x: hidden;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+    font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
   }
 
   #root {
@@ -38,14 +40,14 @@
 
 /* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600;
+  @apply bg-slate-300 dark:bg-[#333537] rounded-full hover:bg-slate-400 dark:hover:bg-[#444746];
 }
 
 /* Drag drop drop-line styling */
@@ -58,9 +60,9 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: #3b82f6;
+  background-color: #8ab4f8;
   border-radius: 9999px;
-  box-shadow: 0 0 6px rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 6px rgba(138, 180, 248, 0.6);
   pointer-events: none;
 }
 .drop-indicator-top::after {
@@ -113,6 +115,7 @@
   }
 
   header,
+  aside,
   .no-print,
   button,
   .toast-container,

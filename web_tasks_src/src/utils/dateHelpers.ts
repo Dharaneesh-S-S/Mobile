@@ -86,6 +86,51 @@ export function formatDateChip(dateStr?: string, timeStr?: string, timeFormat: '
   return label;
 }
 
+export function formatRelativeDate(
+  dateStr?: string,
+  timeStr?: string,
+  timeFormat: '12h' | '24h' = '12h'
+): { text: string; isOverdue: boolean } {
+  if (!dateStr) return { text: '', isOverdue: false };
+  const now = new Date();
+  const todayStr = formatDateToYYYYMMDD(now);
+  const target = parseYYYYMMDD(dateStr);
+  const diffTime = target.getTime() - parseYYYYMMDD(todayStr).getTime();
+  const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
+
+  const overdue = isOverdue(dateStr, timeStr);
+
+  let text = '';
+  if (diffDays === 0) {
+    text = timeStr ? `Today, ${formatTime(timeStr, timeFormat)}` : 'Today';
+  } else if (diffDays === 1) {
+    text = timeStr ? `Tomorrow, ${formatTime(timeStr, timeFormat)}` : 'Tomorrow';
+  } else if (diffDays === -1) {
+    text = timeStr ? `Yesterday, ${formatTime(timeStr, timeFormat)}` : 'Yesterday';
+  } else if (diffDays < -1) {
+    const daysAgo = Math.abs(diffDays);
+    if (daysAgo < 7) {
+      text = `${daysAgo} days ago`;
+    } else if (daysAgo < 30) {
+      const weeks = Math.round(daysAgo / 7);
+      text = `${weeks} week${weeks > 1 ? 's' : ''} ago`;
+    } else {
+      const months = Math.round(daysAgo / 30);
+      text = `${months} month${months > 1 ? 's' : ''} ago`;
+    }
+  } else {
+    if (diffDays < 7) {
+      const dayName = target.toLocaleDateString(undefined, { weekday: 'short' });
+      text = timeStr ? `${dayName}, ${formatTime(timeStr, timeFormat)}` : dayName;
+    } else {
+      const monthName = target.toLocaleDateString(undefined, { month: 'short' });
+      text = `${monthName} ${target.getDate()}`;
+    }
+  }
+
+  return { text, isOverdue: overdue };
+}
+
 export function calculateNextRecurrenceDate(currentDateStr: string, rule: RecurrenceRule): string | null {
   if (rule.frequency === 'none') return null;
 
