@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMoney, MoneyProvider } from './context/MoneyContext';
-import { PhoneFrame } from './components/layout/PhoneFrame';
+import { Header } from './components/layout/Header';
+import { BottomNav } from './components/layout/BottomNav';
 import { TransactionList } from './components/transactions/TransactionList';
 import { CalendarView } from './components/calendar/CalendarView';
 import { StatisticView } from './components/statistics/StatisticView';
@@ -33,7 +34,6 @@ const MainAppContent: React.FC = () => {
   // Desktop Keyboard Shortcuts
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Don't trigger if user is typing in an input, textarea, or contentEditable
       const target = e.target as HTMLElement;
       if (
         target.tagName === 'INPUT' ||
@@ -58,8 +58,8 @@ const MainAppContent: React.FC = () => {
 
       // Numeric shortcuts: 1-4 for Tabs
       if (e.key === '1') setActiveTab('transactions');
-      if (e.key === '2') setActiveTab('statistics');
-      if (e.key === '3') setActiveTab('calendar');
+      if (e.key === '2') setActiveTab('calendar');
+      if (e.key === '3') setActiveTab('statistics');
       if (e.key === '4') setActiveTab('wallet');
     };
 
@@ -79,13 +79,21 @@ const MainAppContent: React.FC = () => {
   }
 
   return (
-    <PhoneFrame>
-      {/* Active Tab Screen */}
-      <div className="flex-1 flex flex-col min-h-0 relative">
+    <div className="w-full h-screen min-h-screen flex flex-col bg-[#070b14] text-slate-100 font-sans antialiased overflow-hidden select-none">
+      {/* 1. Universal Top Header (Adapts automatically to screen width) */}
+      <Header />
+
+      {/* 2. Main Content View Area (Fills 100% width and height, fluidly responsive) */}
+      <main className="flex-1 flex flex-col min-h-0 overflow-y-auto relative w-full">
         {activeTab === 'transactions' && <TransactionList />}
         {activeTab === 'calendar' && <CalendarView />}
         {activeTab === 'statistics' && <StatisticView />}
         {activeTab === 'wallet' && <WalletView />}
+      </main>
+
+      {/* 3. Mobile Bottom Navigation (Only visible on mobile / narrow screens < md) */}
+      <div className="md:hidden">
+        <BottomNav />
       </div>
 
       {/* Global Modals */}
@@ -99,7 +107,7 @@ const MainAppContent: React.FC = () => {
       <MonthlyReportModal />
       <SettingsModal />
 
-      {/* First Launch Modal: "Start fresh" or "Load sample data" */}
+      {/* First Launch Modal */}
       {showFirstLaunchPrompt && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl p-6 shadow-2xl text-center space-y-4">
@@ -139,7 +147,7 @@ const MainAppContent: React.FC = () => {
           </div>
         </div>
       )}
-    </PhoneFrame>
+    </div>
   );
 };
 
