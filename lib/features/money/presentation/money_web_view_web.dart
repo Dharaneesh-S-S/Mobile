@@ -15,7 +15,7 @@ Widget buildMoneyWebView() {
       viewType,
       (int viewId) {
         final iframe = web.HTMLIFrameElement()
-          ..src = kDebugMode ? 'http://127.0.0.1:5178/' : '/money/index.html'
+          ..src = kDebugMode ? 'http://127.0.0.1:5178/' : '/money/index.html?t=${DateTime.now().millisecondsSinceEpoch}'
           ..style.border = 'none'
           ..style.width = '100%'
           ..style.height = '100%';

@@ -74,45 +74,59 @@ export const Header: React.FC = () => {
     <header className="w-full bg-[#0a0f1d] border-b border-slate-800/90 shadow-md select-none shrink-0 z-30">
       {/* Main Top Bar */}
       <div className="px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
-        {/* Left: Branding & Account Balance */}
-        <div className="flex items-center gap-3 sm:gap-4 shrink-0">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-9 h-9 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 p-[1px] shadow-glow-blue flex items-center justify-center shrink-0">
-              <div className="w-full h-full bg-slate-950 rounded-[15px] flex items-center justify-center font-display font-black text-blue-400 text-base">
-                ₹
-              </div>
+        {/* Desktop Left: Section Title & Subtitle */}
+        <div className="hidden md:flex items-center gap-3 shrink-0">
+          <div>
+            <div className="flex items-center gap-2">
+              <h2 className="text-base font-extrabold text-white font-display tracking-tight">
+                {activeTab === 'transactions' && 'Transactions'}
+                {activeTab === 'calendar' && 'Calendar Breakdown'}
+                {activeTab === 'statistics' && 'Analytics & Reports'}
+                {activeTab === 'wallet' && 'Wallets & Accounts'}
+              </h2>
+              <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20 font-mono">
+                {activeTab === 'transactions' && `${filteredRecords.length} Records`}
+                {activeTab === 'calendar' && dateRange.label}
+                {activeTab === 'statistics' && viewRange.toUpperCase()}
+                {activeTab === 'wallet' && 'Balances'}
+              </span>
             </div>
-            <div className="hidden xl:block">
-              <div className="flex items-center gap-1.5">
-                <span className="text-sm font-black text-white tracking-tight font-display">
-                  RupeeFlow
-                </span>
-                <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                  INR
-                </span>
-              </div>
+            <p className="text-[11px] text-slate-400 font-medium -mt-0.5">
+              {activeTab === 'transactions' && 'Income, expense, and daily cash flow stream'}
+              {activeTab === 'calendar' && 'Daily financial overview and activity schedule'}
+              {activeTab === 'statistics' && 'Visual charts, spending trends, and category distribution'}
+              {activeTab === 'wallet' && 'Multi-account management, debts, and savings goals'}
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile Left: Branding & Account Balance (visible only on mobile < md) */}
+        <div className="flex md:hidden items-center gap-2.5 shrink-0">
+          {/* Logo */}
+          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-cyan-400 p-[1px] shadow-glow-blue flex items-center justify-center shrink-0">
+            <div className="w-full h-full bg-slate-950 rounded-[11px] flex items-center justify-center font-display font-black text-blue-400 text-sm">
+              ₹
             </div>
           </div>
 
           {/* Account Switcher & Balance Pill */}
           <div
             onClick={openAccountSwitcher}
-            className="flex items-center gap-2.5 px-3 py-1.5 rounded-2xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 cursor-pointer transition-all group"
+            className="flex items-center gap-2 px-2.5 py-1 rounded-xl bg-slate-900/90 border border-slate-800 hover:border-slate-700 cursor-pointer transition-all group"
             role="button"
             tabIndex={0}
             title="Switch Account"
           >
-            <div className="flex items-center gap-1 text-slate-400 text-xs font-semibold group-hover:text-slate-200 transition-colors">
-              <span>{currentAccount?.name || 'Personal'}</span>
-              <ChevronDown className="w-3.5 h-3.5 text-slate-500 group-hover:translate-y-0.5 transition-transform" />
+            <div className="flex items-center gap-1 text-slate-400 text-[11px] font-semibold">
+              <span className="max-w-[70px] truncate">{currentAccount?.name || 'Personal'}</span>
+              <ChevronDown className="w-3 h-3 text-slate-500" />
             </div>
 
-            <div className="h-4 w-[1px] bg-slate-800" />
+            <div className="h-3 w-[1px] bg-slate-800" />
 
-            <div className="flex items-center gap-1.5">
-              <span className="text-sm sm:text-base font-black text-white font-display tracking-tight">
-                {isBalanceHidden ? '₹ ••••••' : formatInr(totalAccountBalance, opts)}
+            <div className="flex items-center gap-1">
+              <span className="text-xs font-black text-white font-display tracking-tight">
+                {isBalanceHidden ? '₹••••' : formatInr(totalAccountBalance, opts)}
               </span>
               <button
                 type="button"
@@ -123,48 +137,17 @@ export const Header: React.FC = () => {
                 className="text-slate-500 hover:text-slate-300 p-0.5 transition-colors"
                 title={isBalanceHidden ? 'Show balance' : 'Hide balance'}
               >
-                {isBalanceHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                {isBalanceHidden ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
               </button>
             </div>
           </div>
         </div>
 
-        {/* Center: Navigation Tabs (Desktop & Tablet: >= md) */}
-        <nav className="hidden md:flex items-center gap-1 bg-slate-950/80 p-1 rounded-2xl border border-slate-800/80 shrink-0">
-          {navTabs.map((tab) => {
-            const Icon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
-                  isActive
-                    ? 'bg-blue-600 text-white shadow-glow-blue'
-                    : 'text-slate-400 hover:text-slate-200 hover:bg-slate-900'
-                }`}
-              >
-                <Icon className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-slate-400'}`} />
-                <span>{tab.label}</span>
-                {tab.count !== undefined && tab.count > 0 && (
-                  <span
-                    className={`text-[10px] font-mono px-1.5 py-0.2 rounded-full ${
-                      isActive ? 'bg-white/20 text-white' : 'bg-slate-800 text-slate-400'
-                    }`}
-                  >
-                    {tab.count}
-                  </span>
-                )}
-              </button>
-            );
-          })}
-        </nav>
-
         {/* Right: Period Navigator (on desktop) & Actions */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Period Navigator (visible on lg+) */}
+          {/* Period Navigator (visible on md+) */}
           {activeTab !== 'wallet' && (
-            <div className="hidden lg:flex items-center gap-1 bg-slate-950/70 border border-slate-800 rounded-xl p-0.5">
+            <div className="hidden md:flex items-center gap-1 bg-slate-950/70 border border-slate-800 rounded-xl p-0.5">
               <button
                 onClick={() => navigatePeriod('prev')}
                 className="p-1 rounded-lg text-slate-400 hover:text-white hover:bg-slate-850 transition-colors"
@@ -175,9 +158,9 @@ export const Header: React.FC = () => {
 
               <button
                 onClick={() => setIsMonthPickerOpen((p) => !p)}
-                className="px-2 py-1 text-xs font-bold text-slate-200 hover:text-blue-400 flex items-center gap-1.5 transition-colors"
+                className="px-2.5 py-1 text-xs font-bold text-slate-200 hover:text-blue-400 flex items-center gap-1.5 transition-colors"
               >
-                <CalendarIcon className="w-3 h-3 text-blue-400" />
+                <CalendarIcon className="w-3.5 h-3.5 text-blue-400" />
                 <span>{dateRange.label}</span>
               </button>
 
@@ -188,6 +171,23 @@ export const Header: React.FC = () => {
               >
                 <ChevronRight className="w-3.5 h-3.5" />
               </button>
+
+              {/* Range Selector Dropdown/Pills on desktop */}
+              <div className="flex items-center gap-0.5 border-l border-slate-800 pl-1 ml-0.5">
+                {RANGE_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.id}
+                    onClick={() => setViewRange(opt.id)}
+                    className={`px-2 py-0.5 rounded-lg text-[10px] font-semibold transition-all ${
+                      viewRange === opt.id
+                        ? 'bg-blue-600 text-white font-bold'
+                        : 'text-slate-400 hover:text-slate-200 hover:bg-slate-850'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
             </div>
           )}
 

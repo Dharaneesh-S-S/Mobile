@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useMoney, MoneyProvider } from './context/MoneyContext';
 import { Header } from './components/layout/Header';
+import { Sidebar } from './components/layout/Sidebar';
 import { BottomNav } from './components/layout/BottomNav';
 import { TransactionList } from './components/transactions/TransactionList';
 import { CalendarView } from './components/calendar/CalendarView';
@@ -79,21 +80,27 @@ const MainAppContent: React.FC = () => {
   }
 
   return (
-    <div className="w-full h-screen min-h-screen flex flex-col bg-[#070b14] text-slate-100 font-sans antialiased overflow-hidden select-none">
-      {/* 1. Universal Top Header (Adapts automatically to screen width) */}
-      <Header />
+    <div className="w-full h-screen min-h-screen flex bg-[#070b14] text-slate-100 font-sans antialiased overflow-hidden select-none">
+      {/* 1. Left Desktop Sidebar (Hidden on mobile < md, visible on desktop md+) */}
+      <Sidebar />
 
-      {/* 2. Main Content View Area (Fills 100% width and height, fluidly responsive) */}
-      <main className="flex-1 flex flex-col min-h-0 overflow-y-auto relative w-full">
-        {activeTab === 'transactions' && <TransactionList />}
-        {activeTab === 'calendar' && <CalendarView />}
-        {activeTab === 'statistics' && <StatisticView />}
-        {activeTab === 'wallet' && <WalletView />}
-      </main>
+      {/* 2. Main Content Column (Takes 100% remaining width and adapts fluidly) */}
+      <div className="flex-1 flex flex-col h-full overflow-hidden relative min-w-0">
+        {/* Universal Top Header */}
+        <Header />
 
-      {/* 3. Mobile Bottom Navigation (Only visible on mobile / narrow screens < md) */}
-      <div className="md:hidden">
-        <BottomNav />
+        {/* Scrollable Main Workspace */}
+        <main className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 relative w-full">
+          {activeTab === 'transactions' && <TransactionList />}
+          {activeTab === 'calendar' && <CalendarView />}
+          {activeTab === 'statistics' && <StatisticView />}
+          {activeTab === 'wallet' && <WalletView />}
+        </main>
+
+        {/* Mobile Bottom Navigation (Only visible on mobile / narrow screens < md) */}
+        <div className="md:hidden">
+          <BottomNav />
+        </div>
       </div>
 
       {/* Global Modals */}
