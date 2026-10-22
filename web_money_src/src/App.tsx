@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useMoney, MoneyProvider } from './context/MoneyContext';
 import { PhoneFrame } from './components/layout/PhoneFrame';
-import { Header } from './components/layout/Header';
-import { MonthNavigator } from './components/layout/MonthNavigator';
-import { BottomNav } from './components/layout/BottomNav';
 import { TransactionList } from './components/transactions/TransactionList';
 import { CalendarView } from './components/calendar/CalendarView';
 import { StatisticView } from './components/statistics/StatisticView';
@@ -20,6 +17,9 @@ import { Sparkles, ArrowRight } from 'lucide-react';
 const MainAppContent: React.FC = () => {
   const {
     activeTab,
+    setActiveTab,
+    openAddRecord,
+    openSearch,
     isLocked,
     unlockApp,
     settings,
@@ -29,6 +29,43 @@ const MainAppContent: React.FC = () => {
     isCategoryManagerOpen,
     closeCategoryManager,
   } = useMoney();
+
+  // Desktop Keyboard Shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Don't trigger if user is typing in an input, textarea, or contentEditable
+      const target = e.target as HTMLElement;
+      if (
+        target.tagName === 'INPUT' ||
+        target.tagName === 'TEXTAREA' ||
+        target.tagName === 'SELECT' ||
+        target.isContentEditable
+      ) {
+        return;
+      }
+
+      // Shortcut: "N" or "n" for New Transaction
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        openAddRecord();
+      }
+
+      // Shortcut: "Ctrl+K" or "/" for Search
+      if ((e.ctrlKey && e.key.toLowerCase() === 'k') || e.key === '/') {
+        e.preventDefault();
+        openSearch();
+      }
+
+      // Numeric shortcuts: 1-4 for Tabs
+      if (e.key === '1') setActiveTab('transactions');
+      if (e.key === '2') setActiveTab('statistics');
+      if (e.key === '3') setActiveTab('calendar');
+      if (e.key === '4') setActiveTab('wallet');
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [openAddRecord, openSearch, setActiveTab]);
 
   // First launch banner / prompt
   const [dismissFirstLaunch, setDismissFirstLaunch] = useState<boolean>(false);
@@ -43,22 +80,13 @@ const MainAppContent: React.FC = () => {
 
   return (
     <PhoneFrame>
-      {/* Shared Header for Top navigation (Transaction, Calendar, Statistic, Wallet) */}
-      <Header />
-
-      {/* Shared Month Navigator (Transaction, Calendar, Statistic) */}
-      {activeTab !== 'wallet' && <MonthNavigator />}
-
-      {/* Main Tab Screen */}
-      <main className="flex-1 flex flex-col min-h-0 relative overflow-hidden">
+      {/* Active Tab Screen */}
+      <div className="flex-1 flex flex-col min-h-0 relative">
         {activeTab === 'transactions' && <TransactionList />}
         {activeTab === 'calendar' && <CalendarView />}
         {activeTab === 'statistics' && <StatisticView />}
         {activeTab === 'wallet' && <WalletView />}
-      </main>
-
-      {/* Bottom 5-Slot Navigation Bar */}
-      <BottomNav />
+      </div>
 
       {/* Global Modals */}
       <AddRecordModal />

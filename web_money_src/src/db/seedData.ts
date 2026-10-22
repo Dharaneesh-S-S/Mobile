@@ -56,7 +56,7 @@ export const DEFAULT_SETTINGS: UserSettings = {
   monthStartDay: 1,
   hideBalanceDefault: false,
   showGreenNet: true,
-  isPhoneFrameEnabled: true,
+  isPhoneFrameEnabled: false,
   isPasscodeEnabled: false,
   autoLockMinutes: 5,
   hasSeededData: false,
