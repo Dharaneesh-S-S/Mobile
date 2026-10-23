@@ -60,33 +60,33 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-64 flex-shrink-0 flex flex-col h-full bg-[#131314] dark:bg-[#131314] border-r border-[#282a2c] text-[#e3e3e3] select-none z-20">
-      {/* Prominent "+ Create" Pill Button */}
+    <aside className="w-64 flex-shrink-0 flex flex-col h-full bg-[#051211]/90 backdrop-blur-xl border-r border-teal-500/20 text-[#F4FFFD] select-none z-20">
+      {/* Prominent "+ Create" White Pill Button */}
       <div className="p-4 pb-2">
         <button
           onClick={() => setIsAddingTask(true)}
-          className="flex items-center gap-3 px-5 py-3 rounded-full bg-[#282a2c] hover:bg-[#37393b] text-[#e3e3e3] hover:text-white shadow-md text-sm font-medium transition"
+          className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] text-xs transition active:scale-95"
           title="Create task"
         >
-          <Plus className="w-5 h-5 text-[#8ab4f8]" />
+          <Plus className="w-4 h-4 stroke-[2.5]" />
           <span>Create</span>
         </button>
       </div>
 
       {/* Primary Navigation Tabs */}
-      <div className="px-2 py-1 space-y-0.5">
+      <div className="px-3 py-2 space-y-1">
         <button
           onClick={() => {
             setActiveNavTab('all');
             showAllLists();
           }}
-          className={`w-full flex items-center gap-3.5 px-4 py-2.5 rounded-full text-sm font-medium transition ${
+          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-semibold transition ${
             activeNavTab === 'all'
-              ? 'bg-[#004a77] text-[#c2e7ff]'
-              : 'text-[#c4c7c5] hover:bg-[#1e1f20]'
+              ? 'bg-[#19E6C8] text-[#030707] font-extrabold shadow-[0_0_20px_rgba(25,230,200,0.35)]'
+              : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#F4FFFD]'
           }`}
         >
-          <CheckCircle2 className="w-5 h-5 text-[#8ab4f8]" />
+          <CheckCircle2 className={`w-4 h-4 ${activeNavTab === 'all' ? 'text-[#030707]' : 'text-teal-400'}`} />
           <span>All tasks</span>
         </button>
 
@@ -94,23 +94,23 @@ export const Sidebar: React.FC = () => {
           onClick={() => {
             setActiveNavTab('starred');
           }}
-          className={`w-full flex items-center gap-3.5 px-4 py-2.5 rounded-full text-sm font-medium transition ${
+          className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-semibold transition ${
             activeNavTab === 'starred'
-              ? 'bg-[#004a77] text-[#c2e7ff]'
-              : 'text-[#c4c7c5] hover:bg-[#1e1f20]'
+              ? 'bg-[#19E6C8] text-[#030707] font-extrabold shadow-[0_0_20px_rgba(25,230,200,0.35)]'
+              : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#F4FFFD]'
           }`}
         >
-          <Star className="w-5 h-5 text-[#c4c7c5]" />
+          <Star className={`w-4 h-4 ${activeNavTab === 'starred' ? 'text-[#030707] fill-[#030707]' : 'text-[#94B5B0]'}`} />
           <span>Starred</span>
         </button>
       </div>
 
       {/* Lists Section Header */}
-      <div className="mt-4 px-4 py-1.5 flex items-center justify-between text-xs font-medium text-[#8e918f]">
+      <div className="mt-3 px-4 py-1.5 flex items-center justify-between text-[11px] font-bold text-teal-400/80 uppercase tracking-wider">
         <span>Lists</span>
         <button
           onClick={() => setIsListsExpanded(!isListsExpanded)}
-          className="p-1 rounded hover:bg-[#1e1f20] text-[#8e918f] hover:text-[#e3e3e3] transition"
+          className="p-1 rounded hover:bg-teal-500/10 text-teal-400 hover:text-white transition"
         >
           {isListsExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -129,36 +129,36 @@ export const Sidebar: React.FC = () => {
                 key={list.id}
                 onMouseEnter={() => setHoveredListId(list.id)}
                 onMouseLeave={() => setHoveredListId(null)}
-                className={`group flex items-center justify-between px-3 py-2 rounded-xl text-sm transition relative cursor-pointer ${
+                className={`group flex items-center justify-between px-3 py-2 rounded-xl text-xs transition relative cursor-pointer ${
                   isSelected
-                    ? 'bg-[#1e1f20] text-white font-medium'
-                    : 'text-[#c4c7c5] hover:bg-[#1e1f20] hover:text-[#e3e3e3]'
+                    ? 'bg-teal-500/15 text-[#19E6C8] border border-teal-500/30 font-bold'
+                    : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#F4FFFD]'
                 }`}
                 onClick={() => handleListClick(list.id)}
               >
                 {/* Checkbox to toggle column visibility in the board */}
-                <div className="flex items-center gap-3 flex-1 min-w-0">
+                <div className="flex items-center gap-2.5 flex-1 min-w-0">
                   <button
                     type="button"
                     onClick={e => {
                       e.stopPropagation();
                       toggleListVisibility(list.id);
                     }}
-                    className="text-[#8ab4f8] hover:text-white transition flex-shrink-0"
+                    className="text-[#19E6C8] hover:text-white transition flex-shrink-0"
                     title={isVisible ? 'Hide list column' : 'Show list column'}
                   >
                     {isVisible ? (
-                      <CheckSquare className="w-4 h-4 text-[#8ab4f8] fill-[#004a77]/30" />
+                      <CheckSquare className="w-4 h-4 text-[#19E6C8] fill-teal-500/20" />
                     ) : (
-                      <Square className="w-4 h-4 text-[#8e918f]" />
+                      <Square className="w-4 h-4 text-teal-500/40" />
                     )}
                   </button>
-                  <span className="truncate text-xs sm:text-sm">{list.name}</span>
+                  <span className="truncate">{list.name}</span>
                 </div>
 
                 {/* Task Count on the Right */}
                 <div className="flex items-center gap-1.5 flex-shrink-0">
-                  <span className="text-xs text-[#8e918f] font-normal px-1">
+                  <span className="text-[11px] text-teal-400/60 font-medium px-1">
                     {count}
                   </span>
 
@@ -170,7 +170,7 @@ export const Sidebar: React.FC = () => {
                         e.stopPropagation();
                         setActiveMenuId(activeMenuId === list.id ? null : list.id);
                       }}
-                      className="p-1 rounded hover:bg-[#282a2c] text-[#8e918f] hover:text-white"
+                      className="p-1 rounded hover:bg-teal-500/20 text-teal-400 hover:text-white"
                       title="List options"
                     >
                       <MoreVertical className="w-3.5 h-3.5" />
@@ -194,10 +194,10 @@ export const Sidebar: React.FC = () => {
       )}
 
       {/* "+ Create new list" button at the bottom */}
-      <div className="p-3 border-t border-[#282a2c] mt-auto">
+      <div className="p-3 border-t border-teal-500/20 mt-auto">
         <button
           onClick={() => setShowCreateListModal(true)}
-          className="flex items-center gap-3 px-3 py-2 text-sm text-[#8ab4f8] hover:text-[#c2e7ff] hover:bg-[#1e1f20] rounded-xl w-full transition font-medium"
+          className="flex items-center gap-2.5 px-3 py-2 text-xs text-[#19E6C8] hover:text-[#2DD4BF] hover:bg-teal-500/10 rounded-xl w-full transition font-bold"
         >
           <Plus className="w-4 h-4" />
           <span>Create new list</span>

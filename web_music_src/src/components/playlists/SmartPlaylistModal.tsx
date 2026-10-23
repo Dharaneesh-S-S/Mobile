@@ -62,19 +62,19 @@ export const SmartPlaylistModal: React.FC<{
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
-      <div className="w-full max-w-lg max-h-[85vh] bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col overflow-hidden text-white space-y-4">
+      <div className="w-full max-w-lg max-h-[85vh] bg-[#051413]/95 border border-teal-500/25 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col overflow-hidden text-[#F4FFFD] space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-2 border-b border-teal-500/15">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-purple-400" />
-            <h3 className="font-extrabold text-base font-display">
+            <Sparkles className="w-5 h-5 text-[#19E6C8]" />
+            <h3 className="font-extrabold text-base font-display text-[#F4FFFD]">
               Smart Playlist Builder
             </h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+            className="p-1.5 rounded-full text-[#94B5B0] hover:text-[#F4FFFD] hover:bg-teal-500/10"
           >
             <X className="w-5 h-5" />
           </button>
@@ -87,7 +87,7 @@ export const SmartPlaylistModal: React.FC<{
             value={name}
             onChange={(e) => setName(e.target.value)}
             placeholder="Smart Playlist Name (e.g. 90s Rock Favorites)"
-            className="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-purple-500 font-semibold"
+            className="w-full bg-[#030d0c] border border-teal-500/20 rounded-xl px-3.5 py-2 text-xs text-[#F4FFFD] placeholder:text-teal-400/40 focus:outline-none focus:border-[#19E6C8] font-semibold"
             autoFocus
           />
           <input
@@ -95,35 +95,35 @@ export const SmartPlaylistModal: React.FC<{
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Optional description..."
-            className="w-full bg-slate-800/80 border border-slate-700 rounded-xl px-3.5 py-2 text-xs text-white placeholder:text-slate-400 focus:outline-none focus:border-purple-500"
+            className="w-full bg-[#030d0c] border border-teal-500/20 rounded-xl px-3.5 py-2 text-xs text-[#F4FFFD] placeholder:text-teal-400/40 focus:outline-none focus:border-[#19E6C8]"
           />
         </div>
 
         {/* Match Mode & Sort */}
         <div className="grid grid-cols-2 gap-2 text-xs">
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 space-y-1">
-            <span className="block text-[11px] text-slate-400 font-semibold">Match Condition</span>
+          <div className="bg-[#030d0c] border border-teal-500/20 rounded-xl p-2.5 space-y-1">
+            <span className="block text-[11px] text-[#94B5B0] font-semibold">Match Condition</span>
             <select
               value={matchMode}
               onChange={(e) => setMatchMode(e.target.value as any)}
-              className="w-full bg-transparent font-bold text-white focus:outline-none cursor-pointer"
+              className="w-full bg-transparent font-bold text-[#F4FFFD] focus:outline-none cursor-pointer"
             >
-              <option value="all" className="bg-slate-900">Match ALL rules (AND)</option>
-              <option value="any" className="bg-slate-900">Match ANY rule (OR)</option>
+              <option value="all" className="bg-[#051413]">Match ALL rules (AND)</option>
+              <option value="any" className="bg-[#051413]">Match ANY rule (OR)</option>
             </select>
           </div>
-          <div className="bg-slate-950/60 border border-slate-800 rounded-xl p-2.5 space-y-1">
-            <span className="block text-[11px] text-slate-400 font-semibold">Live Sort Order</span>
+          <div className="bg-[#030d0c] border border-teal-500/20 rounded-xl p-2.5 space-y-1">
+            <span className="block text-[11px] text-[#94B5B0] font-semibold">Live Sort Order</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="w-full bg-transparent font-bold text-white focus:outline-none cursor-pointer"
+              className="w-full bg-transparent font-bold text-[#F4FFFD] focus:outline-none cursor-pointer"
             >
-              <option value="dateAdded" className="bg-slate-900">Recently Added</option>
-              <option value="playCount" className="bg-slate-900">Most Played</option>
-              <option value="title" className="bg-slate-900">Track Title</option>
-              <option value="artist" className="bg-slate-900">Artist</option>
-              <option value="random" className="bg-slate-900">Randomized</option>
+              <option value="dateAdded" className="bg-[#051413]">Recently Added</option>
+              <option value="playCount" className="bg-[#051413]">Most Played</option>
+              <option value="title" className="bg-[#051413]">Track Title</option>
+              <option value="artist" className="bg-[#051413]">Artist</option>
+              <option value="random" className="bg-[#051413]">Randomized</option>
             </select>
           </div>
         </div>
@@ -131,11 +131,11 @@ export const SmartPlaylistModal: React.FC<{
         {/* Dynamic Rules List */}
         <div className="flex-1 overflow-y-auto space-y-2 pr-1 min-h-[140px]">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-300">Rules</span>
+            <span className="text-xs font-bold text-[#94B5B0]">Rules</span>
             <button
               type="button"
               onClick={handleAddRule}
-              className="text-xs font-bold text-purple-400 hover:text-purple-300 flex items-center gap-1"
+              className="text-xs font-bold text-[#19E6C8] hover:text-[#2DD4BF] flex items-center gap-1"
             >
               <Plus className="w-3.5 h-3.5" />
               <span>Add Rule</span>
@@ -145,12 +145,12 @@ export const SmartPlaylistModal: React.FC<{
           {rules.map((rule) => (
             <div
               key={rule.id}
-              className="p-3 rounded-2xl bg-slate-950/60 border border-slate-800 flex items-center gap-2 text-xs"
+              className="p-3 rounded-2xl bg-[#030d0c] border border-teal-500/20 flex items-center gap-2 text-xs"
             >
               <select
                 value={rule.field}
                 onChange={(e) => handleUpdateRule(rule.id, { field: e.target.value as any })}
-                className="bg-slate-800 rounded-lg px-2 py-1 text-white focus:outline-none"
+                className="bg-[#081f1d] rounded-lg px-2 py-1 text-[#F4FFFD] border border-teal-500/20 focus:outline-none"
               >
                 <option value="genre">Genre</option>
                 <option value="artist">Artist</option>
@@ -163,7 +163,7 @@ export const SmartPlaylistModal: React.FC<{
               <select
                 value={rule.operator}
                 onChange={(e) => handleUpdateRule(rule.id, { operator: e.target.value as any })}
-                className="bg-slate-800 rounded-lg px-2 py-1 text-white focus:outline-none"
+                className="bg-[#081f1d] rounded-lg px-2 py-1 text-[#F4FFFD] border border-teal-500/20 focus:outline-none"
               >
                 <option value="contains">contains</option>
                 <option value="equals">is equal to</option>
@@ -176,7 +176,7 @@ export const SmartPlaylistModal: React.FC<{
                 value={String(rule.value)}
                 onChange={(e) => handleUpdateRule(rule.id, { value: e.target.value })}
                 placeholder="Value..."
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none"
+                className="flex-1 bg-[#051211] border border-teal-500/20 rounded-lg px-2.5 py-1 text-xs text-[#F4FFFD] focus:outline-none focus:border-[#19E6C8]"
               />
 
               <button
@@ -191,11 +191,11 @@ export const SmartPlaylistModal: React.FC<{
         </div>
 
         {/* Footer */}
-        <div className="pt-2 flex justify-end gap-2 border-t border-slate-800">
+        <div className="pt-2 flex justify-end gap-2 border-t border-teal-500/15">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+            className="px-4 py-2 rounded-full text-xs font-semibold text-[#94B5B0] hover:text-[#F4FFFD]"
           >
             Cancel
           </button>
@@ -203,7 +203,7 @@ export const SmartPlaylistModal: React.FC<{
             type="button"
             onClick={handleSave}
             disabled={!name.trim()}
-            className="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white text-xs font-bold shadow-md shadow-purple-600/30 disabled:opacity-50"
+            className="px-5 py-2 rounded-full bg-white hover:bg-slate-100 text-[#04100F] text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] disabled:opacity-50 transition-all active:scale-95"
           >
             Create Smart Playlist
           </button>

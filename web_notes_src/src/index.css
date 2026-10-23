@@ -4,7 +4,10 @@
 
 @layer base {
   body {
+    background-color: #030707;
+    color: #F4FFFD;
     font-family: 'Outfit', 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 }
 
@@ -19,12 +22,12 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
+  background: rgba(45, 212, 191, 0.2);
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(148, 163, 184, 0.6);
+  background: rgba(25, 230, 200, 0.45);
 }
 
 /* TipTap ProseMirror Editor Styling */

@@ -53,27 +53,27 @@ export const Header: React.FC<HeaderProps> = ({
     <header
       className={`sticky top-0 z-30 transition-all duration-200 px-3 sm:px-4 ${
         isScrolled
-          ? 'bg-slate-50/90 dark:bg-[#090D16]/90 backdrop-blur-xl shadow-sm border-b border-slate-200/70 dark:border-white/[0.06] py-2.5 sm:py-3'
+          ? 'bg-[#030707]/90 backdrop-blur-xl shadow-sm border-b border-teal-500/15 py-2.5 sm:py-3'
           : 'bg-transparent py-3 sm:py-4'
       }`}
     >
       <div className="flex items-center justify-between gap-3">
         {/* Brand & Title */}
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 via-emerald-500 to-teal-400 flex items-center justify-center text-slate-950 shadow-[0_4px_16px_rgba(16,185,129,0.35)] shrink-0 ring-1 ring-white/20">
+          <div className="w-10 h-10 rounded-2xl bg-[#19E6C8] text-[#030707] shadow-[0_0_20px_rgba(25,230,200,0.4)] flex items-center justify-center shrink-0">
             <HeartPulse size={22} strokeWidth={2.4} />
           </div>
           <div>
             <h1
-              className={`font-display font-extrabold tracking-tight text-slate-900 dark:text-white transition-all ${
+              className={`font-display font-extrabold tracking-tight text-white transition-all ${
                 isScrolled ? 'text-lg' : 'text-xl sm:text-2xl'
               }`}
             >
               {title}
             </h1>
             {!isScrolled && (
-              <p className="text-xs font-semibold text-emerald-600 dark:text-emerald-400/90 flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <p className="text-xs font-semibold text-[#19E6C8] flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#19E6C8] shadow-[0_0_8px_rgba(25,230,200,0.8)] animate-pulse" />
                 {subtitle}
               </p>
             )}
@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Desktop Navigation Tabs (Visible on md+ screens when not locked in phone bezel) */}
         {!phoneFrameMode && onSelectTab && (
-          <nav className="hidden md:flex items-center gap-1 bg-slate-200/60 dark:bg-slate-800/60 p-1.5 rounded-2xl border border-slate-300/40 dark:border-white/[0.06] backdrop-blur-md">
+          <nav className="hidden md:flex items-center gap-1 bg-[#051211]/90 p-1.5 rounded-full border border-teal-500/20 backdrop-blur-md">
             {desktopTabs.map((tab) => {
               const Icon = tab.icon
               const isActive = currentTab === tab.id
@@ -90,10 +90,10 @@ export const Header: React.FC<HeaderProps> = ({
                 <button
                   key={tab.id}
                   onClick={() => onSelectTab(tab.id)}
-                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs transition-all ${
                     isActive
-                      ? 'bg-emerald-500 text-slate-950 shadow-md shadow-emerald-500/25 font-extrabold'
-                      : 'text-slate-600 dark:text-slate-400 hover:text-slate-950 dark:hover:text-white hover:bg-white/50 dark:hover:bg-white/[0.05]'
+                      ? 'bg-white text-[#04100F] shadow-[0_0_20px_rgba(255,255,255,0.22)] font-extrabold'
+                      : 'text-slate-400 hover:text-white hover:bg-teal-500/10'
                   }`}
                 >
                   <Icon size={14} strokeWidth={2.4} />
@@ -112,8 +112,8 @@ export const Header: React.FC<HeaderProps> = ({
               onClick={onToggleFrame}
               className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-2xl text-xs font-bold transition-all border ${
                 phoneFrameMode
-                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 shadow-sm'
-                  : 'text-slate-600 dark:text-slate-300 bg-slate-200/50 dark:bg-white/[0.04] border-slate-300/50 dark:border-white/[0.08] hover:bg-slate-200 dark:hover:bg-white/[0.08]'
+                  ? 'bg-teal-500/15 text-[#19E6C8] border-teal-500/30 shadow-sm'
+                  : 'text-slate-300 bg-[#051211] border-teal-500/20 hover:border-teal-500/40'
               }`}
               title="Toggle between full-width responsive laptop view and phone mockup preview"
             >
@@ -125,7 +125,7 @@ export const Header: React.FC<HeaderProps> = ({
           {onOpenGoals && (
             <button
               onClick={onOpenGoals}
-              className="p-2 rounded-2xl text-amber-500 hover:bg-amber-500/10 dark:hover:bg-amber-500/15 border border-transparent hover:border-amber-500/20 transition-all active:scale-95"
+              className="p-2 rounded-2xl text-[#19E6C8] hover:bg-teal-500/10 border border-transparent hover:border-teal-500/20 transition-all active:scale-95"
               title="Goals & Achievements"
               aria-label="Goals & Achievements"
             >
@@ -135,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <button
             onClick={onToggleTheme}
-            className="p-2 rounded-2xl text-slate-600 dark:text-slate-300 hover:bg-slate-200/70 dark:hover:bg-white/[0.08] border border-transparent hover:border-slate-300/60 dark:hover:border-white/10 transition-all active:scale-95"
+            className="p-2 rounded-2xl text-slate-300 hover:bg-teal-500/10 border border-transparent hover:border-teal-500/20 transition-all active:scale-95"
             title="Toggle Light/Dark Theme"
             aria-label="Toggle Theme"
           >

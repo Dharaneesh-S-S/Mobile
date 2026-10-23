@@ -48,19 +48,19 @@ export const EditTabsModal: React.FC<{
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col text-white space-y-4">
-        <div className="flex items-center justify-between pb-2 border-b border-slate-800">
-          <h3 className="font-extrabold text-base font-display">Edit Navigation Tabs</h3>
+      <div className="w-full max-w-sm bg-[#051413]/95 border border-teal-500/25 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col text-[#F4FFFD] space-y-4">
+        <div className="flex items-center justify-between pb-2 border-b border-teal-500/15">
+          <h3 className="font-extrabold text-base font-display text-[#F4FFFD]">Edit Navigation Tabs</h3>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+            className="p-1.5 rounded-full text-[#94B5B0] hover:text-[#F4FFFD] hover:bg-teal-500/10"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <p className="text-xs text-slate-400">
+        <p className="text-xs text-[#94B5B0]">
           Reorder or hide navigation tabs displayed in the bottom bar and sidebar.
         </p>
 
@@ -71,17 +71,17 @@ export const EditTabsModal: React.FC<{
             return (
               <div
                 key={tab.id}
-                className="flex items-center justify-between p-2.5 rounded-xl bg-slate-950/60 border border-slate-800"
+                className="flex items-center justify-between p-2.5 rounded-xl bg-[#030d0c] border border-teal-500/20"
               >
                 <div className="flex items-center gap-2.5">
                   <button
                     type="button"
                     onClick={() => handleToggleTab(tab.id)}
-                    className={isVisible ? 'text-fuchsia-400' : 'text-slate-600'}
+                    className={isVisible ? 'text-[#19E6C8]' : 'text-slate-600'}
                   >
                     {isVisible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
-                  <span className={`text-xs font-bold ${isVisible ? 'text-white' : 'text-slate-500 line-through'}`}>
+                  <span className={`text-xs font-bold ${isVisible ? 'text-[#F4FFFD]' : 'text-slate-500 line-through'}`}>
                     {tab.label}
                   </span>
                 </div>
@@ -92,7 +92,7 @@ export const EditTabsModal: React.FC<{
                       type="button"
                       disabled={idx === 0}
                       onClick={() => handleMove(idx, 'up')}
-                      className="p-1 text-slate-400 hover:text-white disabled:opacity-20"
+                      className="p-1 text-[#94B5B0] hover:text-[#F4FFFD] disabled:opacity-20"
                     >
                       <ArrowUp className="w-3.5 h-3.5" />
                     </button>
@@ -100,7 +100,7 @@ export const EditTabsModal: React.FC<{
                       type="button"
                       disabled={idx === tabOrder.length - 1}
                       onClick={() => handleMove(idx, 'down')}
-                      className="p-1 text-slate-400 hover:text-white disabled:opacity-20"
+                      className="p-1 text-[#94B5B0] hover:text-[#F4FFFD] disabled:opacity-20"
                     >
                       <ArrowDown className="w-3.5 h-3.5" />
                     </button>
@@ -111,18 +111,18 @@ export const EditTabsModal: React.FC<{
           })}
         </div>
 
-        <div className="pt-2 flex justify-end gap-2 border-t border-slate-800">
+        <div className="pt-2 flex justify-end gap-2 border-t border-teal-500/15">
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-400 hover:text-white"
+            className="px-4 py-2 rounded-full text-xs font-semibold text-[#94B5B0] hover:text-[#F4FFFD]"
           >
             Cancel
           </button>
           <button
             type="button"
             onClick={handleSave}
-            className="px-5 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white text-xs font-bold shadow-md shadow-fuchsia-600/30"
+            className="px-5 py-2 rounded-full bg-white hover:bg-slate-100 text-[#04100F] text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] transition-all active:scale-95"
           >
             Save Tabs
           </button>

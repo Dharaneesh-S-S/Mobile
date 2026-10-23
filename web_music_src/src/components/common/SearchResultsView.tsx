@@ -90,7 +90,7 @@ export const SearchResultsView: React.FC<{
             <button
               type="button"
               onClick={handleClearHistory}
-              className="text-xs text-fuchsia-400 hover:underline"
+              className="text-xs text-[#19E6C8] hover:underline"
             >
               Clear All
             </button>
@@ -104,7 +104,7 @@ export const SearchResultsView: React.FC<{
                 key={s.id}
                 type="button"
                 onClick={() => setSearchQuery(s.query)}
-                className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-300 transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-[#051211] hover:bg-[#071f1d] border border-teal-500/20 text-xs font-semibold text-slate-300 transition-colors"
               >
                 {s.query}
               </button>
@@ -130,7 +130,7 @@ export const SearchResultsView: React.FC<{
           {/* Matched Tracks */}
           {matchedTracks.length > 0 && (
             <div className="space-y-2">
-              <div className="flex items-center gap-2 text-xs font-bold text-fuchsia-400 uppercase tracking-wider">
+              <div className="flex items-center gap-2 text-xs font-bold text-[#19E6C8] uppercase tracking-wider">
                 <Music2 className="w-4 h-4" />
                 <span>Songs</span>
               </div>

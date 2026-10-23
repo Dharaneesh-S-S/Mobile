@@ -110,14 +110,14 @@ export const TopBar: React.FC = () => {
   const currentViewLabel = viewOptions.find(v => v.id === currentView)?.label || 'Week';
 
   return (
-    <header className="h-16 px-3 md:px-5 border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex items-center justify-between select-none relative z-30 transition-colors">
+    <header className="h-16 px-3 md:px-5 border-b border-teal-500/15 bg-[#051211]/90 backdrop-blur-xl flex items-center justify-between select-none relative z-30 transition-colors text-[#F4FFFD]">
       {/* Left side: Hamburger, Logo, Today, Navigation chevrons, Date title */}
       <div className="flex items-center gap-2 md:gap-4">
         <button
           type="button"
           onClick={toggleSidebar}
           aria-label={sidebarOpen ? 'Collapse sidebar' : 'Expand sidebar'}
-          className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="p-2 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors"
         >
           <Menu className="w-5 h-5" />
         </button>
@@ -129,7 +129,7 @@ export const TopBar: React.FC = () => {
           className="flex items-center gap-2.5 group focus:outline-none"
           title="Chronos Calendar - Return to Today"
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform">
+          <div className="w-9 h-9 rounded-2xl bg-teal-500/20 text-[#19E6C8] border border-teal-400/40 flex items-center justify-center shadow-[0_0_15px_rgba(25,230,200,0.3)] ring-1 ring-teal-400/20 group-hover:scale-105 transition-transform">
             <svg
               className="w-5 h-5"
               viewBox="0 0 24 24"
@@ -146,7 +146,7 @@ export const TopBar: React.FC = () => {
               <circle cx="12" cy="15" r="2" fill="currentColor" />
             </svg>
           </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 dark:from-white dark:to-gray-300 bg-clip-text text-transparent hidden sm:inline-block tracking-tight font-sans">
+          <span className="text-xl font-extrabold text-[#F4FFFD] hidden sm:inline-block tracking-tight font-display">
             Chronos
           </span>
         </button>
@@ -155,7 +155,7 @@ export const TopBar: React.FC = () => {
         <button
           type="button"
           onClick={goToToday}
-          className="ml-2 md:ml-4 px-3.5 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-xs md:text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors shadow-2xs"
+          className="ml-2 md:ml-4 px-3.5 py-1.5 rounded-full border border-teal-500/30 text-xs md:text-sm font-bold text-[#19E6C8] hover:bg-teal-500/10 transition-colors shadow-2xs"
         >
           Today
         </button>
@@ -166,7 +166,7 @@ export const TopBar: React.FC = () => {
             type="button"
             onClick={navigatePrev}
             aria-label="Previous period"
-            className="p-1.5 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -174,7 +174,7 @@ export const TopBar: React.FC = () => {
             type="button"
             onClick={navigateNext}
             aria-label="Next period"
-            className="p-1.5 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-1.5 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors"
           >
             <ChevronRight className="w-5 h-5" />
           </button>
@@ -185,12 +185,12 @@ export const TopBar: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowDatePicker(prev => !prev)}
-            className="flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors group"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl hover:bg-teal-500/10 transition-colors group"
           >
-            <h1 className="text-base md:text-xl font-medium text-gray-800 dark:text-gray-100 whitespace-nowrap">
+            <h1 className="text-base md:text-xl font-bold text-[#F4FFFD] whitespace-nowrap">
               {getHeaderTitle()}
             </h1>
-            <ChevronDown className="w-4 h-4 text-gray-500 group-hover:text-gray-800 dark:group-hover:text-gray-200 transition-colors" />
+            <ChevronDown className="w-4 h-4 text-teal-400/60 group-hover:text-white transition-colors" />
           </button>
 
           {showDatePicker && (
@@ -206,20 +206,20 @@ export const TopBar: React.FC = () => {
       {/* Center: Search Box with Advanced Filter toggle */}
       <div className="flex-1 max-w-xl mx-2 md:mx-6 hidden md:block" ref={searchRef}>
         <div className="relative">
-          <div className="flex items-center w-full bg-gray-100 dark:bg-gray-800/80 rounded-xl px-3 py-1.5 border border-transparent focus-within:border-blue-500 focus-within:bg-white dark:focus-within:bg-gray-800 focus-within:shadow-md transition-all">
-            <Search className="w-4 h-4 text-gray-400 mr-2 flex-shrink-0" />
+          <div className="flex items-center w-full bg-[#081a18] rounded-full px-3.5 py-1.5 border border-teal-500/20 focus-within:border-[#19E6C8] focus-within:ring-2 focus-within:ring-[#19E6C8]/20 transition-all">
+            <Search className="w-4 h-4 text-teal-400/60 mr-2 flex-shrink-0" />
             <input
               type="text"
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search title, description, location, guests..."
-              className="w-full bg-transparent text-sm text-gray-800 dark:text-gray-100 placeholder-gray-400 focus:outline-none"
+              className="w-full bg-transparent text-sm text-[#F4FFFD] placeholder-teal-400/40 focus:outline-none"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="p-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                className="p-0.5 text-teal-400/60 hover:text-white"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -230,8 +230,8 @@ export const TopBar: React.FC = () => {
               aria-label="Advanced search filters"
               className={`p-1.5 ml-1 rounded-lg transition-colors ${
                 advancedFilters
-                  ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'
-                  : 'text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
+                  ? 'bg-teal-500/20 text-[#19E6C8]'
+                  : 'text-teal-400/60 hover:text-white hover:bg-teal-500/10'
               }`}
               title="Advanced search filters"
             >
@@ -260,14 +260,14 @@ export const TopBar: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowViewMenu(prev => !prev)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-300 dark:border-gray-700 text-xs md:text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full border border-teal-500/20 bg-[#081a18] text-xs md:text-sm font-semibold text-[#F4FFFD] hover:bg-teal-500/10 transition-colors"
           >
             <span>{currentViewLabel}</span>
-            <ChevronDown className="w-4 h-4 text-gray-500" />
+            <ChevronDown className="w-4 h-4 text-teal-400/60" />
           </button>
 
           {showViewMenu && (
-            <div className="absolute right-0 top-full mt-1.5 w-48 rounded-2xl bg-white dark:bg-gray-800 p-1.5 shadow-xl border border-gray-100 dark:border-gray-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+            <div className="absolute right-0 top-full mt-1.5 w-48 rounded-2xl bg-[#051211] p-1.5 shadow-2xl border border-teal-500/20 z-50 animate-in fade-in zoom-in-95 duration-150">
               {viewOptions.map(option => (
                 <button
                   key={option.id}
@@ -276,14 +276,14 @@ export const TopBar: React.FC = () => {
                     setCurrentView(option.id);
                     setShowViewMenu(false);
                   }}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-medium transition-colors ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold transition-colors ${
                     currentView === option.id
-                      ? 'bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold'
-                      : 'text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700'
+                      ? 'bg-teal-500/20 text-[#19E6C8] font-bold'
+                      : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#F4FFFD]'
                   }`}
                 >
                   <span>{option.label}</span>
-                  <span className="text-[10px] text-gray-400 font-mono">{option.shortcut}</span>
+                  <span className="text-[10px] text-teal-400/60 font-mono">{option.shortcut}</span>
                 </button>
               ))}
             </div>
@@ -296,7 +296,7 @@ export const TopBar: React.FC = () => {
           onClick={openHelp}
           aria-label="Help and keyboard shortcuts"
           title="Help & Shortcuts (?)"
-          className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          className="p-2 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors"
         >
           <HelpCircle className="w-5 h-5" />
         </button>
@@ -308,7 +308,7 @@ export const TopBar: React.FC = () => {
             onClick={() => setShowSettingsMenu(prev => !prev)}
             aria-label="Settings"
             title="Settings"
-            className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+            className="p-2 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors"
           >
             <SettingsIcon className="w-5 h-5" />
           </button>
@@ -337,7 +337,7 @@ export const TopBar: React.FC = () => {
           }}
           aria-label="Apps menu"
           title="Chronos Suite Apps"
-          className="p-2 rounded-full text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors hidden sm:inline-flex"
+          className="p-2 rounded-full text-teal-400/70 hover:bg-teal-500/10 hover:text-white transition-colors hidden sm:inline-flex"
         >
           <Grid className="w-5 h-5" />
         </button>
@@ -347,7 +347,7 @@ export const TopBar: React.FC = () => {
           <button
             type="button"
             onClick={() => setShowProfileMenu(prev => !prev)}
-            className="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center text-xs font-bold ring-2 ring-transparent hover:ring-blue-400 transition-all focus:outline-none"
+            className="w-8 h-8 rounded-full bg-teal-500/20 text-[#19E6C8] border border-teal-400/40 flex items-center justify-center text-xs font-bold ring-2 ring-transparent hover:ring-teal-400 transition-all focus:outline-none"
             title="Chronos Account"
           >
             CC

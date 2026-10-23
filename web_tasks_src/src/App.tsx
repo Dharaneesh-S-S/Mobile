@@ -26,7 +26,7 @@ export const App: React.FC = () => {
   useKeyboardShortcuts(focusedTaskId, setFocusedTaskId, searchInputRef);
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-[#131314] text-[#e3e3e3] overflow-hidden select-none font-sans">
+    <div className="h-screen w-screen flex flex-col bg-[#030707] text-[#F4FFFD] overflow-hidden select-none font-sans">
       {/* Top Header Bar */}
       <Header searchInputRef={searchInputRef} />
 
@@ -36,9 +36,9 @@ export const App: React.FC = () => {
         <Sidebar />
 
         {/* Board View or Search Results */}
-        <main className="flex-1 h-full overflow-hidden flex flex-col bg-[#131314]">
+        <main className="flex-1 h-full overflow-hidden flex flex-col bg-[#030707]">
           {searchQuery.trim() ? (
-            <div className="flex-1 h-full overflow-y-auto p-4 bg-[#131314]">
+            <div className="flex-1 h-full overflow-y-auto p-4 bg-[#030707]">
               <SearchResults
                 focusedTaskId={focusedTaskId}
                 setFocusedTaskId={setFocusedTaskId}

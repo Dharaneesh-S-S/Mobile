@@ -488,7 +488,7 @@ export const App: React.FC = () => {
   const trashCount = notes.filter(n => n.isTrash).length
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-800 dark:text-slate-100 flex flex-col font-sans transition-colors duration-200">
+    <div className="min-h-screen bg-[#030707] text-[#F4FFFD] flex flex-col font-sans transition-colors duration-200">
       {/* Top Header */}
       <Header
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}

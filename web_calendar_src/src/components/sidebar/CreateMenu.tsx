@@ -75,30 +75,28 @@ export const CreateMenu: React.FC = () => {
       <button
         type="button"
         onClick={() => setIsOpen(prev => !prev)}
-        className="w-full sm:w-auto flex items-center justify-center gap-3 px-5 py-3 rounded-2xl bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 font-semibold text-sm shadow-md hover:shadow-lg hover:bg-gray-50 dark:hover:bg-gray-750 border border-gray-200 dark:border-gray-700 transition-all duration-200 group"
+        className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-6 py-2.5 rounded-full bg-white text-[#04100F] font-extrabold text-sm shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-slate-100 transition-all active:scale-95 duration-200 group"
       >
-        <div className="w-7 h-7 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center group-hover:scale-110 transition-transform">
-          <Plus className="w-5 h-5" />
-        </div>
+        <Plus className="w-4 h-4 text-[#04100F] stroke-[2.5]" />
         <span>Create</span>
       </button>
 
       {isOpen && (
-        <div className="absolute left-3 top-full mt-2 w-64 rounded-2xl bg-white dark:bg-gray-800 p-2 shadow-2xl border border-gray-100 dark:border-gray-700 z-50 animate-in fade-in zoom-in-95 duration-150">
+        <div className="absolute left-3 top-full mt-2 w-64 rounded-2xl bg-[#051211] p-2 shadow-2xl border border-teal-500/20 z-50 animate-in fade-in zoom-in-95 duration-150">
           <div className="space-y-1">
             {createOptions.map(opt => (
               <button
                 key={opt.type}
                 type="button"
                 onClick={() => handleSelect(opt.type)}
-                className="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700/60 transition-colors text-left group"
+                className="w-full flex items-start gap-3 p-2.5 rounded-xl hover:bg-teal-500/10 transition-colors text-left group"
               >
-                <div className="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-700 group-hover:bg-white dark:group-hover:bg-gray-600 shadow-2xs transition-colors mt-0.5">
+                <div className="p-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 shadow-2xs transition-colors mt-0.5">
                   {opt.icon}
                 </div>
                 <div>
-                  <p className="text-xs font-semibold text-gray-800 dark:text-gray-100">{opt.label}</p>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400 leading-tight">{opt.desc}</p>
+                  <p className="text-xs font-bold text-[#F4FFFD]">{opt.label}</p>
+                  <p className="text-[11px] text-[#94B5B0] leading-tight">{opt.desc}</p>
                 </div>
               </button>
             ))}

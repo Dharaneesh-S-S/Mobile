@@ -35,8 +35,8 @@ interface AddRecordOptions {
 
 interface MoneyContextType {
   // Navigation
-  activeTab: 'transactions' | 'calendar' | 'statistics' | 'wallet';
-  setActiveTab: (tab: 'transactions' | 'calendar' | 'statistics' | 'wallet') => void;
+  activeTab: 'transactions' | 'calendar' | 'statistics' | 'wallet' | 'welcome' | 'styleguide';
+  setActiveTab: (tab: 'transactions' | 'calendar' | 'statistics' | 'wallet' | 'welcome' | 'styleguide') => void;
   anchorDate: Date;
   setAnchorDate: (date: Date) => void;
   viewRange: ViewRangeType;
@@ -147,7 +147,9 @@ const MoneyContext = createContext<MoneyContextType | null>(null);
 
 export const MoneyProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   // 1. Navigation state
-  const [activeTab, setActiveTab] = useState<'transactions' | 'calendar' | 'statistics' | 'wallet'>('transactions');
+  const [activeTab, setActiveTab] = useState<
+    'transactions' | 'calendar' | 'statistics' | 'wallet' | 'welcome' | 'styleguide'
+  >('transactions');
   const [anchorDate, setAnchorDate] = useState<Date>(new Date());
   const [viewRange, setViewRange] = useState<ViewRangeType>('month');
   const [chartStyle, setChartStyle] = useState<'donut' | 'bars'>('donut');

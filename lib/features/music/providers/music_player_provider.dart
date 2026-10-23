@@ -114,6 +114,10 @@ class MusicPlaybackController extends StateNotifier<AsyncValue<void>> {
         name: 'MusicWidgetProvider',
         androidName: 'MusicWidgetProvider',
       );
+      await HomeWidget.updateWidget(
+        name: 'CombinedWidgetProvider',
+        androidName: 'CombinedWidgetProvider',
+      );
     } catch (e) {
       debugPrint('HomeWidget sync exception: $e');
     }

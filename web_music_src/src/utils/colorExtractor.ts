@@ -2,7 +2,7 @@
 export function extractColorsFromImage(imgSrc: string): Promise<{ primary: string; secondary: string; glow: string }> {
   return new Promise((resolve) => {
     if (!imgSrc) {
-      resolve({ primary: '#8b5cf6', secondary: '#d946ef', glow: 'rgba(217, 70, 239, 0.4)' })
+      resolve({ primary: '#19E6C8', secondary: '#2DD4BF', glow: 'rgba(25, 230, 200, 0.4)' })
       return
     }
 
@@ -13,7 +13,7 @@ export function extractColorsFromImage(imgSrc: string): Promise<{ primary: strin
         const canvas = document.createElement('canvas')
         const ctx = canvas.getContext('2d')
         if (!ctx) {
-          resolve({ primary: '#8b5cf6', secondary: '#d946ef', glow: 'rgba(217, 70, 239, 0.4)' })
+          resolve({ primary: '#19E6C8', secondary: '#2DD4BF', glow: 'rgba(25, 230, 200, 0.4)' })
           return
         }
 
@@ -54,11 +54,11 @@ export function extractColorsFromImage(imgSrc: string): Promise<{ primary: strin
 
         resolve({ primary, secondary, glow })
       } catch {
-        resolve({ primary: '#8b5cf6', secondary: '#d946ef', glow: 'rgba(217, 70, 239, 0.4)' })
+        resolve({ primary: '#19E6C8', secondary: '#2DD4BF', glow: 'rgba(25, 230, 200, 0.4)' })
       }
     }
     img.onerror = () => {
-      resolve({ primary: '#8b5cf6', secondary: '#d946ef', glow: 'rgba(217, 70, 239, 0.4)' })
+      resolve({ primary: '#19E6C8', secondary: '#2DD4BF', glow: 'rgba(25, 230, 200, 0.4)' })
     }
     img.src = imgSrc
   })

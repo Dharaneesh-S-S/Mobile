@@ -54,14 +54,14 @@ export const ArtistsView: React.FC<{
           <div
             key={artist.name}
             onClick={() => setSelectedArtist(artist)}
-            className="flex flex-col items-center text-center p-3 rounded-2xl hover:bg-slate-100 dark:hover:bg-slate-800/60 cursor-pointer transition-all group"
+            className="flex flex-col items-center text-center p-3 rounded-2xl hover:bg-[#051211] border border-transparent hover:border-teal-500/20 cursor-pointer transition-all group"
           >
-            <div className="relative w-28 h-28 rounded-full overflow-hidden bg-slate-800 shadow-md group-hover:shadow-xl transition-all mb-2 ring-2 ring-transparent group-hover:ring-fuchsia-500">
+            <div className="relative w-28 h-28 rounded-full overflow-hidden bg-[#051211] shadow-md group-hover:shadow-[0_0_20px_rgba(25,230,200,0.3)] transition-all mb-2 ring-2 ring-transparent group-hover:ring-[#19E6C8]">
               {artist.image ? (
                 <img src={artist.image} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-slate-500">
-                  <Mic2 className="w-10 h-10" />
+                  <Mic2 className="w-10 h-10 text-teal-400/60" />
                 </div>
               )}
             </div>
@@ -78,30 +78,30 @@ export const ArtistsView: React.FC<{
       {/* Artist Detail Modal */}
       {selectedArtist && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
-          <div className="w-full max-w-lg max-h-[85vh] bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col overflow-hidden text-white">
+          <div className="w-full max-w-lg max-h-[85vh] bg-[#051211]/95 border border-teal-500/20 rounded-3xl p-6 shadow-2xl flex flex-col overflow-hidden text-white backdrop-blur-xl">
             <div className="flex justify-end pb-2">
               <button
                 type="button"
                 onClick={() => setSelectedArtist(null)}
-                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+                className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-teal-500/10"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Artist Header */}
-            <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
-              <div className="w-20 h-20 rounded-full overflow-hidden bg-slate-800 shrink-0 shadow-lg ring-2 ring-fuchsia-500/50">
+            <div className="flex items-center gap-4 pb-4 border-b border-teal-500/15">
+              <div className="w-20 h-20 rounded-full overflow-hidden bg-[#030707] shrink-0 shadow-lg ring-2 ring-teal-500/40">
                 {selectedArtist.image ? (
                   <img src={selectedArtist.image} alt="" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-slate-500">
-                    <Mic2 className="w-8 h-8" />
+                    <Mic2 className="w-8 h-8 text-teal-400/60" />
                   </div>
                 )}
               </div>
               <div className="min-w-0 flex-1 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-fuchsia-400 tracking-wider">
+                <span className="text-[10px] uppercase font-bold text-[#19E6C8] tracking-wider">
                   Artist
                 </span>
                 <h3 className="text-lg font-extrabold truncate font-display">
@@ -114,12 +114,12 @@ export const ArtistsView: React.FC<{
             </div>
 
             {/* Tab switch: Tracks vs Albums */}
-            <div className="flex gap-2 py-3 border-b border-slate-800">
+            <div className="flex gap-2 py-3 border-b border-teal-500/15">
               <button
                 type="button"
                 onClick={() => setArtistTab('tracks')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                  artistTab === 'tracks' ? 'bg-fuchsia-600 text-white' : 'bg-slate-800 text-slate-400'
+                  artistTab === 'tracks' ? 'bg-[#19E6C8] text-[#030707] shadow-md shadow-teal-500/20' : 'bg-[#030707] text-slate-400 hover:text-white border border-teal-500/15'
                 }`}
               >
                 Tracks ({selectedArtist.tracks.length})
@@ -128,7 +128,7 @@ export const ArtistsView: React.FC<{
                 type="button"
                 onClick={() => setArtistTab('albums')}
                 className={`px-4 py-1.5 rounded-xl text-xs font-bold transition-colors ${
-                  artistTab === 'albums' ? 'bg-fuchsia-600 text-white' : 'bg-slate-800 text-slate-400'
+                  artistTab === 'albums' ? 'bg-[#19E6C8] text-[#030707] shadow-md shadow-teal-500/20' : 'bg-[#030707] text-slate-400 hover:text-white border border-teal-500/15'
                 }`}
               >
                 Albums ({selectedArtist.albums.length})
@@ -136,7 +136,7 @@ export const ArtistsView: React.FC<{
             </div>
 
             {/* Content List */}
-            <div className="flex-1 overflow-y-auto space-y-1 pt-2 divide-y divide-slate-800/50">
+            <div className="flex-1 overflow-y-auto space-y-1 pt-2 divide-y divide-teal-500/10">
               {artistTab === 'tracks' ? (
                 selectedArtist.tracks.map((track) => (
                   <div
@@ -145,7 +145,7 @@ export const ArtistsView: React.FC<{
                       playTrack(track, selectedArtist.tracks)
                       setSelectedArtist(null)
                     }}
-                    className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-slate-800/60 cursor-pointer"
+                    className="flex items-center justify-between py-2 px-2 rounded-xl hover:bg-teal-500/10 cursor-pointer"
                   >
                     <div className="min-w-0 flex-1">
                       <h5 className="text-xs font-bold text-slate-200 truncate">
@@ -164,9 +164,9 @@ export const ArtistsView: React.FC<{
                 selectedArtist.albums.map((albumName) => (
                   <div
                     key={albumName}
-                    className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-slate-800/60"
+                    className="flex items-center gap-3 py-2.5 px-2 rounded-xl hover:bg-teal-500/10"
                   >
-                    <Disc className="w-5 h-5 text-fuchsia-400" />
+                    <Disc className="w-5 h-5 text-[#19E6C8]" />
                     <span className="text-xs font-bold text-slate-200">
                       {albumName}
                     </span>

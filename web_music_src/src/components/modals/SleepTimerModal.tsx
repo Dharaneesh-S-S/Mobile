@@ -16,17 +16,17 @@ export const SleepTimerModal: React.FC<{
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-in fade-in select-none">
-      <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl flex flex-col text-white space-y-4">
+      <div className="w-full max-w-sm bg-[#051413]/95 border border-teal-500/25 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.85)] flex flex-col text-[#F4FFFD] space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between pb-2 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-2 border-b border-teal-500/15">
           <div className="flex items-center gap-2">
-            <Moon className="w-5 h-5 text-amber-400" />
-            <h3 className="font-extrabold text-base font-display">Sleep Timer</h3>
+            <Moon className="w-5 h-5 text-[#19E6C8]" />
+            <h3 className="font-extrabold text-base font-display text-[#F4FFFD]">Sleep Timer</h3>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800"
+            className="p-1.5 rounded-full text-[#94B5B0] hover:text-[#F4FFFD] hover:bg-teal-500/10"
           >
             <X className="w-5 h-5" />
           </button>
@@ -34,14 +34,14 @@ export const SleepTimerModal: React.FC<{
 
         {/* Live Timer Status if active */}
         {sleepRemainingSeconds !== null ? (
-          <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-center space-y-2">
-            <span className="block text-xs font-semibold text-amber-300">
+          <div className="p-4 rounded-2xl bg-teal-500/15 border border-teal-400/30 text-center space-y-2">
+            <span className="block text-xs font-semibold text-[#2DD4BF]">
               Music will automatically pause in:
             </span>
-            <div className="text-3xl font-extrabold font-mono text-amber-400">
+            <div className="text-3xl font-extrabold font-mono text-[#19E6C8]">
               {formatDuration(sleepRemainingSeconds)}
             </div>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-[#94B5B0]">
               Includes a gentle 30-second volume fade-out.
             </p>
             <button
@@ -49,7 +49,7 @@ export const SleepTimerModal: React.FC<{
               onClick={() => {
                 cancelSleepTimer()
               }}
-              className="mt-2 px-4 py-1.5 rounded-xl bg-red-600/80 hover:bg-red-600 text-white text-xs font-bold transition-colors"
+              className="mt-2 px-4 py-1.5 rounded-full bg-rose-500/20 border border-rose-500/30 hover:bg-rose-500/30 text-rose-300 text-xs font-bold transition-colors"
             >
               Cancel Sleep Timer
             </button>
@@ -57,7 +57,7 @@ export const SleepTimerModal: React.FC<{
         ) : (
           /* Presets selection */
           <div className="space-y-3">
-            <span className="block text-xs font-bold text-slate-400">Choose Duration</span>
+            <span className="block text-xs font-bold text-[#94B5B0]">Choose Duration</span>
             <div className="grid grid-cols-3 gap-2">
               {presets.map((mins) => (
                 <button
@@ -67,7 +67,7 @@ export const SleepTimerModal: React.FC<{
                     setSleepTimer(mins)
                     onClose()
                   }}
-                  className="py-2.5 px-2 rounded-xl bg-slate-800 hover:bg-fuchsia-600 hover:text-white text-slate-200 font-bold text-xs transition-colors"
+                  className="py-2.5 px-2 rounded-xl bg-[#030d0c] border border-teal-500/20 hover:border-[#19E6C8] hover:bg-teal-500/15 text-[#F4FFFD] font-bold text-xs transition-colors"
                 >
                   {mins} min
                 </button>
@@ -78,7 +78,7 @@ export const SleepTimerModal: React.FC<{
                   setSleepTimer('end-of-track')
                   onClose()
                 }}
-                className="py-2.5 px-2 rounded-xl bg-slate-800 hover:bg-fuchsia-600 hover:text-white text-slate-200 font-bold text-xs transition-colors flex items-center justify-center gap-1"
+                className="py-2.5 px-2 rounded-xl bg-[#030d0c] border border-teal-500/20 hover:border-[#19E6C8] hover:bg-teal-500/15 text-[#F4FFFD] font-bold text-xs transition-colors flex items-center justify-center gap-1"
               >
                 <span>End of Track</span>
               </button>
@@ -86,9 +86,9 @@ export const SleepTimerModal: React.FC<{
 
             {/* Custom Minutes Slider */}
             <div className="pt-2 space-y-1.5">
-              <div className="flex justify-between text-xs font-bold text-slate-300">
+              <div className="flex justify-between text-xs font-bold text-[#94B5B0]">
                 <span>Custom Duration</span>
-                <span className="text-fuchsia-400 font-mono">{customMinutes} minutes</span>
+                <span className="text-[#19E6C8] font-mono">{customMinutes} minutes</span>
               </div>
               <input
                 type="range"
@@ -97,7 +97,7 @@ export const SleepTimerModal: React.FC<{
                 step="5"
                 value={customMinutes}
                 onChange={(e) => setCustomMinutes(Number(e.target.value))}
-                className="w-full accent-fuchsia-500 cursor-pointer"
+                className="w-full accent-[#19E6C8] cursor-pointer"
               />
               <button
                 type="button"
@@ -105,7 +105,7 @@ export const SleepTimerModal: React.FC<{
                   setSleepTimer(customMinutes)
                   onClose()
                 }}
-                className="w-full mt-2 py-2 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-md shadow-fuchsia-600/30 transition-all"
+                className="w-full mt-2 py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] transition-all active:scale-95"
               >
                 Set {customMinutes} min Timer
               </button>

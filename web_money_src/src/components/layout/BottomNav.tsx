@@ -12,81 +12,103 @@ export const BottomNav: React.FC = () => {
   const { activeTab, setActiveTab, openAddRecord } = useMoney();
 
   return (
-    <nav className="h-18 bg-[#090d16]/95 border-t border-slate-800/90 backdrop-blur-md px-3 flex items-center justify-between shrink-0 relative z-30 select-none pb-safe">
-      {/* 1. Transaction Tab */}
-      <button
-        onClick={() => setActiveTab('transactions')}
-        className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
-          activeTab === 'transactions' ? 'text-white font-semibold' : 'text-slate-400 hover:text-slate-300'
-        }`}
-        aria-label="Transactions tab"
-      >
-        <ReceiptText
-          className={`w-5 h-5 transition-transform ${
-            activeTab === 'transactions' ? 'scale-110 text-white' : ''
-          }`}
-        />
-        <span className="text-[11px] mt-1 tracking-tight">Transaction</span>
-      </button>
-
-      {/* 2. Calendar Tab */}
-      <button
-        onClick={() => setActiveTab('calendar')}
-        className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
-          activeTab === 'calendar' ? 'text-white font-semibold' : 'text-slate-400 hover:text-slate-300'
-        }`}
-        aria-label="Calendar tab"
-      >
-        <CalendarDays
-          className={`w-5 h-5 transition-transform ${
-            activeTab === 'calendar' ? 'scale-110 text-white' : ''
-          }`}
-        />
-        <span className="text-[11px] mt-1 tracking-tight">Calendar</span>
-      </button>
-
-      {/* 3. Center Action Button (+) */}
-      <div className="flex-1 flex items-center justify-center -translate-y-4">
+    <div className="fixed bottom-3 inset-x-3 z-40 select-none pb-safe pointer-events-none flex justify-center">
+      <nav className="pointer-events-auto w-full max-w-md h-16 rounded-full bg-[#061817]/85 border border-teal-500/25 backdrop-blur-2xl px-4 flex items-center justify-between shadow-[0_15px_40px_rgba(0,0,0,0.85)] relative">
+        {/* 1. Transaction Tab */}
         <button
-          onClick={() => openAddRecord()}
-          className="w-14 h-14 rounded-full bg-blue-600 hover:bg-blue-500 active:scale-95 text-white flex items-center justify-center shadow-lg shadow-blue-600/50 border-4 border-[#090d16] transition-all duration-200"
-          aria-label="Add transaction"
+          onClick={() => setActiveTab('transactions')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
+            activeTab === 'transactions'
+              ? 'text-[#19E6C8] font-bold'
+              : 'text-[#94B5B0] hover:text-white'
+          }`}
+          aria-label="Transactions tab"
         >
-          <Plus className="w-7 h-7 stroke-[2.6]" />
+          <ReceiptText
+            className={`w-5 h-5 transition-transform ${
+              activeTab === 'transactions' ? 'scale-110 drop-shadow-[0_0_8px_rgba(25,230,200,0.6)]' : ''
+            }`}
+          />
+          <span className="text-[10px] mt-0.5 tracking-tight">Records</span>
+          {activeTab === 'transactions' && (
+            <span className="w-1 h-1 rounded-full bg-[#19E6C8] mt-0.5 shadow-[0_0_6px_#19E6C8]" />
+          )}
         </button>
-      </div>
 
-      {/* 4. Statistic Tab */}
-      <button
-        onClick={() => setActiveTab('statistics')}
-        className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
-          activeTab === 'statistics' ? 'text-white font-semibold' : 'text-slate-400 hover:text-slate-300'
-        }`}
-        aria-label="Statistic tab"
-      >
-        <PieChart
-          className={`w-5 h-5 transition-transform ${
-            activeTab === 'statistics' ? 'scale-110 text-white' : ''
+        {/* 2. Calendar Tab */}
+        <button
+          onClick={() => setActiveTab('calendar')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
+            activeTab === 'calendar'
+              ? 'text-[#19E6C8] font-bold'
+              : 'text-[#94B5B0] hover:text-white'
           }`}
-        />
-        <span className="text-[11px] mt-1 tracking-tight">Statistic</span>
-      </button>
+          aria-label="Calendar tab"
+        >
+          <CalendarDays
+            className={`w-5 h-5 transition-transform ${
+              activeTab === 'calendar' ? 'scale-110 drop-shadow-[0_0_8px_rgba(25,230,200,0.6)]' : ''
+            }`}
+          />
+          <span className="text-[10px] mt-0.5 tracking-tight">Calendar</span>
+          {activeTab === 'calendar' && (
+            <span className="w-1 h-1 rounded-full bg-[#19E6C8] mt-0.5 shadow-[0_0_6px_#19E6C8]" />
+          )}
+        </button>
 
-      {/* 5. Wallet Tab */}
-      <button
-        onClick={() => setActiveTab('wallet')}
-        className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
-          activeTab === 'wallet' ? 'text-white font-semibold' : 'text-slate-400 hover:text-slate-300'
-        }`}
-        aria-label="Wallet tab"
-      >
-        <WalletIcon
-          className={`w-5 h-5 transition-transform ${
-            activeTab === 'wallet' ? 'scale-110 text-white' : ''
+        {/* 3. Center Glowing Action Button (+) */}
+        <div className="flex-shrink-0 px-2 -translate-y-3">
+          <button
+            onClick={() => openAddRecord()}
+            className="w-12 h-12 rounded-full bg-[#19E6C8] hover:bg-[#2DD4BF] active:scale-95 text-[#030807] flex items-center justify-center shadow-[0_0_25px_rgba(25,230,200,0.55)] border-2 border-[#030807] transition-all duration-200"
+            aria-label="Add transaction"
+          >
+            <Plus className="w-6 h-6 stroke-[3]" />
+          </button>
+        </div>
+
+        {/* 4. Statistic Tab */}
+        <button
+          onClick={() => setActiveTab('statistics')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
+            activeTab === 'statistics'
+              ? 'text-[#19E6C8] font-bold'
+              : 'text-[#94B5B0] hover:text-white'
           }`}
-        />
-        <span className="text-[11px] mt-1 tracking-tight">Wallet</span>
-      </button>
-    </nav>
+          aria-label="Statistic tab"
+        >
+          <PieChart
+            className={`w-5 h-5 transition-transform ${
+              activeTab === 'statistics' ? 'scale-110 drop-shadow-[0_0_8px_rgba(25,230,200,0.6)]' : ''
+            }`}
+          />
+          <span className="text-[10px] mt-0.5 tracking-tight">Analytics</span>
+          {activeTab === 'statistics' && (
+            <span className="w-1 h-1 rounded-full bg-[#19E6C8] mt-0.5 shadow-[0_0_6px_#19E6C8]" />
+          )}
+        </button>
+
+        {/* 5. Wallet Tab */}
+        <button
+          onClick={() => setActiveTab('wallet')}
+          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
+            activeTab === 'wallet'
+              ? 'text-[#19E6C8] font-bold'
+              : 'text-[#94B5B0] hover:text-white'
+          }`}
+          aria-label="Wallet tab"
+        >
+          <WalletIcon
+            className={`w-5 h-5 transition-transform ${
+              activeTab === 'wallet' ? 'scale-110 drop-shadow-[0_0_8px_rgba(25,230,200,0.6)]' : ''
+            }`}
+          />
+          <span className="text-[10px] mt-0.5 tracking-tight">Wallets</span>
+          {activeTab === 'wallet' && (
+            <span className="w-1 h-1 rounded-full bg-[#19E6C8] mt-0.5 shadow-[0_0_6px_#19E6C8]" />
+          )}
+        </button>
+      </nav>
+    </div>
   );
 };

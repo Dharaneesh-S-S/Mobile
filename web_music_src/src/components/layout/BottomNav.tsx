@@ -28,7 +28,7 @@ export const BottomNav: React.FC = () => {
   const visibleTabs = ALL_TABS.filter(t => allowedTabs.includes(t.id))
 
   return (
-    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200/80 dark:border-slate-800/80 px-2 py-1.5 select-none transition-colors md:hidden">
+    <nav className="fixed bottom-0 left-0 right-0 z-30 bg-[#051211]/95 backdrop-blur-md border-t border-teal-500/15 px-2 py-1.5 select-none transition-colors md:hidden">
       <div className="flex items-center justify-around max-w-md mx-auto">
         {visibleTabs.map((tab) => {
           const Icon = tab.icon
@@ -40,14 +40,14 @@ export const BottomNav: React.FC = () => {
               onClick={() => setActiveTab(tab.id)}
               className={`flex flex-col items-center justify-center py-1 px-2 rounded-xl transition-all ${
                 isActive
-                  ? 'text-fuchsia-600 dark:text-fuchsia-400 font-bold scale-105'
-                  : 'text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 font-medium'
+                  ? 'text-[#19E6C8] font-bold scale-105'
+                  : 'text-[#94B5B0] hover:text-[#F4FFFD] font-medium'
               }`}
             >
               <div className="relative">
                 <Icon className="w-5 h-5" />
                 {isActive && (
-                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-fuchsia-600 dark:bg-fuchsia-400 shadow-sm shadow-fuchsia-500" />
+                  <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 rounded-full bg-[#19E6C8] shadow-[0_0_8px_rgba(25,230,200,0.8)]" />
                 )}
               </div>
               <span className="text-[10px] mt-1 tracking-tight">

@@ -3,4 +3,8 @@
     <string name="app_name">Personal Hub</string>
     <string name="widget_name">Music Player</string>
     <string name="widget_description">Control music playback directly from your home screen.</string>
+    <string name="widget_usage_name">Screen Time &amp; Usage</string>
+    <string name="widget_usage_description">Glance at daily screen time and top apps directly from your home screen.</string>
+    <string name="widget_combined_name">Personal Hub: Music &amp; Usage</string>
+    <string name="widget_combined_description">Control music playback and monitor daily screen time together on your home screen.</string>
 </resources>

@@ -52,64 +52,64 @@ export const SettingsModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-lg bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="w-full max-w-lg bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-teal-500/20 p-5 animate-pop-in max-h-[90vh] overflow-y-auto text-[#F4FFFD]">
+        <div className="flex items-center justify-between pb-3 mb-4 border-b border-teal-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-[#19E6C8] border border-teal-500/30 flex items-center justify-center">
               <Settings className="w-4 h-4" />
             </div>
-            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Settings</h3>
+            <h3 className="text-base font-bold text-[#F4FFFD]">Settings</h3>
           </div>
           <button
             onClick={() => setShowSettingsModal(false)}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            className="p-1 rounded-lg text-teal-400 hover:text-white"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <div className="space-y-4 text-xs text-slate-700 dark:text-slate-300">
+        <div className="space-y-4 text-xs text-[#94B5B0]">
           {/* Appearance / Theme */}
           <div>
-            <label className="font-semibold block mb-2 text-slate-800 dark:text-slate-200">Theme</label>
+            <label className="font-bold block mb-2 text-[#F4FFFD]">Theme</label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => updateSettings({ theme: 'light' })}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-medium transition ${
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold transition ${
                   settings.theme === 'light'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
-                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                    ? 'border-[#19E6C8] bg-teal-500/20 text-[#19E6C8]'
+                    : 'border-teal-500/20 bg-[#081a18] text-[#94B5B0] hover:bg-teal-500/10'
                 }`}
               >
-                <Sun className="w-4 h-4 text-amber-500" />
+                <Sun className="w-4 h-4 text-amber-400" />
                 <span>Light</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => updateSettings({ theme: 'dark' })}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-medium transition ${
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold transition ${
                   settings.theme === 'dark'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
-                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                    ? 'border-[#19E6C8] bg-teal-500/20 text-[#19E6C8]'
+                    : 'border-teal-500/20 bg-[#081a18] text-[#94B5B0] hover:bg-teal-500/10'
                 }`}
               >
-                <Moon className="w-4 h-4 text-indigo-400" />
+                <Moon className="w-4 h-4 text-[#19E6C8]" />
                 <span>Dark</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => updateSettings({ theme: 'system' })}
-                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-medium transition ${
+                className={`flex items-center justify-center gap-2 py-2 px-3 rounded-xl border text-xs font-semibold transition ${
                   settings.theme === 'system'
-                    ? 'border-blue-600 bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400'
-                    : 'border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50'
+                    ? 'border-[#19E6C8] bg-teal-500/20 text-[#19E6C8]'
+                    : 'border-teal-500/20 bg-[#081a18] text-[#94B5B0] hover:bg-teal-500/10'
                 }`}
               >
-                <Laptop className="w-4 h-4 text-slate-400" />
+                <Laptop className="w-4 h-4 text-teal-400/60" />
                 <span>System</span>
               </button>
             </div>
@@ -245,10 +245,10 @@ export const SettingsModal: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
+        <div className="mt-5 pt-3 border-t border-teal-500/20 flex justify-end">
           <button
             onClick={() => setShowSettingsModal(false)}
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition shadow-sm"
+            className="px-5 py-2 rounded-full bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030707] text-xs font-bold transition shadow-[0_0_15px_rgba(25,230,200,0.3)]"
           >
             Close
           </button>

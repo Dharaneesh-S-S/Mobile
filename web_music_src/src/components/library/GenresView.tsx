@@ -23,18 +23,16 @@ export const GenresView: React.FC<{
   }, [tracks])
 
   const genreGradients = [
-    'from-fuchsia-600 to-indigo-600',
-    'from-blue-600 to-cyan-600',
-    'from-amber-600 to-rose-600',
-    'from-emerald-600 to-teal-600',
-    'from-purple-600 to-pink-600',
-    'from-rose-600 to-orange-600',
+    'from-[#051211] to-[#0b2926] border border-teal-500/25',
+    'from-[#051211] to-[#08221f] border border-cyan-500/25',
+    'from-[#051211] to-[#041c19] border border-emerald-500/25',
+    'from-[#061816] to-[#0e3834] border border-teal-400/30',
   ]
 
   return (
     <div className="space-y-4 pb-28 select-none">
-      <div className="pb-3 border-b border-slate-200/80 dark:border-slate-800">
-        <span className="text-xs font-bold text-slate-900 dark:text-white">
+      <div className="pb-3 border-b border-teal-500/15">
+        <span className="text-xs font-bold text-white">
           {genres.length} Genres
         </span>
       </div>
@@ -46,10 +44,10 @@ export const GenresView: React.FC<{
             <div
               key={genre.name}
               onClick={() => playTrack(genre.tracks[0], genre.tracks)}
-              className={`p-5 rounded-3xl bg-gradient-to-tr ${grad} text-white shadow-lg shadow-black/20 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer relative overflow-hidden group`}
+              className={`p-5 rounded-3xl bg-gradient-to-tr ${grad} text-white shadow-lg shadow-black/40 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer relative overflow-hidden group`}
             >
               <div className="relative z-10 space-y-2">
-                <Radio className="w-5 h-5 opacity-80" />
+                <Radio className="w-5 h-5 text-[#19E6C8]" />
                 <div>
                   <h4 className="font-extrabold text-base font-display truncate">
                     {genre.name}

@@ -7,6 +7,7 @@ import '../../../core/providers/core_providers.dart';
 import '../models/usage_models.dart';
 import '../services/app_categorizer.dart';
 import '../services/usage_notification_manager.dart';
+import '../services/usage_widget_sync.dart';
 
 // Current view date
 final usageDateProvider = StateProvider<DateTime>((ref) => DateTime.now());
@@ -82,9 +83,26 @@ final usageLimitsProvider = StreamProvider<List<UsageLimitEntry>>((ref) {
 final dailyTotalUsageProvider = Provider.family<Duration, DateTime>((ref, date) {
   final usageData = ref.watch(dailyUsageProvider(date)).valueOrNull ?? [];
   Duration total = Duration.zero;
+  AppUsageInfo? topAppInfo;
   for (var info in usageData) {
     total += info.usage;
+    if (topAppInfo == null || info.usage > topAppInfo.usage) {
+      topAppInfo = info;
+    }
   }
+
+  // If calculating for today, trigger HomeWidget sync asynchronously
+  final now = DateTime.now();
+  if (date.year == now.year && date.month == now.month && date.day == now.day && total.inSeconds > 0) {
+    Future.microtask(() {
+      UsageWidgetSync.syncUsage(
+        totalScreenTime: total,
+        topAppName: topAppInfo?.appName,
+        topAppDuration: topAppInfo?.usage,
+      );
+    });
+  }
+
   return total;
 });
 

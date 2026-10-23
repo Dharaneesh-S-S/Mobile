@@ -21,14 +21,14 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
 
   const percent = Math.min(150, Math.round((currentMinutes / goalMinutes) * 100))
 
-  // Color dynamics: green < 75%, amber 75-95%, red > 95%
-  let strokeColor = '#10b981' // emerald
+  // Color dynamics: neon cyan < 75%, mint 75-95%, rose > 95%
+  let strokeColor = '#19E6C8' // neon cyan
   let statusText = 'Well within limit'
   if (percent >= 95) {
-    strokeColor = '#ef4444' // rose / red
+    strokeColor = '#f43f5e' // rose
     statusText = percent > 100 ? 'Goal exceeded' : 'Limit almost reached'
   } else if (percent >= 75) {
-    strokeColor = '#f59e0b' // amber
+    strokeColor = '#2dd4bf' // mint
     statusText = 'Approaching limit'
   }
 
@@ -46,14 +46,14 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
           setTempGoalHours(Math.max(1, Math.round(goalMinutes / 60)))
           setIsEditOpen(true)
         }}
-        className="mx-4 mb-4 p-5 rounded-[28px] glass-card glass-card-interactive shadow-sm cursor-pointer flex items-center justify-between group"
+        className="mx-4 mb-4 p-5 rounded-[28px] bg-[#051211]/90 border border-teal-500/20 hover:border-teal-500/40 hover:bg-[#08221f] shadow-[0_10px_35px_-8px_rgba(0,0,0,0.5)] cursor-pointer flex items-center justify-between group transition-all"
         role="button"
         tabIndex={0}
         aria-label="Daily screen time goal progress card. Tap to edit goal."
       >
         <div className="flex-1 pr-3">
-          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">
-            <Target size={14} className="text-emerald-500" />
+          <div className="flex items-center gap-1.5 text-xs font-bold text-teal-400/80 mb-1">
+            <Target size={14} className="text-[#19E6C8]" />
             <span>Daily Goal Target</span>
             <Edit2
               size={12}
@@ -61,7 +61,7 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
             />
           </div>
 
-          <h4 className="text-xl font-display font-extrabold text-slate-900 dark:text-white">
+          <h4 className="text-xl font-display font-extrabold text-white">
             {formatDuration(goalMinutes)} Goal
           </h4>
 
@@ -70,8 +70,8 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
           </p>
 
           {/* Streak pill */}
-          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-amber-500/15 via-orange-500/15 to-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-bold shadow-[0_0_15px_rgba(245,158,11,0.2)]">
-            <Flame size={14} className="text-amber-500 animate-pulse" />
+          <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/30 text-[#19E6C8] text-xs font-bold shadow-[0_0_15px_rgba(25,230,200,0.2)]">
+            <Flame size={14} className="text-[#19E6C8] animate-pulse" />
             <span>{streakDays} Day Streak Under Goal!</span>
           </div>
         </div>
@@ -86,7 +86,7 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
               r={radius}
               stroke="currentColor"
               strokeWidth={strokeWidth}
-              className="text-slate-200/50 dark:text-slate-800/60"
+              className="text-[#030707]"
               fill="transparent"
             />
             {/* Animated Progress Ring */}
@@ -100,17 +100,17 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
               strokeDashoffset={strokeDashoffset}
               strokeLinecap="round"
               fill="transparent"
-              style={{ filter: `drop-shadow(0 0 6px ${strokeColor}60)` }}
+              style={{ filter: `drop-shadow(0 0 8px ${strokeColor}80)` }}
               className="transition-all duration-700 ease-out"
             />
           </svg>
 
           {/* Center Text */}
           <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="text-lg font-display font-extrabold text-slate-900 dark:text-white">
+            <span className="text-lg font-display font-extrabold text-white">
               {percent}%
             </span>
-            <span className="text-[10px] text-slate-400 font-semibold tracking-tight">used</span>
+            <span className="text-[10px] text-teal-400/70 font-semibold tracking-tight">used</span>
           </div>
         </div>
       </div>
@@ -123,11 +123,11 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
         subtitle="Set your desired maximum daily phone target"
       >
         <div className="flex flex-col gap-4 py-2">
-          <div className="text-center py-4 rounded-2xl bg-slate-100/80 dark:bg-slate-900/80 border border-slate-200/70 dark:border-white/[0.08]">
-            <div className="text-5xl font-display font-extrabold text-emerald-600 dark:text-emerald-400">
+          <div className="text-center py-4 rounded-2xl bg-[#030707] border border-teal-500/20">
+            <div className="text-5xl font-display font-extrabold text-[#19E6C8] drop-shadow-[0_0_15px_rgba(25,230,200,0.4)]">
               {tempGoalHours}h
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1">
+            <p className="text-xs text-slate-400 font-medium mt-1">
               ({tempGoalHours * 60} minutes per day)
             </p>
           </div>
@@ -140,7 +140,7 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
               step="0.5"
               value={tempGoalHours}
               onChange={(e) => setTempGoalHours(parseFloat(e.target.value))}
-              className="w-full accent-emerald-500 h-2.5 bg-slate-200 dark:bg-slate-700 rounded-lg cursor-pointer"
+              className="w-full accent-[#19E6C8] h-2.5 bg-[#030707] border border-teal-500/20 rounded-lg cursor-pointer"
             />
             <div className="flex justify-between text-xs font-semibold text-slate-400 mt-2">
               <span>1h</span>
@@ -158,8 +158,8 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
                 onClick={() => setTempGoalHours(h)}
                 className={`py-2.5 rounded-2xl text-xs font-bold border transition-all active:scale-95 ${
                   tempGoalHours === h
-                    ? 'border-emerald-500 bg-emerald-500/15 text-emerald-600 dark:text-emerald-300 shadow-sm'
-                    : 'border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                    ? 'border-[#19E6C8] bg-teal-500/15 text-[#19E6C8] shadow-sm'
+                    : 'border-teal-500/20 text-slate-300 hover:bg-[#08221f] bg-[#030707]'
                 }`}
               >
                 {h} Hours
@@ -172,7 +172,7 @@ export const GoalRingCard: React.FC<GoalRingCardProps> = ({
               onUpdateGoal(Math.round(tempGoalHours * 60))
               setIsEditOpen(false)
             }}
-            className="w-full py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-600 text-slate-950 font-bold text-sm transition-transform active:scale-95 shadow-md shadow-emerald-500/25 mt-2"
+            className="w-full py-3.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-sm transition-transform active:scale-95 shadow-[0_0_20px_rgba(255,255,255,0.22)] mt-2"
           >
             Save Goal Target
           </button>

@@ -63,58 +63,58 @@ export const HourlyStackedBarChart: React.FC<HourlyStackedBarChartProps> = ({
   }
 
   return (
-    <div className="mx-4 mb-4 p-5 rounded-[28px] glass-card shadow-sm flex flex-col">
+    <div className="mx-4 mb-4 p-5 rounded-[28px] bg-[#051211]/90 border border-teal-500/20 shadow-sm flex flex-col">
       <div className="flex items-center justify-between mb-3.5">
         <div>
-          <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500" />
+          <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-[#19E6C8] shadow-[0_0_8px_rgba(25,230,200,0.8)]" />
             <span>Hourly Activity</span>
           </h3>
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+          <p className="text-[11px] text-slate-400 mt-0.5">
             24-hour stacked breakdown by app
           </p>
         </div>
 
         {/* Goal Pace Indicator */}
-        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-500 dark:text-slate-400 bg-slate-100 dark:bg-slate-800/70 px-2.5 py-1 rounded-full border border-slate-200/60 dark:border-white/[0.06]">
-          <span className="w-3 border-b-2 border-dashed border-emerald-500" />
+        <div className="flex items-center gap-1.5 text-[11px] font-semibold text-slate-300 bg-[#030707] px-2.5 py-1 rounded-full border border-teal-500/20">
+          <span className="w-3 border-b-2 border-dashed border-[#19E6C8]" />
           <span>Goal pace ({hourlyGoalPace}m/h)</span>
         </div>
       </div>
 
       {/* Selected Hour Tooltip Card */}
       {activeHourData && (
-        <div className="mb-3.5 p-3 rounded-2xl bg-white/90 dark:bg-slate-900/90 border border-slate-200 dark:border-emerald-500/30 shadow-md flex items-center justify-between text-xs animate-fade-in backdrop-blur-md">
+        <div className="mb-3.5 p-3 rounded-2xl bg-[#051211]/95 border border-teal-500/30 shadow-md flex items-center justify-between text-xs animate-fade-in backdrop-blur-md">
           <div>
-            <div className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <div className="font-bold text-white flex items-center gap-2">
               <span className="text-xs">
                 {formatTimeOfDay(activeHourData.hour)} – {formatTimeOfDay(activeHourData.hour + 1)}
               </span>
-              <span className="text-emerald-700 dark:text-emerald-300 font-extrabold bg-emerald-500/15 dark:bg-emerald-400/20 px-2 py-0.5 rounded-full text-[11px] border border-emerald-500/30">
+              <span className="text-[#19E6C8] font-extrabold bg-teal-500/15 px-2 py-0.5 rounded-full text-[11px] border border-teal-500/30">
                 {formatDuration(activeHourData.totalMinutes)}
               </span>
             </div>
             {topAppInHour ? (
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 flex items-center gap-1.5">
+              <div className="text-[11px] text-slate-400 mt-1 flex items-center gap-1.5">
                 <span
                   className="w-2 h-2 rounded-full shrink-0"
                   style={{ backgroundColor: topAppInHour.app.accentColor }}
                 />
                 <span>Top app:</span>
-                <span className="font-bold text-slate-800 dark:text-slate-200">{topAppInHour.app.name}</span>
-                <span className="font-semibold text-slate-500 dark:text-slate-400">({formatDuration(topAppInHour.minutes)})</span>
+                <span className="font-bold text-slate-200">{topAppInHour.app.name}</span>
+                <span className="font-semibold text-slate-400">({formatDuration(topAppInHour.minutes)})</span>
               </div>
             ) : (
               <div className="text-[11px] text-slate-400 mt-1">No app activity in this hour</div>
             )}
           </div>
 
-          <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300 text-[11px]">
-            <span className="flex items-center gap-1 bg-amber-500/10 dark:bg-amber-400/15 px-2 py-1 rounded-xl text-amber-600 dark:text-amber-400 font-bold" title="Unlocks">
+          <div className="flex items-center gap-2 text-slate-300 text-[11px]">
+            <span className="flex items-center gap-1 bg-[#030707] border border-teal-500/20 px-2 py-1 rounded-xl text-teal-300 font-bold" title="Unlocks">
               <Unlock size={12} strokeWidth={2.4} />
               <span>{activeHourData.unlocks}</span>
             </span>
-            <span className="flex items-center gap-1 bg-blue-500/10 dark:bg-blue-400/15 px-2 py-1 rounded-xl text-blue-600 dark:text-blue-400 font-bold" title="Notifications">
+            <span className="flex items-center gap-1 bg-[#030707] border border-teal-500/20 px-2 py-1 rounded-xl text-cyan-300 font-bold" title="Notifications">
               <Bell size={12} strokeWidth={2.4} />
               <span>{activeHourData.notifications}</span>
             </span>
@@ -137,7 +137,7 @@ export const HourlyStackedBarChart: React.FC<HourlyStackedBarChartProps> = ({
               y1={chartHeight - (hourlyGoalPace / maxMinute) * chartHeight}
               x2="480"
               y2={chartHeight - (hourlyGoalPace / maxMinute) * chartHeight}
-              stroke="#10b981"
+              stroke="#19E6C8"
               strokeWidth="1.5"
               strokeDasharray="4 4"
               opacity="0.85"

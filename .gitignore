@@ -60,4 +60,6 @@ web_notes_src/node_modules/
 web_notes_src/dist/
 web_music_src/node_modules/
 web_music_src/dist/
+web_money_src/node_modules/
+web_money_src/dist/
 .vscode/

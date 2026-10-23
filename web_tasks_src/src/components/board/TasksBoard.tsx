@@ -17,7 +17,7 @@ export const TasksBoard: React.FC<TasksBoardProps> = ({
   // If "Starred" tab is selected in sidebar, display Starred view
   if (activeNavTab === 'starred') {
     return (
-      <div className="flex-1 h-full overflow-y-auto bg-[#131314] dark:bg-[#131314] p-4">
+      <div className="flex-1 h-full overflow-y-auto bg-[#030707] p-4">
         <StarredView focusedTaskId={focusedTaskId} setFocusedTaskId={setFocusedTaskId} />
       </div>
     );
@@ -27,7 +27,7 @@ export const TasksBoard: React.FC<TasksBoardProps> = ({
   const visibleLists = lists.filter(l => visibleListIds.has(l.id));
 
   return (
-    <div className="flex-1 h-full overflow-x-auto overflow-y-hidden bg-[#131314] dark:bg-[#131314] p-4 flex flex-row items-start gap-4 scrollbar-thin select-none">
+    <div className="flex-1 h-full overflow-x-auto overflow-y-hidden bg-[#030707] p-4 flex flex-row items-start gap-4 scrollbar-thin select-none">
       {visibleLists.map(list => (
         <ListColumn
           key={list.id}
@@ -39,7 +39,7 @@ export const TasksBoard: React.FC<TasksBoardProps> = ({
       ))}
 
       {visibleLists.length === 0 && (
-        <div className="flex-1 h-full flex items-center justify-center text-[#8e918f] text-sm">
+        <div className="flex-1 h-full flex items-center justify-center text-teal-400/60 text-sm">
           No lists selected. Check lists in the sidebar to display them.
         </div>
       )}

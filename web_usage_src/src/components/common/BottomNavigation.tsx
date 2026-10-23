@@ -29,7 +29,7 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
       } sticky bottom-0 z-40 px-3 pb-2 pt-1 pointer-events-none transition-all`}
     >
       <nav
-        className="pointer-events-auto bg-white/85 dark:bg-[#101726]/85 backdrop-blur-2xl border border-slate-200/90 dark:border-white/[0.1] px-2 py-1.5 rounded-full shadow-[0_12px_36px_-6px_rgba(0,0,0,0.2)] dark:shadow-[0_16px_45px_-8px_rgba(0,0,0,0.75)] transition-all"
+        className="pointer-events-auto bg-[#051211]/90 backdrop-blur-2xl border border-teal-500/20 px-2 py-1.5 rounded-full shadow-[0_16px_45px_-8px_rgba(0,0,0,0.85)] transition-all"
         aria-label="Bottom Navigation"
       >
         <div className="flex items-center justify-around">
@@ -43,14 +43,14 @@ export const BottomNavigation: React.FC<BottomNavigationProps> = ({
                 onClick={() => onSelectTab(tab.id)}
                 className={`flex flex-col items-center justify-center py-1.5 px-3 rounded-full relative transition-all duration-200 active:scale-95 ${
                   isActive
-                    ? 'text-emerald-600 dark:text-emerald-400 font-bold'
-                    : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200'
+                    ? 'text-[#19E6C8] font-bold'
+                    : 'text-slate-400 hover:text-white'
                 }`}
               >
                 <div
                   className={`p-1 rounded-full transition-all ${
                     isActive
-                      ? 'bg-emerald-500/15 dark:bg-emerald-400/20 text-emerald-600 dark:text-emerald-300 shadow-[0_0_12px_rgba(16,185,129,0.25)]'
+                      ? 'bg-teal-500/15 text-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.35)]'
                       : ''
                   }`}
                 >

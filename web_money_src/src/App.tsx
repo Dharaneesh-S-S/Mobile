@@ -14,6 +14,9 @@ import { AccountSwitcherModal } from './components/settings/AccountSwitcherModal
 import { MonthlyReportModal } from './components/settings/MonthlyReportModal';
 import { SettingsModal } from './components/settings/SettingsModal';
 import { PasscodeLock } from './components/common/PasscodeLock';
+import { LandingView } from './components/landing/LandingView';
+import { StyleguideView } from './components/styleguide/StyleguideView';
+import { GlowBackground } from './components/ui';
 import { Sparkles, ArrowRight } from 'lucide-react';
 
 const MainAppContent: React.FC = () => {
@@ -79,27 +82,34 @@ const MainAppContent: React.FC = () => {
     return <PasscodeLock storedPasscode={settings.passcode} onSuccess={unlockApp} />;
   }
 
+  if (activeTab === 'welcome') {
+    return <LandingView onEnterApp={() => setActiveTab('transactions')} />;
+  }
+
   return (
-    <div className="w-full h-screen min-h-screen flex bg-[#070b14] text-slate-100 font-sans antialiased overflow-hidden select-none">
-      {/* 1. Left Desktop Sidebar (Hidden on mobile < md, visible on desktop md+) */}
-      <Sidebar />
+    <GlowBackground className="h-screen w-screen overflow-hidden">
+      <div className="w-full h-full flex font-sans antialiased overflow-hidden select-none">
+        {/* 1. Left Desktop Sidebar (Hidden on mobile < md, visible on desktop md+) */}
+        <Sidebar />
 
-      {/* 2. Main Content Column (Takes 100% remaining width and adapts fluidly) */}
-      <div className="flex-1 flex flex-col h-full overflow-hidden relative min-w-0">
-        {/* Universal Top Header */}
-        <Header />
+        {/* 2. Main Content Column (Takes 100% remaining width and adapts fluidly) */}
+        <div className="flex-1 flex flex-col h-full overflow-hidden relative min-w-0">
+          {/* Universal Top Header */}
+          <Header />
 
-        {/* Scrollable Main Workspace */}
-        <main className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 relative w-full">
-          {activeTab === 'transactions' && <TransactionList />}
-          {activeTab === 'calendar' && <CalendarView />}
-          {activeTab === 'statistics' && <StatisticView />}
-          {activeTab === 'wallet' && <WalletView />}
-        </main>
+          {/* Scrollable Main Workspace */}
+          <main className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 relative w-full">
+            {activeTab === 'transactions' && <TransactionList />}
+            {activeTab === 'calendar' && <CalendarView />}
+            {activeTab === 'statistics' && <StatisticView />}
+            {activeTab === 'wallet' && <WalletView />}
+            {activeTab === 'styleguide' && <StyleguideView />}
+          </main>
 
-        {/* Mobile Bottom Navigation (Only visible on mobile / narrow screens < md) */}
-        <div className="md:hidden">
-          <BottomNav />
+          {/* Mobile Bottom Navigation (Only visible on mobile / narrow screens < md) */}
+          <div className="md:hidden">
+            <BottomNav />
+          </div>
         </div>
       </div>
 
@@ -154,7 +164,7 @@ const MainAppContent: React.FC = () => {
           </div>
         </div>
       )}
-    </div>
+    </GlowBackground>
   );
 };
 

@@ -213,10 +213,10 @@ export function createGradientCover(title: string, artist: string, fromColor: st
 }
 
 export async function generateDemoTracks(): Promise<Track[]> {
-  const cover1 = createGradientCover('Neon Horizon', 'Aura Soundscapes', '#8b5cf6', '#ec4899')
-  const cover2 = createGradientCover('Midnight Lofi', 'Echo Drift', '#06b6d4', '#3b82f6')
-  const cover3 = createGradientCover('Acoustic Sunrise', 'Solar Strings', '#f59e0b', '#ef4444')
-  const cover4 = createGradientCover('Cyber Pulse', 'HyperWave', '#10b981', '#06b6d4')
+  const cover1 = createGradientCover('Neon Horizon', 'Aura Soundscapes', '#064E3B', '#19E6C8')
+  const cover2 = createGradientCover('Midnight Lofi', 'Echo Drift', '#042F2E', '#2DD4BF')
+  const cover3 = createGradientCover('Acoustic Sunrise', 'Solar Strings', '#08332F', '#14B8A6')
+  const cover4 = createGradientCover('Cyber Pulse', 'HyperWave', '#062420', '#38BDF8')
 
   const [blob1, blob2, blob3, blob4] = await Promise.all([
     renderSynthesizedWav('synthwave', 22),

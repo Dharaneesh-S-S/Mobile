@@ -36,23 +36,23 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
   };
 
   return (
-    <header className="h-14 flex-shrink-0 bg-[#131314] dark:bg-[#131314] border-b border-[#282a2c] flex items-center justify-between px-4 text-[#e3e3e3] select-none z-30">
+    <header className="h-14 flex-shrink-0 bg-[#051211]/90 backdrop-blur-xl border-b border-teal-500/20 flex items-center justify-between px-4 text-[#F4FFFD] select-none z-30">
       {/* Left: Hamburger menu + Logo + "Tasks" */}
       <div className="flex items-center gap-3">
         <button
           onClick={toggleSidebar}
-          className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition"
+          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
           title="Main menu"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <div className="flex items-center gap-2.5">
-          {/* Blue circular checkmark logo */}
-          <div className="w-8 h-8 rounded-full bg-[#1a73e8] flex items-center justify-center text-white shadow-sm flex-shrink-0">
+          {/* Neon Cyan circular checkmark logo */}
+          <div className="w-8 h-8 rounded-xl bg-[#19E6C8] flex items-center justify-center text-[#030707] shadow-[0_0_15px_rgba(25,230,200,0.4)] flex-shrink-0">
             <Check className="w-5 h-5 stroke-[3]" />
           </div>
-          <span className="text-xl font-normal tracking-tight text-[#e3e3e3]">
+          <span className="text-xl font-bold tracking-tight text-[#F4FFFD] font-display">
             Tasks
           </span>
         </div>
@@ -60,20 +60,20 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
 
       {/* Center: Search Bar (when active or on desktop) */}
       <div className="flex-1 max-w-lg mx-4 hidden md:block">
-        <div className="flex items-center bg-[#1e1f20] hover:bg-[#282a2c] focus-within:bg-[#282a2c] rounded-full px-4 py-2 border border-transparent focus-within:border-[#8ab4f8] transition">
-          <Search className="w-4 h-4 text-[#8e918f] mr-3 flex-shrink-0" />
+        <div className="flex items-center bg-[#081a18]/80 hover:bg-[#0a2421] focus-within:bg-[#0a2421] rounded-full px-4 py-2 border border-teal-500/20 focus-within:border-[#19E6C8] focus-within:ring-2 focus-within:ring-[#19E6C8]/20 transition">
+          <Search className="w-4 h-4 text-teal-400/60 mr-3 flex-shrink-0" />
           <input
             ref={searchInputRef}
             type="text"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
             placeholder="Search tasks..."
-            className="w-full bg-transparent border-none outline-none text-sm text-[#e3e3e3] placeholder-[#8e918f]"
+            className="w-full bg-transparent border-none outline-none text-sm text-[#F4FFFD] placeholder:text-teal-400/50"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="p-0.5 rounded-full hover:bg-[#333537] text-[#8e918f] hover:text-white"
+              className="p-0.5 rounded-full hover:bg-teal-500/20 text-teal-400 hover:text-white"
             >
               <X className="w-4 h-4" />
             </button>
@@ -86,24 +86,24 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
         {/* Mobile search button */}
         <div className="md:hidden">
           {isSearchActive ? (
-            <div className="absolute top-2 left-16 right-16 z-50 flex items-center bg-[#1e1f20] rounded-full px-3 py-1.5 border border-[#8ab4f8]">
-              <Search className="w-4 h-4 text-[#8e918f] mr-2" />
+            <div className="absolute top-2 left-16 right-16 z-50 flex items-center bg-[#051211] rounded-full px-3 py-1.5 border border-[#19E6C8] shadow-lg">
+              <Search className="w-4 h-4 text-[#19E6C8] mr-2" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={e => setSearchQuery(e.target.value)}
                 placeholder="Search..."
                 autoFocus
-                className="w-full bg-transparent border-none outline-none text-xs text-[#e3e3e3]"
+                className="w-full bg-transparent border-none outline-none text-xs text-[#F4FFFD]"
               />
               <button onClick={() => setIsSearchActive(false)}>
-                <X className="w-4 h-4 text-[#8e918f]" />
+                <X className="w-4 h-4 text-teal-400" />
               </button>
             </div>
           ) : (
             <button
               onClick={() => setIsSearchActive(true)}
-              className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition"
+              className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
               title="Search"
             >
               <Search className="w-5 h-5" />
@@ -114,20 +114,20 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
         {/* Theme Toggle */}
         <button
           onClick={handleCycleTheme}
-          className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition"
+          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
           title={`Theme: ${settings.theme}`}
         >
           {settings.theme === 'light' ? (
             <Sun className="w-5 h-5 text-amber-400" />
           ) : (
-            <Moon className="w-5 h-5 text-[#8ab4f8]" />
+            <Moon className="w-5 h-5 text-[#19E6C8]" />
           )}
         </button>
 
         {/* Help icon */}
         <button
           onClick={() => setShowShortcutsHelp(true)}
-          className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition"
+          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
           title="Support & keyboard shortcuts (?)"
         >
           <HelpCircle className="w-5 h-5" />
@@ -136,7 +136,7 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
         {/* Settings icon */}
         <button
           onClick={() => setShowSettingsModal(true)}
-          className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition"
+          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
           title="Settings"
         >
           <Settings className="w-5 h-5" />
@@ -144,15 +144,15 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
 
         {/* 9-dots Grid icon */}
         <button
-          className="p-2 rounded-full hover:bg-[#282a2c] text-[#c4c7c5] hover:text-white transition hidden sm:inline-flex"
-          title="Google apps"
+          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition hidden sm:inline-flex"
+          title="Apps"
         >
           <Grid className="w-5 h-5" />
         </button>
 
         {/* Profile Avatar */}
         <div className="ml-1 cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-xs font-semibold ring-2 ring-transparent hover:ring-[#8ab4f8] transition">
+          <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-[#19E6C8] text-xs font-bold ring-2 ring-transparent hover:ring-[#19E6C8] transition shadow-[0_0_12px_rgba(25,230,200,0.25)]">
             D
           </div>
         </div>

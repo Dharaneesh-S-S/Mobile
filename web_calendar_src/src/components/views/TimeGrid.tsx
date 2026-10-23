@@ -81,6 +81,26 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
     return () => clearInterval(timer);
   }, []);
 
+  // Measure scrollbar width of gridContainerRef to keep Days Header & All-day shelf perfectly aligned with the day columns
+  const [scrollbarWidth, setScrollbarWidth] = useState<number>(0);
+
+  useEffect(() => {
+    const el = gridContainerRef.current;
+    if (!el) return;
+    const updateScrollbar = () => {
+      const sw = el.offsetWidth - el.clientWidth;
+      setScrollbarWidth(sw > 0 ? sw : 0);
+    };
+    updateScrollbar();
+    window.addEventListener('resize', updateScrollbar);
+    const ro = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(updateScrollbar) : null;
+    ro?.observe(el);
+    return () => {
+      window.removeEventListener('resize', updateScrollbar);
+      ro?.disconnect();
+    };
+  }, []);
+
   // Filter visible events & expand recurrence
   const visibleCalendarIds = calendars.filter(c => c.isVisible).map(c => c.id);
   const rangeStart = days[0];
@@ -284,37 +304,37 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
   const dayHeaders = ['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'];
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 select-none overflow-hidden">
-      {/* Top Days Header & All-day row */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0 z-10 shadow-2xs">
+    <div className="flex-1 flex flex-col h-full bg-[#030707] text-[#F4FFFD] select-none overflow-hidden">
+      {/* Top Days Header */}
+      <div className="flex border-b border-teal-500/15 bg-[#051211]/90 flex-shrink-0 z-10 shadow-2xs">
         {/* Time zone gutter label */}
-        <div className="w-16 md:w-20 p-2 flex flex-col justify-end items-end pr-3 border-r border-gray-200 dark:border-gray-800 flex-shrink-0">
-          <span className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider">
+        <div className="w-16 md:w-20 p-2 flex flex-col justify-end items-end pr-3 border-r border-teal-500/15 flex-shrink-0">
+          <span className="text-[10px] text-teal-400/60 font-semibold uppercase tracking-wider">
             {settings.timeFormat === '24h' ? '24h' : 'GMT'}
           </span>
         </div>
 
         {/* Column day titles */}
-        <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${numDays}, 1fr)` }}>
+        <div className="flex-1 grid min-w-0" style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}>
           {days.map((day, idx) => {
             const isCurDayToday = isToday(day);
 
             return (
               <div
                 key={idx}
-                className={`py-2 px-1 text-center border-r border-gray-200 dark:border-gray-800 transition-colors ${
-                  isCurDayToday ? 'bg-blue-50/40 dark:bg-blue-950/20' : ''
+                className={`py-2 px-1 text-center border-r border-teal-500/15 transition-colors min-w-0 overflow-hidden ${
+                  isCurDayToday ? 'bg-teal-500/10' : ''
                 }`}
               >
-                <div className="text-[11px] font-semibold text-gray-500 dark:text-gray-400 tracking-wider">
+                <div className="text-[11px] font-bold text-teal-400/60 tracking-wider uppercase truncate">
                   {dayHeaders[day.getDay()]}
                 </div>
                 <div className="mt-1 flex items-center justify-center">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm md:text-base font-bold transition-all ${
+                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm md:text-base font-extrabold transition-all ${
                       isCurDayToday
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                        : 'text-gray-800 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-800'
+                        ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_20px_rgba(25,230,200,0.4)]'
+                        : 'text-[#F4FFFD] hover:bg-teal-500/10'
                     }`}
                   >
                     {day.getDate()}
@@ -324,38 +344,47 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             );
           })}
         </div>
+
+        {/* Scrollbar compensation spacer */}
+        {scrollbarWidth > 0 && (
+          <div style={{ width: `${scrollbarWidth}px` }} className="flex-shrink-0 bg-[#051211]/90" />
+        )}
       </div>
 
       {/* All-Day Items Shelf */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800 bg-gray-50/70 dark:bg-gray-900/50 flex-shrink-0 min-h-[36px]">
-        <div className="w-16 md:w-20 p-1.5 flex items-center justify-end pr-3 text-[10px] font-medium text-gray-400 border-r border-gray-200 dark:border-gray-800 flex-shrink-0">
+      <div className="flex border-b border-teal-500/15 bg-[#051211]/60 flex-shrink-0 min-h-[36px]">
+        <div className="w-16 md:w-20 p-1.5 flex items-center justify-end pr-3 text-[10px] font-bold text-teal-400/60 border-r border-teal-500/15 flex-shrink-0">
           all-day
         </div>
-        <div className="flex-1 grid" style={{ gridTemplateColumns: `repeat(${numDays}, 1fr)` }}>
+        <div className="flex-1 grid min-w-0" style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}>
           {days.map((day, idx) => {
             const dateStr = formatDateToYYYYMMDD(day);
             const allDayItems = filteredEvents.filter(
               e => (e.isAllDay || !e.startTime) && e.startDate <= dateStr && e.endDate >= dateStr
             );
+            const maxVisible = 2;
+            const visibleItems = allDayItems.slice(0, maxVisible);
+            const hiddenCount = allDayItems.length - maxVisible;
 
             return (
               <div
                 key={idx}
-                className="p-1 border-r border-gray-200 dark:border-gray-800 space-y-1 min-h-[36px]"
+                className="p-1 border-r border-teal-500/15 space-y-1 min-h-[36px] min-w-0 overflow-hidden flex flex-col justify-start"
               >
-                {allDayItems.map(item => {
+                {visibleItems.map(item => {
                   const cal = getCalendar(item.calendarId);
-                  const bg = item.colorOverride || cal?.color || '#3b82f6';
+                  const bg = item.colorOverride || cal?.color || '#19E6C8';
 
                   return (
                     <button
                       key={item.id}
                       type="button"
+                      title={item.title}
                       onClick={e => {
                         e.stopPropagation();
                         openEventDetails(item, { x: e.clientX, y: e.clientY });
                       }}
-                      className="w-full text-left px-2 py-0.5 rounded-md text-[11px] font-medium text-white truncate shadow-2xs hover:opacity-90 flex items-center gap-1 transition-opacity"
+                      className="w-full text-left px-2 py-0.5 rounded-md text-[11px] font-semibold text-[#030707] shadow-2xs hover:opacity-90 flex items-center gap-1 transition-opacity min-w-0 overflow-hidden"
                       style={{ backgroundColor: bg }}
                     >
                       {item.type === 'task' && <CheckSquare className="w-3 h-3 flex-shrink-0" />}
@@ -363,24 +392,44 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       {item.type === 'working_location' && (
                         item.workingLocation === 'home' ? <Home className="w-3 h-3 flex-shrink-0" /> : <Building className="w-3 h-3 flex-shrink-0" />
                       )}
-                      <span className="truncate">{item.title}</span>
+                      <span className="truncate min-w-0 flex-1 block">{item.title}</span>
                     </button>
                   );
                 })}
+                {hiddenCount > 0 && (
+                  <button
+                    type="button"
+                    onClick={e => {
+                      e.stopPropagation();
+                      if (allDayItems[maxVisible]) {
+                        openEventDetails(allDayItems[maxVisible], { x: e.clientX, y: e.clientY });
+                      }
+                    }}
+                    className="text-[10px] text-teal-400/80 hover:text-[#19E6C8] font-bold text-left px-1 truncate block hover:underline"
+                    title={`${hiddenCount} more all-day event${hiddenCount > 1 ? 's' : ''}`}
+                  >
+                    +{hiddenCount} more
+                  </button>
+                )}
               </div>
             );
           })}
         </div>
+
+        {/* Scrollbar compensation spacer */}
+        {scrollbarWidth > 0 && (
+          <div style={{ width: `${scrollbarWidth}px` }} className="flex-shrink-0 bg-[#051211]/60" />
+        )}
       </div>
 
       {/* Hourly Grid Scrollable Area */}
       <div
         ref={gridContainerRef}
-        className="flex-1 overflow-y-auto relative flex"
+        className="flex-1 overflow-y-auto relative flex min-w-0"
         style={{ scrollbarGutter: 'stable' }}
       >
         {/* Hour Labels Column */}
-        <div className="w-16 md:w-20 flex-shrink-0 border-r border-gray-200 dark:border-gray-800 select-none bg-white dark:bg-gray-900 z-10">
+        <div className="w-16 md:w-20 flex-shrink-0 border-r border-teal-500/15 select-none bg-[#051211]/90 z-10">
           {hours.map(hour => (
             <div
               key={hour}
@@ -388,7 +437,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
               className="h-14 relative flex items-start justify-end pr-3 border-b border-transparent"
             >
               {hour !== 0 && (
-                <span className="text-[11px] text-gray-400 font-medium -translate-y-2.5">
+                <span className="text-[11px] text-teal-400/60 font-semibold -translate-y-2.5">
                   {formatTimeDisplay(`${hour}:00`, settings.timeFormat)}
                 </span>
               )}
@@ -398,8 +447,8 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
 
         {/* Day Columns Grid */}
         <div
-          className="flex-1 grid relative"
-          style={{ gridTemplateColumns: `repeat(${numDays}, 1fr)` }}
+          className="flex-1 grid relative min-w-0"
+          style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}
         >
           {days.map((day, dayIdx) => {
             const dateStr = formatDateToYYYYMMDD(day);
@@ -413,8 +462,8 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
               <div
                 key={dayIdx}
                 data-day-column
-                className={`relative border-r border-gray-200 dark:border-gray-800 ${
-                  isCurDayToday ? 'bg-blue-50/20 dark:bg-blue-950/10' : ''
+                className={`relative border-r border-teal-500/15 min-w-0 overflow-hidden ${
+                  isCurDayToday ? 'bg-teal-500/5' : ''
                 }`}
               >
                 {/* 24 Hour slot lines */}
@@ -422,9 +471,9 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                   <div
                     key={hour}
                     onClick={e => handleGridSlotClick(day, hour, e)}
-                    className="h-14 border-b border-gray-100 dark:border-gray-800/60 hover:bg-gray-50/80 dark:hover:bg-gray-800/40 cursor-pointer transition-colors relative group"
+                    className="h-14 border-b border-teal-500/10 hover:bg-teal-500/5 cursor-pointer transition-colors relative group"
                   >
-                    <div className="absolute inset-x-0 top-1/2 border-b border-dotted border-gray-100 dark:border-gray-850 pointer-events-none" />
+                    <div className="absolute inset-x-0 top-1/2 border-b border-dotted border-teal-500/10 pointer-events-none" />
                   </div>
                 ))}
 
@@ -436,25 +485,25 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       top: `${(currentTimeMins / (24 * 60)) * 100}%`,
                     }}
                   >
-                    <div className="w-2.5 h-2.5 rounded-full bg-red-500 -ml-1.5 shadow-sm ring-2 ring-white dark:ring-gray-900" />
-                    <div className="flex-1 h-[2px] bg-red-500 shadow-xs" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-[#19E6C8] -ml-1.5 shadow-[0_0_8px_#19E6C8]" />
+                    <div className="flex-1 h-[2px] bg-[#19E6C8] shadow-[0_0_6px_#19E6C8]" />
                   </div>
                 )}
 
                 {/* Live dragged ghost preview if dragged into this column from another date */}
                 {dragState && dragState.type === 'move' && dragState.currentDayIndex === dayIdx && dragState.event.startDate !== dateStr && (
                   <div
-                    className="absolute inset-x-1 rounded-xl p-2 z-40 ring-2 ring-blue-500 bg-blue-100/70 dark:bg-blue-900/70 border-2 border-blue-500 shadow-xl pointer-events-none transition-all flex flex-col justify-between overflow-hidden"
+                    className="absolute inset-x-1 rounded-xl p-2 z-40 ring-2 ring-[#19E6C8] bg-teal-950/70 border-2 border-[#19E6C8] shadow-xl pointer-events-none transition-all flex flex-col justify-between overflow-hidden"
                     style={{
                       top: `${(dragState.currentStartMins / (24 * 60)) * 100}%`,
                       height: `${((dragState.currentEndMins - dragState.currentStartMins) / (24 * 60)) * 100}%`,
                     }}
                   >
                     <div className="min-w-0">
-                      <p className="text-xs font-bold text-blue-800 dark:text-blue-200 truncate">
+                      <p className="text-xs font-bold text-teal-200 truncate">
                         {dragState.event.title}
                       </p>
-                      <p className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 mt-0.5">
+                      <p className="text-[11px] font-semibold text-[#19E6C8] mt-0.5">
                         {formatTimeDisplay(getTimeStrFromMinutes(dragState.currentStartMins), settings.timeFormat)} – {formatTimeDisplay(getTimeStrFromMinutes(dragState.currentEndMins), settings.timeFormat)}
                       </p>
                     </div>
@@ -465,7 +514,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                 {positioned.map(p => {
                   const e = p.event;
                   const cal = getCalendar(e.calendarId);
-                  const bg = e.colorOverride || cal?.color || '#3b82f6';
+                  const bg = e.colorOverride || cal?.color || '#19E6C8';
                   const isDraggingThis = dragState?.event.id === e.id;
                   const isDraggedToAnotherDay = isDraggingThis && dragState?.currentDayIndex !== dayIdx;
 
@@ -493,7 +542,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         isDraggedToAnotherDay
                           ? 'opacity-20 pointer-events-none'
                           : isDraggingThis
-                          ? 'z-30 opacity-80 scale-102 ring-2 ring-blue-500'
+                          ? 'z-30 opacity-80 scale-102 ring-2 ring-[#19E6C8]'
                           : 'z-10 hover:shadow-md hover:brightness-105'
                       } ${isPast ? 'opacity-55' : ''}`}
                       style={{
@@ -516,41 +565,41 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                                 ev.stopPropagation();
                                 quickToggleTaskCompletion(e.id);
                               }}
-                              className="text-gray-600 dark:text-gray-300 hover:text-blue-600"
+                              className="text-teal-400/80 hover:text-[#19E6C8]"
                             >
                               {e.isCompleted ? (
-                                <CheckSquare className="w-3.5 h-3.5 text-emerald-600" />
+                                <CheckSquare className="w-3.5 h-3.5 text-[#19E6C8]" />
                               ) : (
                                 <Square className="w-3.5 h-3.5" />
                               )}
                             </button>
                           ) : e.type === 'focus_time' ? (
-                            <Clock className="w-3 h-3 text-indigo-600 dark:text-indigo-400 flex-shrink-0" />
+                            <Clock className="w-3 h-3 text-[#19E6C8] flex-shrink-0" />
                           ) : e.type === 'out_of_office' ? (
-                            <Plane className="w-3 h-3 text-purple-600 dark:text-purple-400 flex-shrink-0" />
+                            <Plane className="w-3 h-3 text-purple-400 flex-shrink-0" />
                           ) : e.type === 'appointment_schedule' ? (
-                            <CalendarRange className="w-3 h-3 text-rose-600 dark:text-rose-400 flex-shrink-0" />
+                            <CalendarRange className="w-3 h-3 text-rose-400 flex-shrink-0" />
                           ) : null}
 
                           <p
                             className={`text-xs font-semibold truncate ${
-                              e.isCompleted ? 'line-through text-gray-400' : 'text-gray-800 dark:text-gray-100'
+                              e.isCompleted ? 'line-through text-teal-400/40' : 'text-[#F4FFFD]'
                             }`}
                           >
                             {e.title}
                           </p>
                         </div>
 
-                        <p className="text-[11px] font-medium text-gray-500 dark:text-gray-400 truncate mt-0.5">
+                        <p className="text-[11px] font-medium text-teal-400/70 truncate mt-0.5">
                           {formatTimeDisplay(e.startTime, settings.timeFormat)} – {formatTimeDisplay(e.endTime, settings.timeFormat)}
                         </p>
                       </div>
 
                       {/* Bottom row badges: Video call or location */}
                       {(e.videoConference || e.location) && (
-                        <div className="flex items-center gap-2 text-[10px] text-gray-500 dark:text-gray-400 truncate mt-1">
+                        <div className="flex items-center gap-2 text-[10px] text-teal-400/70 truncate mt-1">
                           {e.videoConference && (
-                            <span className="flex items-center gap-1 text-blue-600 dark:text-blue-400 font-medium">
+                            <span className="flex items-center gap-1 text-[#19E6C8] font-medium">
                               <Video className="w-3 h-3" /> Meet
                             </span>
                           )}
@@ -566,7 +615,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       {/* Bottom resize drag handle */}
                       <div
                         onMouseDown={ev => handleMouseDownOnEvent(ev, e, 'resize', dayIdx)}
-                        className="absolute bottom-0 inset-x-0 h-2 cursor-s-resize hover:bg-black/10 dark:hover:bg-white/10 transition-colors"
+                        className="absolute bottom-0 inset-x-0 h-2 cursor-s-resize hover:bg-white/10 transition-colors"
                         title="Drag to adjust duration"
                       />
                     </div>

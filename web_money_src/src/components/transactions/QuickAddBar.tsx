@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Sparkles, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { Sparkles, ArrowRight } from 'lucide-react';
 import { useMoney } from '../../context/MoneyContext';
 
 const QUICK_SUGGESTIONS = [
@@ -33,9 +33,9 @@ export const QuickAddBar: React.FC = () => {
   };
 
   return (
-    <div className="mx-4 mb-2">
+    <div className="mx-2 md:mx-0 mb-3 select-none">
       <form onSubmit={handleSubmit} className="relative flex items-center">
-        <div className="absolute left-3 text-blue-400 pointer-events-none">
+        <div className="absolute left-3.5 text-[#19E6C8] pointer-events-none drop-shadow-[0_0_6px_#19E6C8]">
           <Sparkles className="w-4 h-4" />
         </div>
         <input
@@ -43,28 +43,28 @@ export const QuickAddBar: React.FC = () => {
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder='Quick Add: "lunch 90 food" or "salary 75000"...'
-          className="w-full pl-9 pr-10 py-2 rounded-xl bg-slate-900/80 border border-slate-800 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-blue-500/70 focus:ring-1 focus:ring-blue-500/40 transition-all"
+          className="w-full pl-10 pr-12 py-2.5 rounded-2xl bg-[#061817]/75 border border-teal-500/20 text-xs text-white placeholder-[#5B7B76] focus:outline-none focus:border-[#19E6C8] focus:ring-2 focus:ring-teal-400/20 backdrop-blur-xl transition-all shadow-md"
         />
         <button
           type="submit"
           disabled={!text.trim() || isSubmitting}
-          className="absolute right-1.5 p-1.5 rounded-lg bg-blue-600/80 hover:bg-blue-600 disabled:opacity-30 disabled:pointer-events-none text-white transition-all"
+          className="absolute right-1.5 p-2 rounded-xl bg-[#19E6C8] hover:bg-[#2DD4BF] disabled:opacity-30 disabled:pointer-events-none text-black transition-all cursor-pointer shadow-[0_0_12px_rgba(25,230,200,0.4)]"
           aria-label="Add transaction"
         >
-          <ArrowRight className="w-3.5 h-3.5" />
+          <ArrowRight className="w-3.5 h-3.5 stroke-[2.8]" />
         </button>
       </form>
 
-      {/* Suggestion hints on focus or when empty */}
+      {/* Suggestion hints */}
       {!text && (
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mt-1.5 px-0.5 pb-1">
-          <span className="text-[10px] text-slate-500 shrink-0">Try:</span>
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar mt-2 px-1 pb-1">
+          <span className="text-[10px] text-[#5B7B76] font-mono shrink-0">Try:</span>
           {QUICK_SUGGESTIONS.map((sug) => (
             <button
               key={sug}
               type="button"
               onClick={() => setText(sug)}
-              className="text-[10px] whitespace-nowrap px-2 py-0.5 rounded-md bg-slate-800/60 hover:bg-slate-800 text-slate-400 hover:text-slate-200 transition-colors"
+              className="text-[10px] font-mono whitespace-nowrap px-2.5 py-0.5 rounded-full bg-[#061817]/70 border border-teal-500/15 hover:border-teal-400/40 text-[#94B5B0] hover:text-[#19E6C8] transition-colors cursor-pointer"
             >
               {sug}
             </button>

@@ -51,9 +51,9 @@ export const NowPlayingScreen: React.FC<{
   } = useMusic()
 
   const [ambientColors, setAmbientColors] = useState<{ primary: string; secondary: string; glow: string }>({
-    primary: '#8b5cf6',
-    secondary: '#d946ef',
-    glow: 'rgba(217, 70, 239, 0.4)',
+    primary: '#19E6C8',
+    secondary: '#0B2926',
+    glow: 'rgba(25, 230, 200, 0.35)',
   })
   const [activeTabOverlay, setActiveTabOverlay] = useState<'none' | 'visualizer' | 'lyrics'>('none')
   const [showMoreMenu, setShowMoreMenu] = useState(false)
@@ -141,12 +141,12 @@ export const NowPlayingScreen: React.FC<{
   }[settings.albumArtShape || 'rounded']
 
   return (
-    <div className="fixed inset-0 z-50 flex flex-col bg-slate-950 text-white select-none overflow-y-auto animate-in fade-in slide-in-from-bottom duration-300">
+    <div className="fixed inset-0 z-50 flex flex-col bg-[#030707] text-white select-none overflow-y-auto animate-in fade-in slide-in-from-bottom duration-300">
       {/* Dynamic Ambient Background Glow */}
       <div
         className="absolute inset-0 pointer-events-none opacity-40 blur-3xl transition-all duration-700 -z-10"
         style={{
-          background: `radial-gradient(circle at 50% 30%, ${ambientColors.glow} 0%, rgba(15, 23, 42, 0.95) 75%)`,
+          background: `radial-gradient(circle at 50% 30%, ${ambientColors.glow} 0%, rgba(3, 7, 7, 0.98) 75%)`,
         }}
       />
 
@@ -155,14 +155,14 @@ export const NowPlayingScreen: React.FC<{
         <button
           type="button"
           onClick={onClose}
-          className="p-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+          className="p-2 rounded-2xl bg-[#051211]/80 hover:bg-[#092220] border border-teal-500/20 text-white transition-colors"
           title="Minimize Player"
         >
-          <ChevronDown className="w-5 h-5" />
+          <ChevronDown className="w-5 h-5 text-teal-300" />
         </button>
 
         <div className="text-center">
-          <span className="block text-[10px] font-bold uppercase tracking-wider text-slate-400">
+          <span className="block text-[10px] font-bold uppercase tracking-wider text-teal-400/80">
             Playing From
           </span>
           <span className="block text-xs font-bold text-white max-w-[200px] truncate">
@@ -175,23 +175,23 @@ export const NowPlayingScreen: React.FC<{
           <button
             type="button"
             onClick={() => setShowMoreMenu(!showMoreMenu)}
-            className="p-2 rounded-2xl bg-white/10 hover:bg-white/20 text-white transition-colors"
+            className="p-2 rounded-2xl bg-[#051211]/80 hover:bg-[#092220] border border-teal-500/20 text-white transition-colors"
           >
-            <MoreVertical className="w-5 h-5" />
+            <MoreVertical className="w-5 h-5 text-teal-300" />
           </button>
 
           {showMoreMenu && (
             <>
               <div className="fixed inset-0 z-40" onClick={() => setShowMoreMenu(false)} />
-              <div className="absolute right-0 mt-2 w-52 bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl z-50 py-1.5 text-xs">
+              <div className="absolute right-0 mt-2 w-52 bg-[#051211] border border-teal-500/20 rounded-2xl shadow-2xl z-50 py-1.5 text-xs">
                 <button
                   onClick={() => {
                     setShowMoreMenu(false)
                     onOpenDetails()
                   }}
-                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-800 text-slate-200"
+                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-teal-500/10 text-slate-200"
                 >
-                  <Info className="w-4 h-4 text-indigo-400" />
+                  <Info className="w-4 h-4 text-teal-400" />
                   <span>Track Details</span>
                 </button>
                 <button
@@ -199,16 +199,16 @@ export const NowPlayingScreen: React.FC<{
                     setShowMoreMenu(false)
                     onOpenTagEditor()
                   }}
-                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-800 text-slate-200"
+                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-teal-500/10 text-slate-200"
                 >
-                  <Edit3 className="w-4 h-4 text-fuchsia-400" />
+                  <Edit3 className="w-4 h-4 text-teal-400" />
                   <span>Edit Tags & Cover</span>
                 </button>
                 <button
                   onClick={handleMockRingtone}
-                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-slate-800 text-slate-200"
+                  className="w-full px-3.5 py-2.5 flex items-center gap-2.5 hover:bg-teal-500/10 text-slate-200"
                 >
-                  <BellRing className="w-4 h-4 text-amber-400" />
+                  <BellRing className="w-4 h-4 text-teal-300" />
                   <span>Set as Ringtone</span>
                 </button>
               </div>
@@ -288,7 +288,7 @@ export const NowPlayingScreen: React.FC<{
         <div className="space-y-1.5 py-2 shrink-0">
           {/* A-B Repeat Marker Indicators */}
           {(markerA !== null || markerB !== null) && (
-            <div className="flex items-center justify-between text-[10px] font-mono font-bold text-fuchsia-400 px-1">
+            <div className="flex items-center justify-between text-[10px] font-mono font-bold text-teal-400 px-1">
               <span>{markerA !== null ? `A: ${formatDuration(markerA)}` : 'A: unset'}</span>
               <button
                 type="button"
@@ -309,7 +309,7 @@ export const NowPlayingScreen: React.FC<{
               step="0.5"
               value={currentTime}
               onChange={(e) => seek(Number(e.target.value))}
-              className="w-full h-2 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-fuchsia-500"
+              className="w-full h-2 bg-[#051211] rounded-lg appearance-none cursor-pointer accent-[#19E6C8] border border-teal-500/20"
             />
           </div>
 
@@ -325,7 +325,7 @@ export const NowPlayingScreen: React.FC<{
             type="button"
             onClick={toggleShuffle}
             className={`p-3 rounded-full transition-colors ${
-              shuffle ? 'text-fuchsia-400 bg-fuchsia-950/60' : 'text-slate-400 hover:text-white'
+              shuffle ? 'text-[#19E6C8] bg-teal-500/20 shadow-sm border border-teal-500/30' : 'text-slate-400 hover:text-white'
             }`}
             title={`Shuffle: ${shuffle ? 'On' : 'Off'}`}
           >
@@ -340,7 +340,7 @@ export const NowPlayingScreen: React.FC<{
             onTouchStart={() => handleStartSeekHold('back')}
             onTouchEnd={handleStopSeekHold}
             onClick={() => prevTrack()}
-            className="p-3 rounded-full text-slate-300 hover:text-white active:scale-95 transition-all"
+            className="p-3 rounded-full text-slate-300 hover:text-[#19E6C8] active:scale-95 transition-all"
             title="Previous (Hold to seek -5s)"
           >
             <SkipBack className="w-7 h-7 fill-current" />
@@ -350,7 +350,7 @@ export const NowPlayingScreen: React.FC<{
           <button
             type="button"
             onClick={togglePlayPause}
-            className="w-16 h-16 rounded-full bg-gradient-to-tr from-fuchsia-600 to-indigo-600 text-white flex items-center justify-center shadow-xl shadow-fuchsia-600/40 active:scale-95 hover:scale-105 transition-all"
+            className="w-16 h-16 rounded-full bg-[#19E6C8] hover:bg-[#1cf2d3] text-[#030707] flex items-center justify-center shadow-[0_0_30px_rgba(25,230,200,0.5)] active:scale-95 hover:scale-105 transition-all"
             title={isPlaying ? 'Pause' : 'Play'}
           >
             {isPlaying ? (
@@ -368,7 +368,7 @@ export const NowPlayingScreen: React.FC<{
             onTouchStart={() => handleStartSeekHold('forward')}
             onTouchEnd={handleStopSeekHold}
             onClick={() => nextTrack()}
-            className="p-3 rounded-full text-slate-300 hover:text-white active:scale-95 transition-all"
+            className="p-3 rounded-full text-slate-300 hover:text-[#19E6C8] active:scale-95 transition-all"
             title="Next (Hold to seek +5s)"
           >
             <SkipForward className="w-7 h-7 fill-current" />
@@ -378,7 +378,7 @@ export const NowPlayingScreen: React.FC<{
             type="button"
             onClick={toggleRepeat}
             className={`p-3 rounded-full transition-colors ${
-              repeat !== 'off' ? 'text-fuchsia-400 bg-fuchsia-950/60' : 'text-slate-400 hover:text-white'
+              repeat !== 'off' ? 'text-[#19E6C8] bg-teal-500/20 shadow-sm border border-teal-500/30' : 'text-slate-400 hover:text-white'
             }`}
             title={`Repeat: ${repeat}`}
           >
@@ -387,15 +387,15 @@ export const NowPlayingScreen: React.FC<{
         </div>
 
         {/* Secondary Bar: Volume & Speed & A-B Repeat Trigger */}
-        <div className="flex items-center justify-between gap-3 py-2 bg-slate-900/60 rounded-2xl px-4 border border-white/5 shrink-0">
+        <div className="flex items-center justify-between gap-3 py-2 bg-[#051211]/90 rounded-2xl px-4 border border-teal-500/20 shrink-0">
           {/* Volume */}
           <div className="flex items-center gap-2 flex-1">
             <button
               type="button"
               onClick={toggleMute}
-              className="text-slate-400 hover:text-white"
+              className="text-slate-400 hover:text-[#19E6C8]"
             >
-              {isMuted || volume === 0 ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isMuted || volume === 0 ? <VolumeX className="w-4 h-4 text-rose-400" /> : <Volume2 className="w-4 h-4 text-teal-300" />}
             </button>
             <input
               type="range"
@@ -404,24 +404,24 @@ export const NowPlayingScreen: React.FC<{
               step="0.02"
               value={isMuted ? 0 : volume}
               onChange={(e) => setVolume(Number(e.target.value))}
-              className="w-24 accent-fuchsia-500 cursor-pointer"
+              className="w-24 accent-[#19E6C8] cursor-pointer"
             />
           </div>
 
           {/* Speed Selector */}
           <div className="flex items-center gap-1 text-xs">
-            <Gauge className="w-3.5 h-3.5 text-slate-400" />
+            <Gauge className="w-3.5 h-3.5 text-teal-400" />
             <select
               value={speed}
               onChange={(e) => setSpeed(Number(e.target.value))}
-              className="bg-transparent text-slate-300 font-mono font-bold focus:outline-none cursor-pointer"
+              className="bg-[#030707] text-[#19E6C8] border border-teal-500/20 rounded-lg px-1.5 py-0.5 font-mono font-bold focus:outline-none cursor-pointer"
             >
-              <option value="0.5" className="bg-slate-900">0.5x</option>
-              <option value="0.75" className="bg-slate-900">0.75x</option>
-              <option value="1.0" className="bg-slate-900">1.0x</option>
-              <option value="1.25" className="bg-slate-900">1.25x</option>
-              <option value="1.5" className="bg-slate-900">1.5x</option>
-              <option value="2.0" className="bg-slate-900">2.0x</option>
+              <option value="0.5" className="bg-[#051211]">0.5x</option>
+              <option value="0.75" className="bg-[#051211]">0.75x</option>
+              <option value="1.0" className="bg-[#051211]">1.0x</option>
+              <option value="1.25" className="bg-[#051211]">1.25x</option>
+              <option value="1.5" className="bg-[#051211]">1.5x</option>
+              <option value="2.0" className="bg-[#051211]">2.0x</option>
             </select>
           </div>
 
@@ -430,7 +430,7 @@ export const NowPlayingScreen: React.FC<{
             <button
               type="button"
               onClick={() => setMarkerA()}
-              className="px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 font-bold text-[10px]"
+              className="px-2 py-0.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-teal-300 font-bold text-[10px]"
               title="Set point A at current position"
             >
               A
@@ -438,7 +438,7 @@ export const NowPlayingScreen: React.FC<{
             <button
               type="button"
               onClick={() => setMarkerB()}
-              className="px-2 py-0.5 rounded-lg bg-white/10 hover:bg-white/20 font-bold text-[10px]"
+              className="px-2 py-0.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-teal-300 font-bold text-[10px]"
               title="Set point B at current position"
             >
               B
@@ -447,12 +447,12 @@ export const NowPlayingScreen: React.FC<{
         </div>
 
         {/* Bottom Toolbar Icons (Lyrics, Visualizer, Sleep, EQ, Queue) */}
-        <div className="flex items-center justify-around py-3 border-t border-white/10 shrink-0">
+        <div className="flex items-center justify-around py-3 border-t border-teal-500/15 shrink-0">
           <button
             type="button"
             onClick={() => setActiveTabOverlay(prev => prev === 'lyrics' ? 'none' : 'lyrics')}
             className={`p-2.5 rounded-2xl transition-colors ${
-              activeTabOverlay === 'lyrics' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+              activeTabOverlay === 'lyrics' ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_15px_rgba(25,230,200,0.4)]' : 'text-slate-400 hover:text-white'
             }`}
             title="Lyrics (.lrc)"
           >
@@ -463,7 +463,7 @@ export const NowPlayingScreen: React.FC<{
             type="button"
             onClick={() => setActiveTabOverlay(prev => prev === 'visualizer' ? 'none' : 'visualizer')}
             className={`p-2.5 rounded-2xl transition-colors ${
-              activeTabOverlay === 'visualizer' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+              activeTabOverlay === 'visualizer' ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_15px_rgba(25,230,200,0.4)]' : 'text-slate-400 hover:text-white'
             }`}
             title="Visualizer"
           >

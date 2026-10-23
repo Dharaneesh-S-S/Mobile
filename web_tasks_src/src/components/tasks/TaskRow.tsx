@@ -82,10 +82,10 @@ export const TaskRow: React.FC<TaskRowProps> = ({
     <div
       className={`relative group rounded-xl transition-all duration-150 ${
         isSelected
-          ? 'bg-blue-50/80 dark:bg-blue-950/40 ring-1 ring-blue-400'
+          ? 'bg-teal-500/20 ring-1 ring-[#19E6C8] text-[#F4FFFD]'
           : isFocused
-          ? 'bg-slate-100/90 dark:bg-slate-800/80'
-          : 'hover:bg-slate-50 dark:hover:bg-slate-800/50'
+          ? 'bg-teal-500/10 text-[#F4FFFD]'
+          : 'hover:bg-teal-500/5 text-[#94B5B0] hover:text-[#F4FFFD]'
       } ${
         dropPosition === 'top'
           ? 'drop-indicator drop-indicator-top'
@@ -104,7 +104,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
       >
         {/* Left Drag Handle */}
         <div
-          className="cursor-grab active:cursor-grabbing text-slate-300 dark:text-slate-600 hover:text-slate-500 dark:hover:text-slate-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 -ml-1 flex-shrink-0"
+          className="cursor-grab active:cursor-grabbing text-teal-400/30 hover:text-teal-400 opacity-0 group-hover:opacity-100 transition-opacity mt-1 -ml-1 flex-shrink-0"
           title="Drag to reorder"
         >
           <GripVertical className="w-3.5 h-3.5" />
@@ -119,8 +119,8 @@ export const TaskRow: React.FC<TaskRowProps> = ({
           }}
           className={`w-4 h-4 rounded-full border mt-1 flex items-center justify-center transition flex-shrink-0 ${
             task.isCompleted
-              ? 'border-blue-600 bg-blue-600 text-white animate-check-pop'
-              : 'border-slate-400 dark:border-slate-500 hover:border-blue-500'
+              ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707] animate-check-pop'
+              : 'border-teal-500/40 hover:border-[#19E6C8]'
           }`}
           title={task.isCompleted ? 'Mark incomplete' : 'Mark complete'}
         >

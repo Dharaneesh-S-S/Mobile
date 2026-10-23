@@ -4,26 +4,31 @@
 
 @layer base {
   :root {
-    --color-bg-primary: #ffffff;
-    --color-bg-secondary: #f8fafc;
-    --color-border: #e2e8f0;
-    --color-text-primary: #0f172a;
-    --color-text-secondary: #64748b;
+    --color-bg-primary: #030707;
+    --color-bg-secondary: #051211;
+    --color-border: rgba(45, 212, 191, 0.12);
+    --color-text-primary: #F4FFFD;
+    --color-text-secondary: #94B5B0;
+    --glow-teal-primary: #19E6C8;
   }
 
   .dark {
-    --color-bg-primary: #0f172a;
-    --color-bg-secondary: #1e293b;
-    --color-border: #334155;
-    --color-text-primary: #f8fafc;
-    --color-text-secondary: #94a3b8;
+    --color-bg-primary: #030707;
+    --color-bg-secondary: #051211;
+    --color-border: rgba(45, 212, 191, 0.12);
+    --color-text-primary: #F4FFFD;
+    --color-text-secondary: #94B5B0;
   }
 
   body {
-    @apply bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-sans antialiased select-none;
+    background-color: #030707;
+    color: #F4FFFD;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    user-select: none;
     margin: 0;
     padding: 0;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
   }
 
   #root {
@@ -32,19 +37,24 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(25, 230, 200, 0.12), transparent);
   }
 }
 
-/* Custom Sleek Scrollbar */
+/* Custom Sleek Cyan/Teal Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-200 dark:bg-slate-700 rounded-full hover:bg-slate-300 dark:hover:bg-slate-600;
+  background: rgba(45, 212, 191, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(25, 230, 200, 0.45);
 }
 
 /* Prevent text selection while dragging events */

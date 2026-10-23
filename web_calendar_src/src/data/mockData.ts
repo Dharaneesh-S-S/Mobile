@@ -5,7 +5,7 @@ export const DEFAULT_CALENDARS: CalendarCategory[] = [
   {
     id: 'cal_my_calendar',
     name: 'My Calendar',
-    color: '#2563eb', // Brand Blue
+    color: '#19E6C8', // Neon Cyan / Teal
     isPrimary: true,
     isVisible: true,
     description: 'Personal and work events',
@@ -13,21 +13,21 @@ export const DEFAULT_CALENDARS: CalendarCategory[] = [
   {
     id: 'cal_birthdays',
     name: 'Birthdays',
-    color: '#10b981', // Emerald
+    color: '#2DD4BF', // Mint
     isVisible: true,
     description: 'Anniversaries and friends birthdays',
   },
   {
     id: 'cal_tasks',
     name: 'Tasks',
-    color: '#f59e0b', // Amber
+    color: '#14B8A6', // Teal
     isVisible: true,
     description: 'Scheduled todos and action items',
   },
   {
     id: 'cal_holidays',
     name: 'Holidays in India & US',
-    color: '#8b5cf6', // Violet
+    color: '#0D9488', // Deep Teal
     isVisible: true,
     isSubscribed: true,
     description: 'Official national and international holidays',
@@ -86,7 +86,7 @@ export const DEFAULT_SETTINGS: Settings = {
   showWorldClock: true,
   worldClockCities: ['America/New_York', 'Europe/London', 'Asia/Tokyo', 'Asia/Kolkata'],
   enableShortcuts: true,
-  theme: 'light',
+  theme: 'dark',
 };
 
 export function generateSeedEvents(): CalendarEvent[] {
@@ -111,7 +111,7 @@ export function generateSeedEvents(): CalendarEvent[] {
       isAllDay: false,
       busyStatus: 'busy',
       visibility: 'public',
-      colorOverride: '#2563eb',
+      colorOverride: '#19E6C8',
       guests: [
         { email: 'alex.chen@chronos.io', name: 'Alex Chen', status: 'yes' },
         { email: 'priya.sharma@chronos.io', name: 'Priya Sharma', status: 'maybe' },

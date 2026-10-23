@@ -125,8 +125,8 @@ export const TracksView: React.FC<{
             }}
             className={`p-1.5 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition-colors ${
               isMultiSelectMode
-                ? 'bg-fuchsia-600 text-white font-bold'
-                : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200'
+                ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-md shadow-teal-500/20'
+                : 'bg-[#051211] text-slate-300 hover:text-white border border-teal-500/20'
             }`}
             title="Multi-select mode"
           >
@@ -135,7 +135,7 @@ export const TracksView: React.FC<{
           </button>
 
           {/* Sort Field Selector */}
-          <div className="flex items-center bg-slate-100 dark:bg-slate-800 rounded-xl px-2 py-1 text-xs">
+          <div className="flex items-center bg-[#051211] border border-teal-500/20 rounded-xl px-2 py-1 text-xs">
             <select
               value={sortField}
               onChange={(e) => setSortField(e.target.value as SortField)}
@@ -176,7 +176,7 @@ export const TracksView: React.FC<{
                   {isSectionHeader && (
                     <div
                       id={`letter-${firstLetter}`}
-                      className="pt-3 pb-1 text-xs font-extrabold text-fuchsia-600 dark:text-fuchsia-400 font-display uppercase tracking-wider"
+                      className="pt-3 pb-1 text-xs font-extrabold text-[#19E6C8] font-display uppercase tracking-wider"
                     >
                       {firstLetter}
                     </div>
@@ -185,10 +185,10 @@ export const TracksView: React.FC<{
                   <div
                     className={`flex items-center justify-between p-2.5 rounded-2xl group transition-all cursor-pointer ${
                       isSelected
-                        ? 'bg-fuchsia-100 dark:bg-fuchsia-950/60 border border-fuchsia-500/40 shadow-sm'
+                        ? 'bg-teal-500/15 border border-teal-500/40 shadow-sm'
                         : isCurrent
-                        ? 'bg-fuchsia-50 dark:bg-fuchsia-950/40 border border-fuchsia-500/20'
-                        : 'hover:bg-slate-100 dark:hover:bg-slate-800/60'
+                        ? 'bg-[#051211]/90 border border-teal-500/30'
+                        : 'hover:bg-[#051211]/60 border border-transparent hover:border-teal-500/15'
                     }`}
                   >
                     {/* Multi-select checkbox or Track Info */}
@@ -200,10 +200,10 @@ export const TracksView: React.FC<{
                             e.stopPropagation()
                             handleToggleSelect(track.id)
                           }}
-                          className="text-fuchsia-600"
+                          className="text-[#19E6C8]"
                         >
                           {isSelected ? (
-                            <CheckSquare className="w-5 h-5 fill-fuchsia-600 text-white" />
+                            <CheckSquare className="w-5 h-5 fill-[#19E6C8] text-[#030707]" />
                           ) : (
                             <Square className="w-5 h-5 text-slate-400" />
                           )}
@@ -219,17 +219,17 @@ export const TracksView: React.FC<{
                             playTrack(track, sortedTracks)
                           }
                         }}
-                        className="relative w-11 h-11 rounded-xl overflow-hidden bg-slate-800 shrink-0 shadow-sm"
+                        className="relative w-11 h-11 rounded-xl overflow-hidden bg-[#051211] shrink-0 shadow-sm border border-teal-500/15"
                       >
                         {track.coverArt ? (
                           <img src={track.coverArt} alt="" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-500">
-                            <Disc className="w-5 h-5" />
+                            <Disc className="w-5 h-5 text-teal-400/60" />
                           </div>
                         )}
                         {isCurrent && isPlaying && (
-                          <div className="absolute inset-0 bg-fuchsia-600/40 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-[#19E6C8]/30 flex items-center justify-center">
                             <Play className="w-4 h-4 fill-white text-white animate-pulse" />
                           </div>
                         )}
@@ -246,10 +246,10 @@ export const TracksView: React.FC<{
                         }}
                         className="min-w-0 flex-1"
                       >
-                        <h4 className={`text-xs font-bold truncate ${isCurrent ? 'text-fuchsia-600 dark:text-fuchsia-400' : 'text-slate-900 dark:text-white'}`}>
+                        <h4 className={`text-xs font-bold truncate ${isCurrent ? 'text-[#19E6C8]' : 'text-white'}`}>
                           {track.title}
                         </h4>
-                        <p className="text-[11px] font-medium text-slate-500 dark:text-slate-400 truncate">
+                        <p className="text-[11px] font-medium text-slate-400 truncate">
                           {track.artist} • {track.album}
                         </p>
                       </div>
@@ -287,16 +287,16 @@ export const TracksView: React.FC<{
                         {activeMenuTrackId === track.id && (
                           <>
                             <div className="fixed inset-0 z-40" onClick={() => setActiveMenuTrackId(null)} />
-                            <div className="absolute right-0 mt-2 w-48 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl z-50 py-1.5 text-xs text-slate-700 dark:text-slate-200 animate-in fade-in zoom-in-95 duration-100">
+                            <div className="absolute right-0 mt-2 w-48 bg-[#051413]/95 backdrop-blur-xl border border-teal-500/25 rounded-2xl shadow-[0_12px_40px_rgba(0,0,0,0.8)] z-50 py-1.5 text-xs text-[#F4FFFD] animate-in fade-in zoom-in-95 duration-100">
                               <button
                                 onClick={() => {
                                   setActiveMenuTrackId(null)
                                   playNextInQueue(track)
                                   showToast('Playing next in queue')
                                 }}
-                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-teal-500/10 hover:text-[#19E6C8] transition-colors"
                               >
-                                <CornerDownRight className="w-3.5 h-3.5 text-fuchsia-500" />
+                                <CornerDownRight className="w-3.5 h-3.5 text-[#19E6C8]" />
                                 <span>Play Next</span>
                               </button>
                               <button
@@ -305,9 +305,9 @@ export const TracksView: React.FC<{
                                   addToQueue(track)
                                   showToast('Added to queue')
                                 }}
-                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-teal-500/10 hover:text-[#19E6C8] transition-colors"
                               >
-                                <ListPlus className="w-3.5 h-3.5 text-indigo-500" />
+                                <ListPlus className="w-3.5 h-3.5 text-[#2DD4BF]" />
                                 <span>Add to Queue</span>
                               </button>
                               <button
@@ -315,12 +315,12 @@ export const TracksView: React.FC<{
                                   setActiveMenuTrackId(null)
                                   onOpenAddToPlaylist([track.id])
                                 }}
-                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-slate-100 dark:hover:bg-slate-800"
+                                className="w-full px-3.5 py-2 flex items-center gap-2.5 hover:bg-teal-500/10 hover:text-[#19E6C8] transition-colors"
                               >
-                                <BookmarkPlus className="w-3.5 h-3.5 text-purple-500" />
+                                <BookmarkPlus className="w-3.5 h-3.5 text-[#19E6C8]" />
                                 <span>Add to Playlist</span>
                               </button>
-                              <div className="my-1 border-t border-slate-100 dark:border-slate-800" />
+                              <div className="my-1 border-t border-teal-500/15" />
                               <button
                                 onClick={() => {
                                   setActiveMenuTrackId(null)
@@ -409,7 +409,7 @@ export const TracksView: React.FC<{
                 key={letter}
                 type="button"
                 onClick={() => scrollToLetter(letter)}
-                className="hover:text-fuchsia-600 dark:hover:text-fuchsia-400 transition-colors py-0.5"
+                className="hover:text-[#19E6C8] transition-colors py-0.5"
               >
                 {letter}
               </button>
@@ -420,8 +420,8 @@ export const TracksView: React.FC<{
 
       {/* Contextual Multi-Select Bottom Bar */}
       {isMultiSelectMode && selectedTrackIds.length > 0 && (
-        <div className="fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-40 bg-slate-900 border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-3 text-xs font-semibold">
-          <span className="font-bold text-fuchsia-400">
+        <div className="fixed bottom-16 md:bottom-6 left-1/2 -translate-x-1/2 z-40 bg-[#051211] border border-teal-500/30 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-4 animate-in fade-in slide-in-from-bottom-3 text-xs font-semibold backdrop-blur-xl">
+          <span className="font-bold text-[#19E6C8]">
             {selectedTrackIds.length} selected
           </span>
           <button
@@ -431,11 +431,11 @@ export const TracksView: React.FC<{
           >
             {selectedTrackIds.length === tracks.length ? 'Deselect All' : 'Select All'}
           </button>
-          <div className="h-4 w-px bg-slate-700" />
+          <div className="h-4 w-px bg-teal-500/20" />
           <button
             type="button"
             onClick={handlePlaySelected}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold shadow-[0_0_15px_rgba(255,255,255,0.22)]"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>Play</span>
@@ -443,7 +443,7 @@ export const TracksView: React.FC<{
           <button
             type="button"
             onClick={() => onOpenAddToPlaylist(selectedTrackIds)}
-            className="flex items-center gap-1.5 hover:text-fuchsia-400"
+            className="flex items-center gap-1.5 hover:text-[#19E6C8]"
           >
             <BookmarkPlus className="w-4 h-4" />
             <span className="hidden sm:inline">Add to Playlist</span>
@@ -451,7 +451,7 @@ export const TracksView: React.FC<{
           <button
             type="button"
             onClick={handleQueueSelected}
-            className="flex items-center gap-1.5 hover:text-indigo-400"
+            className="flex items-center gap-1.5 hover:text-[#19E6C8]"
           >
             <ListPlus className="w-4 h-4" />
             <span className="hidden sm:inline">Queue</span>
@@ -469,7 +469,7 @@ export const TracksView: React.FC<{
 
       {/* Floating Toast Notification */}
       {toastMsg && (
-        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-slate-900 border border-fuchsia-500/40 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-semibold animate-in fade-in slide-in-from-bottom-2">
+        <div className="fixed bottom-16 left-1/2 -translate-x-1/2 z-50 bg-[#051211] border border-teal-500/40 text-white px-4 py-2.5 rounded-2xl shadow-xl text-xs font-semibold animate-in fade-in slide-in-from-bottom-2">
           {toastMsg}
         </div>
       )}

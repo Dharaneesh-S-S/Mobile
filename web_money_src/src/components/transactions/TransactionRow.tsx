@@ -40,14 +40,14 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
 
   if (record.type === 'income') {
     amountText = `+${formatInr(record.amountPaise, opts)}`;
-    amountColor = 'text-blue-400';
+    amountColor = 'text-[#19E6C8] text-glow-teal';
   } else if (record.type === 'expense') {
     amountText = `-${formatInr(record.amountPaise, opts)}`;
-    amountColor = 'text-red-400';
+    amountColor = 'text-[#FF6B6B] text-glow-coral';
   } else {
     // Transfer
     amountText = formatInr(record.amountPaise, opts);
-    amountColor = 'text-slate-300';
+    amountColor = 'text-[#38BDF8]';
   }
 
   const handleRowClick = () => {
@@ -65,8 +65,8 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
         e.preventDefault();
         onLongPress(record.id);
       }}
-      className={`group relative flex items-center justify-between px-4 py-3 hover:bg-slate-800/40 active:bg-slate-800/70 cursor-pointer transition-colors border-b border-slate-800/40 select-none ${
-        isSelected ? 'bg-blue-900/20' : ''
+      className={`group relative flex items-center justify-between px-4 py-3.5 hover:bg-teal-950/20 active:bg-teal-950/40 cursor-pointer transition-colors border-b border-teal-500/10 select-none ${
+        isSelected ? 'bg-teal-500/10' : ''
       }`}
     >
       {/* Left: Checkbox (if select mode) + Category Icon + Info */}
@@ -78,32 +78,37 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
               e.stopPropagation();
               onToggleSelect(record.id);
             }}
-            className="text-blue-400 p-0.5"
+            className="text-[#19E6C8] p-0.5"
             aria-label="Select transaction"
           >
             {isSelected ? (
-              <CheckSquare className="w-5 h-5 fill-blue-500 text-slate-900" />
+              <CheckSquare className="w-5 h-5 fill-[#19E6C8] text-black" />
             ) : (
-              <Square className="w-5 h-5 text-slate-500" />
+              <Square className="w-5 h-5 text-[#5B7B76]" />
             )}
           </button>
         )}
 
-        {/* Round Colored Category Icon */}
+        {/* Glowing Category Icon Tile */}
         <div
-          className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-sm"
+          className="w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border"
           style={{
-            backgroundColor: record.type === 'transfer' ? '#334155' : `${category?.color || '#3b82f6'}22`,
-            border: `1.5px solid ${record.type === 'transfer' ? '#64748b' : category?.color || '#3b82f6'}`,
+            backgroundColor:
+              record.type === 'transfer' ? 'rgba(56, 189, 248, 0.12)' : `${category?.color || '#19E6C8'}18`,
+            borderColor:
+              record.type === 'transfer' ? 'rgba(56, 189, 248, 0.4)' : `${category?.color || '#19E6C8'}40`,
+            boxShadow: `0 0 12px ${
+              record.type === 'transfer' ? 'rgba(56, 189, 248, 0.2)' : `${category?.color || '#19E6C8'}25`
+            }`,
           }}
         >
           {record.type === 'transfer' ? (
-            <ArrowRight className="w-4 h-4 text-slate-300" />
+            <ArrowRight className="w-4 h-4 text-[#38BDF8]" />
           ) : (
             <DynamicIcon
               name={category?.icon || 'CircleHelp'}
               className="w-4 h-4"
-              color={category?.color || '#3b82f6'}
+              color={category?.color || '#19E6C8'}
             />
           )}
         </div>
@@ -111,7 +116,7 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
         {/* Description & Wallet Details */}
         <div className="flex flex-col min-w-0">
           <div className="flex items-center gap-1.5">
-            <span className="text-sm font-semibold text-slate-100 truncate">
+            <span className="text-sm font-semibold text-[#F4FFFD] truncate">
               {record.type === 'transfer'
                 ? `Transfer: ${wallet?.name || 'Wallet'} → ${toWallet?.name || 'Wallet'}`
                 : record.description}
@@ -119,7 +124,7 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
 
             {/* Badges: Image, Split */}
             {record.imageBlobs && record.imageBlobs.length > 0 && (
-              <span title="Has attachment" className="text-blue-400">
+              <span title="Has attachment" className="text-[#19E6C8]">
                 <ImageIcon className="w-3.5 h-3.5" />
               </span>
             )}
@@ -130,17 +135,17 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-slate-400 mt-0.5">
+          <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mt-0.5">
             <span>{wallet?.name || 'Wallet'}</span>
             {record.feePaise ? (
-              <span className="text-[10px] text-amber-400/90 font-medium">
+              <span className="text-[10px] text-amber-400 font-medium font-mono">
                 (Fee: {formatInr(record.feePaise, opts)})
               </span>
             ) : null}
             {record.memo && (
               <>
-                <span>•</span>
-                <span className="truncate max-w-[140px] text-slate-500">{record.memo}</span>
+                <span className="text-[#5B7B76]">•</span>
+                <span className="truncate max-w-[140px] text-[#5B7B76]">{record.memo}</span>
               </>
             )}
           </div>
@@ -150,10 +155,10 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
       {/* Right: Amount & Time + Swipe Delete Shortcut */}
       <div className="flex items-center gap-2 shrink-0">
         <div className="flex flex-col items-end">
-          <span className={`text-sm sm:text-base font-bold font-display tracking-tight ${amountColor}`}>
+          <span className={`text-sm sm:text-base font-bold font-display tracking-tight font-mono ${amountColor}`}>
             {amountText}
           </span>
-          <span className="text-[11px] text-slate-400 mt-0.5">{timeStr}</span>
+          <span className="text-[11px] text-[#5B7B76] mt-0.5 font-mono">{timeStr}</span>
         </div>
 
         {/* Quick Delete button on hover for desktop */}
@@ -163,7 +168,7 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
               e.stopPropagation();
               deleteRecord(record.id, true);
             }}
-            className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-slate-500 hover:text-red-400 hover:bg-slate-800 transition-all ml-1"
+            className="opacity-0 group-hover:opacity-100 p-1.5 rounded-lg text-[#5B7B76] hover:text-[#FF6B6B] hover:bg-teal-950/40 transition-all ml-1 cursor-pointer"
             title="Delete record"
             aria-label="Delete record"
           >

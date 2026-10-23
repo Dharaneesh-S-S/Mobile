@@ -98,7 +98,7 @@ export const PlaylistsView: React.FC<{
           <button
             type="button"
             onClick={onOpenSmartPlaylist}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-purple-100 dark:bg-purple-950/60 hover:bg-purple-200 text-purple-700 dark:text-purple-300 font-semibold text-xs transition-colors"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-teal-500/15 border border-teal-400/30 hover:bg-teal-500/25 text-[#2DD4BF] font-semibold text-xs transition-colors"
           >
             <Sparkles className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">Smart Rule</span>
@@ -106,7 +106,7 @@ export const PlaylistsView: React.FC<{
           <button
             type="button"
             onClick={onOpenCreatePlaylist}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-semibold text-xs shadow-sm shadow-fuchsia-600/30 transition-all active:scale-95"
+            className="flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] transition-all active:scale-95"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>New Playlist</span>
@@ -124,16 +124,16 @@ export const PlaylistsView: React.FC<{
               onClick={() => setSelectedPlaylist(playlist)}
               className="group cursor-pointer space-y-2"
             >
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-800 shadow-md group-hover:shadow-xl transition-all">
+              <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#061816] border border-teal-500/20 shadow-md group-hover:shadow-[0_0_20px_rgba(25,230,200,0.2)] group-hover:border-teal-400/40 transition-all">
                 {renderMosaicCover(pTracks, playlist.coverArt)}
                 {playlist.isSmart && (
-                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-purple-600/90 text-white text-[10px] font-bold shadow-md flex items-center gap-1">
+                  <span className="absolute top-2 left-2 px-2 py-0.5 rounded-md bg-[#19E6C8]/90 text-[#04100F] text-[10px] font-bold shadow-md flex items-center gap-1">
                     <Sparkles className="w-2.5 h-2.5" />
                     Smart
                   </span>
                 )}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <div className="w-10 h-10 rounded-full bg-fuchsia-600 text-white flex items-center justify-center shadow-lg shadow-fuchsia-600/50">
+                  <div className="w-10 h-10 rounded-full bg-[#19E6C8] text-[#04100F] flex items-center justify-center shadow-lg shadow-teal-500/50">
                     <Play className="w-4 h-4 fill-current ml-0.5" />
                   </div>
                 </div>
@@ -202,22 +202,22 @@ export const PlaylistsView: React.FC<{
               const currentPTracks = getPlaylistTracks(selectedPlaylist)
               return (
                 <>
-                  <div className="flex items-center gap-4 pb-4 border-b border-slate-800">
-                    <div className="w-24 h-24 rounded-2xl overflow-hidden bg-slate-800 shrink-0 shadow-lg">
+                  <div className="flex items-center gap-4 pb-4 border-b border-teal-500/15">
+                    <div className="w-24 h-24 rounded-2xl overflow-hidden bg-[#061816] border border-teal-500/20 shrink-0 shadow-lg">
                       {renderMosaicCover(currentPTracks, selectedPlaylist.coverArt)}
                     </div>
                     <div className="min-w-0 flex-1 space-y-1">
-                      <span className="text-[10px] uppercase font-bold text-fuchsia-400 tracking-wider flex items-center gap-1">
+                      <span className="text-[10px] uppercase font-bold text-[#19E6C8] tracking-wider flex items-center gap-1">
                         {selectedPlaylist.isSmart ? <Sparkles className="w-3 h-3" /> : <ListMusic className="w-3 h-3" />}
                         {selectedPlaylist.isSmart ? 'Smart Playlist' : 'Custom Playlist'}
                       </span>
-                      <h3 className="text-lg font-extrabold truncate font-display">
+                      <h3 className="text-lg font-extrabold truncate font-display text-[#F4FFFD]">
                         {selectedPlaylist.name}
                       </h3>
-                      <p className="text-xs text-slate-400 truncate">
+                      <p className="text-xs text-[#94B5B0] truncate">
                         {selectedPlaylist.description || `${currentPTracks.length} tracks`}
                       </p>
-                      <p className="text-[11px] text-slate-500 font-mono">
+                      <p className="text-[11px] text-teal-400/80 font-mono">
                         {currentPTracks.length} tracks • {formatDuration(currentPTracks.reduce((acc, t) => acc + (t.duration || 0), 0))}
                       </p>
                     </div>
@@ -232,7 +232,7 @@ export const PlaylistsView: React.FC<{
                         playTrack(currentPTracks[0], currentPTracks)
                         setSelectedPlaylist(null)
                       }}
-                      className="flex-1 py-2.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-md shadow-fuchsia-600/30 flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="flex-1 py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-95"
                     >
                       <Play className="w-4 h-4 fill-current" />
                       <span>Play All</span>
@@ -245,7 +245,7 @@ export const PlaylistsView: React.FC<{
                         playTrack(shuffled[0], shuffled)
                         setSelectedPlaylist(null)
                       }}
-                      className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50"
+                      className="flex-1 py-2.5 rounded-full bg-teal-500/15 hover:bg-teal-500/25 border border-teal-400/30 text-[#2DD4BF] font-bold text-xs flex items-center justify-center gap-2 disabled:opacity-50 transition-all active:scale-95"
                     >
                       <Shuffle className="w-4 h-4" />
                       <span>Shuffle</span>

@@ -146,15 +146,15 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
   const todayStr = formatDateToYYYYMMDD(new Date());
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-4 animate-pop-in max-h-[92vh] overflow-y-auto">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="w-full max-w-sm bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-teal-500/20 p-4 animate-pop-in max-h-[92vh] overflow-y-auto text-[#F4FFFD]">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-100 dark:border-slate-700/60 mb-3">
+        <div className="flex items-center justify-between pb-3 border-b border-teal-500/20 mb-3">
           <div className="flex items-center gap-2">
-            <CalIcon className="w-5 h-5 text-blue-600 dark:text-blue-400" />
-            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Set date & time</h3>
+            <CalIcon className="w-5 h-5 text-[#19E6C8]" />
+            <h3 className="text-base font-bold text-[#F4FFFD]">Set date & time</h3>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+          <button onClick={onClose} className="p-1 rounded-lg text-teal-400 hover:text-white">
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -215,12 +215,12 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                 onClick={() => setSelectedDate(d.dateStr)}
                 className={`h-8 rounded-lg text-xs font-medium flex items-center justify-center transition relative ${
                   isSelected
-                    ? 'bg-blue-600 text-white font-bold shadow-sm'
+                    ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-md shadow-teal-500/25'
                     : isCurrentToday
-                    ? 'border border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
+                    ? 'border border-[#19E6C8] text-[#19E6C8] font-bold'
                     : d.isCurrentMonth
-                    ? 'text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700/60'
-                    : 'text-slate-300 dark:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    ? 'text-[#F4FFFD] hover:bg-teal-500/15'
+                    : 'text-teal-400/30 hover:bg-teal-500/10'
                 }`}
               >
                 {d.day}
@@ -374,7 +374,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
             <button
               type="button"
               onClick={handleDone}
-              className="px-4 py-1.5 rounded-lg text-xs font-medium bg-blue-600 hover:bg-blue-700 text-white transition shadow-sm"
+              className="px-4 py-1.5 rounded-full text-xs font-bold bg-[#19E6C8] text-[#030707] transition shadow-[0_0_15px_rgba(25,230,200,0.3)] hover:bg-[#2DD4BF]"
             >
               Done
             </button>

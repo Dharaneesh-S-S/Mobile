@@ -196,19 +196,19 @@ export const TakeNoteBar: React.FC<TakeNoteBarProps> = ({
           /* COLLAPSED BAR: "Take a note..." */
           <div
             onClick={() => setIsExpanded(true)}
-            className="p-3.5 flex items-center justify-between cursor-text bg-white dark:bg-slate-900 rounded-2xl"
+            className="p-3.5 flex items-center justify-between cursor-text bg-[#051211]/90 border border-teal-500/20 rounded-2xl"
           >
-            <span className="text-slate-500 dark:text-slate-400 text-sm font-normal">
+            <span className="text-teal-400/60 text-sm font-medium">
               Take a note...
             </span>
-            <div className="flex items-center gap-1 text-slate-500 dark:text-slate-400">
+            <div className="flex items-center gap-1 text-teal-400">
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleStartChecklist()
                 }}
-                className="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+                className="p-2 rounded-full hover:bg-teal-500/10 hover:text-white transition-colors"
                 title="New list"
               >
                 <CheckSquare className="w-5 h-5" />
@@ -438,7 +438,7 @@ export const TakeNoteBar: React.FC<TakeNoteBarProps> = ({
               <button
                 type="button"
                 onClick={handleCloseAndSave}
-                className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium text-xs shadow-xs transition-colors"
+                className="px-4 py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] transition-all active:scale-95"
               >
                 Close
               </button>

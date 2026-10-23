@@ -53,9 +53,9 @@ export const ListOptionsMenu: React.FC<ListOptionsMenuProps> = ({ onClose }) => 
   };
 
   return (
-    <div className="absolute right-0 top-full mt-1.5 w-60 bg-white dark:bg-slate-800 rounded-xl shadow-popover border border-slate-200 dark:border-slate-700 py-1.5 z-50 animate-pop-in text-sm text-slate-700 dark:text-slate-200">
+    <div className="absolute right-0 top-full mt-1.5 w-60 bg-[#051211]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-teal-500/20 py-1.5 z-50 animate-pop-in text-xs text-[#F4FFFD]">
       {/* Sort By Section */}
-      <div className="px-3 py-1 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+      <div className="px-3 py-1 text-[11px] font-bold text-teal-400 uppercase tracking-wider flex items-center gap-1.5">
         <ArrowUpDown className="w-3.5 h-3.5" />
         <span>Sort by</span>
       </div>
@@ -63,50 +63,50 @@ export const ListOptionsMenu: React.FC<ListOptionsMenuProps> = ({ onClose }) => 
       <div className="px-1 py-0.5 space-y-0.5">
         <button
           onClick={() => handleSortChange('order')}
-          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition text-left"
+          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-teal-500/15 transition text-left"
         >
           <div className="flex items-center gap-2">
-            <ListOrdered className="w-4 h-4 text-slate-400" />
+            <ListOrdered className="w-4 h-4 text-teal-400/60" />
             <span>My order</span>
           </div>
-          {currentSort === 'order' && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+          {currentSort === 'order' && <Check className="w-4 h-4 text-[#19E6C8]" />}
         </button>
 
         <button
           onClick={() => handleSortChange('date')}
-          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition text-left"
+          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-teal-500/15 transition text-left"
         >
           <div className="flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-slate-400" />
+            <Calendar className="w-4 h-4 text-teal-400/60" />
             <span>Date</span>
           </div>
-          {currentSort === 'date' && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+          {currentSort === 'date' && <Check className="w-4 h-4 text-[#19E6C8]" />}
         </button>
 
         <button
           onClick={() => handleSortChange('starred')}
-          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition text-left"
+          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-teal-500/15 transition text-left"
         >
           <div className="flex items-center gap-2">
-            <Star className="w-4 h-4 text-slate-400" />
+            <Star className="w-4 h-4 text-teal-400/60" />
             <span>Starred recently</span>
           </div>
-          {currentSort === 'starred' && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+          {currentSort === 'starred' && <Check className="w-4 h-4 text-[#19E6C8]" />}
         </button>
 
         <button
           onClick={() => handleSortChange('title')}
-          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50 transition text-left"
+          className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-teal-500/15 transition text-left"
         >
           <div className="flex items-center gap-2">
-            <Type className="w-4 h-4 text-slate-400" />
+            <Type className="w-4 h-4 text-teal-400/60" />
             <span>Title</span>
           </div>
-          {currentSort === 'title' && <Check className="w-4 h-4 text-blue-600 dark:text-blue-400" />}
+          {currentSort === 'title' && <Check className="w-4 h-4 text-[#19E6C8]" />}
         </button>
       </div>
 
-      <div className="my-1.5 border-t border-slate-100 dark:border-slate-700/60" />
+      <div className="my-1.5 border-t border-teal-500/20" />
 
       {/* List Management Options */}
       {activeList && (

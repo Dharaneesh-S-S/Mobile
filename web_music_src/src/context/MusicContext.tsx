@@ -220,9 +220,10 @@ export const MusicProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     }
 
-    // Set accent color CSS variables
-    root.style.setProperty('--accent-color', settings.accentColor || '#d946ef')
-    root.style.setProperty('--accent-glow', `${settings.accentColor || '#d946ef'}55`)
+    // Set accent color CSS variables (Enforce obsidian neon cyan #19E6C8)
+    const effectiveAccent = (!settings.accentColor || settings.accentColor.toLowerCase() === '#d946ef') ? '#19E6C8' : settings.accentColor
+    root.style.setProperty('--accent-color', effectiveAccent)
+    root.style.setProperty('--accent-glow', `${effectiveAccent}55`)
   }, [settings.theme, settings.accentColor])
 
   // Apply sound settings to AudioEngine

@@ -4,29 +4,32 @@
 
 @layer base {
   :root {
-    --color-bg-primary: #f0f4f9;
-    --color-bg-secondary: #ffffff;
-    --color-card: #ffffff;
-    --color-border: #e2e8f0;
-    --color-text-primary: #1f1f1f;
-    --color-text-secondary: #444746;
+    --color-bg-primary: #030707;
+    --color-bg-secondary: #051211;
+    --color-card: rgba(6, 18, 17, 0.65);
+    --color-border: rgba(45, 212, 191, 0.12);
+    --color-text-primary: #F4FFFD;
+    --color-text-secondary: #94B5B0;
+    --glow-teal-primary: #19E6C8;
   }
 
   .dark {
-    --color-bg-primary: #131314;
-    --color-bg-secondary: #1e1f20;
-    --color-card: #1e1f20;
-    --color-border: #282a2c;
-    --color-text-primary: #e3e3e3;
-    --color-text-secondary: #c4c7c5;
+    --color-bg-primary: #030707;
+    --color-bg-secondary: #051211;
+    --color-card: rgba(6, 18, 17, 0.65);
+    --color-border: rgba(45, 212, 191, 0.12);
+    --color-text-primary: #F4FFFD;
+    --color-text-secondary: #94B5B0;
   }
 
   body {
-    @apply bg-[#f0f4f9] dark:bg-[#131314] text-slate-800 dark:text-[#e3e3e3] font-sans antialiased;
+    background-color: #030707;
+    color: #F4FFFD;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
   }
 
   #root {
@@ -35,22 +38,27 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(25, 230, 200, 0.12), transparent);
   }
 }
 
 /* Custom Sleek Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  @apply bg-slate-300 dark:bg-[#333537] rounded-full hover:bg-slate-400 dark:hover:bg-[#444746];
+  background: rgba(45, 212, 191, 0.2);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(25, 230, 200, 0.45);
 }
 
-/* Drag drop drop-line styling */
+/* Drag drop drop-line styling with Neon Cyan Glow */
 .drop-indicator {
   position: relative;
 }
@@ -60,9 +68,9 @@
   left: 0;
   right: 0;
   height: 2px;
-  background-color: #8ab4f8;
+  background-color: #19E6C8;
   border-radius: 9999px;
-  box-shadow: 0 0 6px rgba(138, 180, 248, 0.6);
+  box-shadow: 0 0 10px rgba(25, 230, 200, 0.7);
   pointer-events: none;
 }
 .drop-indicator-top::after {

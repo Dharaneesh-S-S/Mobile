@@ -220,10 +220,10 @@ export const MonthView: React.FC = () => {
                           }}
                           className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                             isCurToday
-                              ? 'bg-blue-600 text-white shadow-xs'
+                              ? 'bg-[#19E6C8] text-[#030707] font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.4)]'
                               : isCurrentMonth
-                              ? 'text-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700'
-                              : 'text-gray-400 dark:text-gray-600'
+                              ? 'text-[#F4FFFD] hover:bg-teal-500/10'
+                              : 'text-teal-900/40'
                           }`}
                         >
                           {date.getDate()}
@@ -234,7 +234,7 @@ export const MonthView: React.FC = () => {
                       <div className="flex-1 space-y-1 mt-1">
                         {visibleItems.map(item => {
                           const cal = getCalendar(item.calendarId);
-                          const bg = item.colorOverride || cal?.color || '#3b82f6';
+                          const bg = item.colorOverride || cal?.color || '#19E6C8';
                           const isPast =
                             settings.dimPastEvents &&
                             dateStr < formatDateToYYYYMMDD(new Date());
@@ -248,7 +248,7 @@ export const MonthView: React.FC = () => {
                                 e.stopPropagation();
                                 openEventDetails(item, { x: e.clientX, y: e.clientY });
                               }}
-                              className={`px-2 py-0.5 rounded-md text-[11px] font-medium text-white truncate shadow-2xs hover:brightness-105 transition-all flex items-center gap-1 cursor-pointer ${
+                              className={`px-2 py-0.5 rounded-md text-[11px] font-semibold text-[#030707] truncate shadow-2xs hover:brightness-105 transition-all flex items-center gap-1 cursor-pointer ${
                                 isPast ? 'opacity-55' : ''
                               }`}
                               style={{ backgroundColor: bg }}
@@ -280,7 +280,7 @@ export const MonthView: React.FC = () => {
                               anchor: { x: e.clientX, y: e.clientY },
                             });
                           }}
-                          className="text-[11px] font-semibold text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded px-1.5 py-0.5 text-left w-fit mt-0.5 transition-colors"
+                          className="text-[11px] font-bold text-[#19E6C8] hover:bg-teal-500/10 rounded px-1.5 py-0.5 text-left w-fit mt-0.5 transition-colors"
                         >
                           +{remainingCount} more
                         </button>

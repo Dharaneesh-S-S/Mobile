@@ -121,22 +121,22 @@ export const ScheduleView: React.FC = () => {
                   <div
                     className={`w-12 h-12 rounded-2xl flex flex-col items-center justify-center font-bold transition-all ${
                       isCurToday
-                        ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20'
-                        : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-200'
+                        ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_20px_rgba(25,230,200,0.4)] font-extrabold'
+                        : 'bg-[#081a18] text-[#94B5B0] border border-teal-500/15'
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-semibold leading-none opacity-80">
+                    <span className="text-[10px] uppercase font-bold leading-none opacity-80">
                       {dateObj.toLocaleString('default', { month: 'short' })}
                     </span>
                     <span className="text-base leading-none mt-1">{dateObj.getDate()}</span>
                   </div>
 
                   <div>
-                    <p className="text-xs font-semibold text-gray-800 dark:text-gray-200">
+                    <p className="text-xs font-semibold text-[#F4FFFD]">
                       {dateObj.toLocaleString('default', { weekday: 'short' })}
                     </p>
                     {isCurToday && (
-                      <span className="text-[10px] font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider">
+                      <span className="text-[10px] font-bold text-[#19E6C8] uppercase tracking-wider">
                         Today
                       </span>
                     )}
@@ -215,7 +215,7 @@ export const ScheduleView: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold shadow-xs flex items-center justify-center gap-1.5 transition-colors flex-shrink-0"
+                            className="px-4 py-1.5 rounded-full bg-white text-[#04100F] text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-slate-100 flex items-center justify-center gap-1.5 transition-all flex-shrink-0 active:scale-95"
                           >
                             <Video className="w-3.5 h-3.5" />
                             <span>Join</span>

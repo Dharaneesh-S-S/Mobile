@@ -44,7 +44,7 @@ const CalendarApp: React.FC = () => {
   };
 
   return (
-    <div className="h-screen w-screen flex flex-col bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 font-sans overflow-hidden select-none">
+    <div className="h-screen w-screen flex flex-col bg-[#030707] text-[#F4FFFD] font-sans overflow-hidden select-none">
       {/* Top Bar */}
       <TopBar />
 

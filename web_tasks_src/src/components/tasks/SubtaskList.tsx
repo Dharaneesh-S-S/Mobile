@@ -28,11 +28,11 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
   };
 
   return (
-    <div className="pl-6 pr-2 py-1 space-y-1.5 border-l-2 border-slate-200 dark:border-slate-700/60 ml-4 my-1">
+    <div className="pl-6 pr-2 py-1 space-y-1.5 border-l-2 border-teal-500/20 ml-4 my-1">
       {subtasks.map(subtask => (
         <div
           key={subtask.id}
-          className="group/sub flex items-center justify-between gap-2 py-1 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800/50 transition text-xs"
+          className="group/sub flex items-center justify-between gap-2 py-1 px-2 rounded-lg hover:bg-teal-500/10 transition text-xs"
         >
           <div className="flex items-center gap-2 flex-1 min-w-0">
             {/* Checkbox */}
@@ -41,8 +41,8 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
               onClick={() => toggleSubtaskComplete(parentTaskId, subtask.id)}
               className={`w-4 h-4 rounded-full border flex items-center justify-center transition flex-shrink-0 ${
                 subtask.isCompleted
-                  ? 'border-blue-600 bg-blue-600 text-white animate-check-pop'
-                  : 'border-slate-400 dark:border-slate-500 hover:border-blue-500'
+                  ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707] animate-check-pop'
+                  : 'border-teal-500/40 hover:border-[#19E6C8]'
               }`}
             >
               {subtask.isCompleted && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -53,8 +53,8 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
               type="text"
               value={subtask.title}
               onChange={e => updateSubtask(parentTaskId, { ...subtask, title: e.target.value })}
-              className={`bg-transparent border-none outline-none flex-1 truncate text-xs text-slate-800 dark:text-slate-100 ${
-                subtask.isCompleted ? 'line-through text-slate-400 dark:text-slate-500' : ''
+              className={`bg-transparent border-none outline-none flex-1 truncate text-xs text-[#F4FFFD] ${
+                subtask.isCompleted ? 'line-through text-teal-400/50' : ''
               }`}
             />
           </div>
@@ -63,19 +63,19 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
             <button
               type="button"
               onClick={() => updateSubtask(parentTaskId, { ...subtask, isStarred: !subtask.isStarred })}
-              className="p-1 rounded text-slate-400 hover:text-amber-500 transition"
+              className="p-1 rounded text-teal-400/40 hover:text-amber-400 transition"
               title="Star subtask"
             >
               <Star
                 className={`w-3.5 h-3.5 ${
-                  subtask.isStarred ? 'text-amber-500 fill-amber-500' : ''
+                  subtask.isStarred ? 'text-amber-400 fill-amber-400' : 'text-teal-400/40'
                 }`}
               />
             </button>
             <button
               type="button"
               onClick={() => deleteSubtask(parentTaskId, subtask.id)}
-              className="p-1 rounded text-slate-400 hover:text-rose-600 transition"
+              className="p-1 rounded text-teal-400/40 hover:text-rose-400 transition"
               title="Delete subtask"
             >
               <Trash2 className="w-3.5 h-3.5" />
@@ -87,20 +87,20 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
       {/* Add Subtask Row */}
       {isAddingSubtask ? (
         <form onSubmit={handleAddSubmit} className="flex items-center gap-2 py-1 px-2">
-          <div className="w-4 h-4 rounded-full border border-dashed border-slate-300 dark:border-slate-600 flex-shrink-0" />
+          <div className="w-4 h-4 rounded-full border border-dashed border-teal-500/40 flex-shrink-0" />
           <input
             type="text"
             value={newSubtaskTitle}
             onChange={e => setNewSubtaskTitle(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Add subtask..."
-            className="bg-transparent border-none outline-none flex-1 text-xs text-slate-800 dark:text-slate-100 placeholder-slate-400"
+            className="bg-transparent border-none outline-none flex-1 text-xs text-[#F4FFFD] placeholder:text-teal-400/50"
             autoFocus
           />
           <button
             type="submit"
             disabled={!newSubtaskTitle.trim()}
-            className="text-[11px] font-medium text-blue-600 dark:text-blue-400 hover:underline disabled:opacity-50"
+            className="text-[11px] font-bold text-[#19E6C8] hover:underline disabled:opacity-50"
           >
             Save
           </button>
@@ -109,7 +109,7 @@ export const SubtaskList: React.FC<SubtaskListProps> = ({ parentTaskId, subtasks
         <button
           type="button"
           onClick={() => setIsAddingSubtask(true)}
-          className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-medium text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition"
+          className="flex items-center gap-1.5 px-2 py-1 rounded-lg text-xs font-semibold text-teal-400 hover:text-[#19E6C8] hover:bg-teal-500/10 transition"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>Add subtasks</span>

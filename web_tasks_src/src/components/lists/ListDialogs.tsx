@@ -62,13 +62,13 @@ export const ListDialogs: React.FC = () => {
     <>
       {/* Create List Modal */}
       {showCreateListModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-sm bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-teal-500/20 p-5 animate-pop-in text-[#F4FFFD]">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-[#19E6C8] flex items-center justify-center border border-teal-500/30">
                 <FolderPlus className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Create new list</h3>
+              <h3 className="text-base font-bold text-[#F4FFFD]">Create new list</h3>
             </div>
             <form onSubmit={handleCreateSubmit}>
               <input
@@ -76,21 +76,21 @@ export const ListDialogs: React.FC = () => {
                 value={newListName}
                 onChange={e => setNewListName(e.target.value)}
                 placeholder="List title"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm mb-4"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-teal-500/20 bg-[#081a18] text-[#F4FFFD] placeholder:text-teal-400/50 focus:outline-none focus:ring-2 focus:ring-[#19E6C8] text-sm mb-4"
                 autoFocus
               />
               <div className="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setShowCreateListModal(false)}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-[#94B5B0] hover:bg-teal-500/10 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!newListName.trim()}
-                  className="px-4 py-2 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  className="px-4 py-2 rounded-full text-sm font-bold bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030707] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(25,230,200,0.3)]"
                 >
                   Done
                 </button>
@@ -102,13 +102,13 @@ export const ListDialogs: React.FC = () => {
 
       {/* Rename List Modal */}
       {listToRename && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-sm bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-teal-500/20 p-5 animate-pop-in text-[#F4FFFD]">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 flex items-center justify-center">
+              <div className="w-9 h-9 rounded-xl bg-teal-500/20 text-[#19E6C8] flex items-center justify-center border border-teal-500/30">
                 <Edit3 className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Rename list</h3>
+              <h3 className="text-base font-bold text-[#F4FFFD]">Rename list</h3>
             </div>
             <form onSubmit={handleRenameSubmit}>
               <input
@@ -116,21 +116,21 @@ export const ListDialogs: React.FC = () => {
                 value={renameValue}
                 onChange={e => setRenameValue(e.target.value)}
                 placeholder="List title"
-                className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm mb-4"
+                className="w-full px-3.5 py-2.5 rounded-xl border border-teal-500/20 bg-[#081a18] text-[#F4FFFD] placeholder:text-teal-400/50 focus:outline-none focus:ring-2 focus:ring-[#19E6C8] text-sm mb-4"
                 autoFocus
               />
               <div className="flex items-center justify-end gap-2">
                 <button
                   type="button"
                   onClick={() => setListToRename(null)}
-                  className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-[#94B5B0] hover:bg-teal-500/10 transition"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={!renameValue.trim()}
-                  className="px-4 py-2 rounded-xl text-sm font-medium bg-blue-600 hover:bg-blue-700 text-white transition disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+                  className="px-4 py-2 rounded-full text-sm font-bold bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030707] transition disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(25,230,200,0.3)]"
                 >
                   Done
                 </button>

@@ -205,12 +205,12 @@ export const VisualizerView: React.FC<{
     >
       {/* Visualizer Header: Style selector & Fullscreen toggle */}
       <div className="flex items-center justify-between z-10 select-none pb-2">
-        <div className="flex items-center gap-1 bg-black/40 rounded-xl p-1 border border-white/10">
+        <div className="flex items-center gap-1 bg-[#030d0c] rounded-xl p-1 border border-teal-500/20">
           <button
             type="button"
             onClick={() => setStyle('bars')}
-            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-              style === 'bars' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              style === 'bars' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="Frequency Bars"
           >
@@ -220,8 +220,8 @@ export const VisualizerView: React.FC<{
           <button
             type="button"
             onClick={() => setStyle('wave')}
-            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-              style === 'wave' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              style === 'wave' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="Oscilloscope Waveform"
           >
@@ -231,8 +231,8 @@ export const VisualizerView: React.FC<{
           <button
             type="button"
             onClick={() => setStyle('circle')}
-            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-              style === 'circle' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              style === 'circle' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="Radial Spectrum"
           >
@@ -242,8 +242,8 @@ export const VisualizerView: React.FC<{
           <button
             type="button"
             onClick={() => setStyle('particles')}
-            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-colors ${
-              style === 'particles' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+            className={`p-1.5 rounded-lg text-xs font-semibold flex items-center gap-1 transition-all ${
+              style === 'particles' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="Audio Particles"
           >

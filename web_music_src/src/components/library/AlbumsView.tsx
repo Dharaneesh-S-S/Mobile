@@ -48,12 +48,12 @@ export const AlbumsView: React.FC<{
           </span>
         </div>
 
-        <div className="flex items-center gap-1 bg-slate-100 dark:bg-slate-800 rounded-xl p-1">
+        <div className="flex items-center gap-1 bg-[#030d0c] border border-teal-500/20 rounded-xl p-1">
           <button
             type="button"
             onClick={() => setViewMode('grid')}
-            className={`p-1.5 rounded-lg text-xs font-semibold ${
-              viewMode === 'grid' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+              viewMode === 'grid' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="Grid View"
           >
@@ -62,8 +62,8 @@ export const AlbumsView: React.FC<{
           <button
             type="button"
             onClick={() => setViewMode('list')}
-            className={`p-1.5 rounded-lg text-xs font-semibold ${
-              viewMode === 'list' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-slate-200'
+            className={`p-1.5 rounded-lg text-xs font-semibold transition-all ${
+              viewMode === 'list' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
             }`}
             title="List View"
           >
@@ -81,16 +81,16 @@ export const AlbumsView: React.FC<{
               onClick={() => setSelectedAlbum(album)}
               className="group cursor-pointer space-y-2"
             >
-              <div className="relative aspect-square rounded-2xl overflow-hidden bg-slate-800 shadow-md group-hover:shadow-xl transition-all">
+              <div className="relative aspect-square rounded-2xl overflow-hidden bg-[#061816] border border-teal-500/20 shadow-md group-hover:shadow-[0_0_20px_rgba(25,230,200,0.2)] group-hover:border-teal-400/40 transition-all">
                 {album.coverArt ? (
                   <img src={album.coverArt} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-500">
+                  <div className="w-full h-full flex items-center justify-center text-teal-500/50">
                     <Disc className="w-12 h-12" />
                   </div>
                 )}
                 <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                  <div className="w-10 h-10 rounded-full bg-fuchsia-600 text-white flex items-center justify-center shadow-lg shadow-fuchsia-600/50">
+                  <div className="w-10 h-10 rounded-full bg-[#19E6C8] text-[#04100F] flex items-center justify-center shadow-lg shadow-teal-500/50">
                     <Play className="w-4 h-4 fill-current ml-0.5" />
                   </div>
                 </div>
@@ -169,16 +169,16 @@ export const AlbumsView: React.FC<{
                 )}
               </div>
               <div className="min-w-0 flex-1 space-y-1">
-                <span className="text-[10px] uppercase font-bold text-fuchsia-400 tracking-wider">
+                <span className="text-[10px] uppercase font-bold text-[#19E6C8] tracking-wider">
                   Album
                 </span>
-                <h3 className="text-lg font-extrabold truncate font-display">
+                <h3 className="text-lg font-extrabold truncate font-display text-[#F4FFFD]">
                   {selectedAlbum.name}
                 </h3>
-                <p className="text-xs font-semibold text-slate-400 truncate">
+                <p className="text-xs font-semibold text-[#94B5B0] truncate">
                   {selectedAlbum.artist} {selectedAlbum.year ? `• ${selectedAlbum.year}` : ''}
                 </p>
-                <p className="text-[11px] text-slate-500 font-mono">
+                <p className="text-[11px] text-teal-400/80 font-mono">
                   {selectedAlbum.tracks.length} tracks • {formatDuration(selectedAlbum.tracks.reduce((acc, t) => acc + (t.duration || 0), 0))}
                 </p>
               </div>
@@ -192,7 +192,7 @@ export const AlbumsView: React.FC<{
                   playTrack(selectedAlbum.tracks[0], selectedAlbum.tracks)
                   setSelectedAlbum(null)
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white font-bold text-xs shadow-md shadow-fuchsia-600/30 flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <Play className="w-4 h-4 fill-current" />
                 <span>Play Album</span>
@@ -204,7 +204,7 @@ export const AlbumsView: React.FC<{
                   playTrack(shuffled[0], shuffled)
                   setSelectedAlbum(null)
                 }}
-                className="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-bold text-xs flex items-center justify-center gap-2"
+                className="flex-1 py-2.5 rounded-full bg-teal-500/15 hover:bg-teal-500/25 border border-teal-400/30 text-[#2DD4BF] font-bold text-xs flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <Shuffle className="w-4 h-4" />
                 <span>Shuffle</span>

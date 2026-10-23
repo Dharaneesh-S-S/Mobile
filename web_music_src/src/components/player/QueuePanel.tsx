@@ -45,19 +45,19 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 bg-black/80 backdrop-blur-md animate-in fade-in duration-200 select-none">
-      <div className="w-full max-w-lg h-[85vh] sm:h-[650px] bg-slate-900 border border-slate-800 rounded-t-[32px] sm:rounded-3xl flex flex-col overflow-hidden shadow-2xl text-white">
+      <div className="w-full max-w-lg h-[85vh] sm:h-[650px] bg-[#051413]/95 border border-teal-500/25 rounded-t-[32px] sm:rounded-3xl flex flex-col overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.85)] text-[#F4FFFD]">
         {/* Header */}
-        <div className="px-5 py-4 border-b border-slate-800/80 flex items-center justify-between shrink-0">
+        <div className="px-5 py-4 border-b border-teal-500/15 flex items-center justify-between shrink-0">
           <div>
             <div className="flex items-center gap-2">
-              <h2 className="font-extrabold text-base font-display">Play Queue</h2>
-              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-fuchsia-950/70 border border-fuchsia-800/40 text-fuchsia-300">
+              <h2 className="font-extrabold text-base font-display text-[#F4FFFD]">Play Queue</h2>
+              <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-teal-500/20 border border-teal-400/40 text-[#19E6C8]">
                 {queue.length} tracks
               </span>
             </div>
             {remainingDuration > 0 && (
-              <p className="text-[11px] text-slate-400 mt-0.5 flex items-center gap-1 font-mono">
-                <Clock className="w-3 h-3 text-slate-500" />
+              <p className="text-[11px] text-[#94B5B0] mt-0.5 flex items-center gap-1 font-mono">
+                <Clock className="w-3 h-3 text-teal-400/60" />
                 <span>{formatDuration(remainingDuration)} remaining</span>
               </p>
             )}
@@ -67,7 +67,7 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <button
               type="button"
               onClick={clearQueue}
-              className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-xl text-slate-400 hover:text-red-400 hover:bg-teal-500/10 transition-colors"
               title="Clear Queue"
             >
               <Trash2 className="w-4 h-4" />
@@ -75,7 +75,7 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+              className="p-2 rounded-full text-[#94B5B0] hover:text-[#F4FFFD] hover:bg-teal-500/10 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
@@ -83,13 +83,13 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
         </div>
 
         {/* Tab switch: Queue vs History */}
-        <div className="px-5 py-2.5 flex items-center justify-between bg-slate-950/40 border-b border-slate-800/50 shrink-0">
-          <div className="flex items-center gap-1 bg-slate-800/80 rounded-xl p-1 text-xs font-semibold">
+        <div className="px-5 py-2.5 flex items-center justify-between bg-[#030d0c] border-b border-teal-500/15 shrink-0">
+          <div className="flex items-center gap-1 bg-[#051413] rounded-xl p-1 text-xs font-semibold border border-teal-500/20">
             <button
               type="button"
               onClick={() => setActiveTab('queue')}
-              className={`px-3 py-1.5 rounded-lg transition-colors ${
-                activeTab === 'queue' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-lg transition-all ${
+                activeTab === 'queue' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
               }`}
             >
               Up Next
@@ -97,8 +97,8 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
             <button
               type="button"
               onClick={() => setActiveTab('history')}
-              className={`px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors ${
-                activeTab === 'history' ? 'bg-fuchsia-600 text-white' : 'text-slate-400 hover:text-white'
+              className={`px-3 py-1.5 rounded-lg flex items-center gap-1 transition-all ${
+                activeTab === 'history' ? 'bg-[#19E6C8] text-[#04100F] font-bold shadow-sm' : 'text-[#94B5B0] hover:text-[#F4FFFD]'
               }`}
             >
               <History className="w-3.5 h-3.5" />
@@ -109,7 +109,7 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
           <button
             type="button"
             onClick={() => setPlaylistNamePrompt(true)}
-            className="flex items-center gap-1.5 text-xs font-semibold text-fuchsia-400 hover:text-fuchsia-300 py-1 px-2.5 rounded-xl hover:bg-fuchsia-950/40 transition-colors"
+            className="flex items-center gap-1.5 text-xs font-semibold text-[#19E6C8] hover:text-[#2DD4BF] py-1 px-2.5 rounded-xl hover:bg-teal-500/10 transition-colors"
           >
             <BookmarkPlus className="w-4 h-4" />
             <span>Save as Playlist</span>
@@ -118,8 +118,8 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
 
         {/* Save Queue as Playlist Modal Prompt */}
         {playlistNamePrompt && (
-          <div className="p-4 bg-slate-800/90 border-b border-slate-700 space-y-2 animate-in slide-in-from-top-2">
-            <span className="block text-xs font-bold text-slate-200">
+          <div className="p-4 bg-[#061816] border-b border-teal-500/20 space-y-2 animate-in slide-in-from-top-2">
+            <span className="block text-xs font-bold text-[#F4FFFD]">
               Save current queue as playlist:
             </span>
             <div className="flex gap-2">
@@ -128,20 +128,20 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                 value={newPlaylistName}
                 onChange={(e) => setNewPlaylistName(e.target.value)}
                 placeholder="Playlist name..."
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-1.5 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500"
+                className="flex-1 bg-[#030d0c] border border-teal-500/20 rounded-xl px-3 py-1.5 text-xs text-[#F4FFFD] placeholder:text-teal-400/40 focus:outline-none focus:border-[#19E6C8]"
                 autoFocus
               />
               <button
                 type="button"
                 onClick={handleSaveQueueAsPlaylist}
-                className="px-3 py-1.5 rounded-xl bg-fuchsia-600 text-white text-xs font-bold shadow-md shadow-fuchsia-600/30"
+                className="px-4 py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] transition-all"
               >
                 Save
               </button>
               <button
                 type="button"
                 onClick={() => setPlaylistNamePrompt(false)}
-                className="px-2 py-1.5 rounded-xl text-slate-400 hover:text-white text-xs"
+                className="px-3 py-1.5 rounded-full text-[#94B5B0] hover:text-[#F4FFFD] text-xs"
               >
                 Cancel
               </button>
@@ -160,8 +160,8 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                     key={`${track.id}-${idx}`}
                     className={`flex items-center justify-between p-2.5 rounded-2xl group transition-all ${
                       isCurrent
-                        ? 'bg-fuchsia-950/60 border border-fuchsia-800/50 shadow-md'
-                        : 'hover:bg-slate-800/50'
+                        ? 'bg-teal-500/15 border border-teal-400/30 shadow-md'
+                        : 'hover:bg-teal-500/5'
                     }`}
                   >
                     {/* Left: Cover art + Info */}
@@ -169,23 +169,23 @@ export const QueuePanel: React.FC<{ isOpen: boolean; onClose: () => void }> = ({
                       onClick={() => playTrack(track, queue)}
                       className="flex items-center gap-3 min-w-0 flex-1 cursor-pointer"
                     >
-                      <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-slate-800 shrink-0 shadow-sm">
+                      <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-[#061816] border border-teal-500/20 shrink-0 shadow-sm">
                         {track.coverArt ? (
                           <img src={track.coverArt} alt="" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full flex items-center justify-center text-slate-500">
+                          <div className="w-full h-full flex items-center justify-center text-teal-500/50">
                             <Disc className="w-5 h-5" />
                           </div>
                         )}
                         {isCurrent && (
-                          <div className="absolute inset-0 bg-fuchsia-600/40 flex items-center justify-center">
+                          <div className="absolute inset-0 bg-[#19E6C8]/40 flex items-center justify-center">
                             <Play className="w-4 h-4 fill-white text-white animate-pulse" />
                           </div>
                         )}
                       </div>
 
                       <div className="min-w-0 flex-1">
-                        <h4 className={`text-xs font-bold truncate ${isCurrent ? 'text-fuchsia-400' : 'text-slate-200'}`}>
+                        <h4 className={`text-xs font-bold truncate ${isCurrent ? 'text-[#19E6C8]' : 'text-[#F4FFFD]'}`}>
                           {track.title}
                         </h4>
                         <p className="text-[11px] font-medium text-slate-400 truncate">

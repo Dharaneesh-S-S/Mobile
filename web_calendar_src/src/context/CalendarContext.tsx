@@ -164,14 +164,16 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return getCompressedItem<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
   });
 
-  // Load initial calendars (compressed)
+  // Load initial calendars (compressed with teal migration)
   const [calendars, setCalendars] = useState<CalendarCategory[]>(() => {
-    return getCompressedItem<CalendarCategory[]>(STORAGE_KEYS.CALENDARS, DEFAULT_CALENDARS);
+    const raw = getCompressedItem<CalendarCategory[]>(STORAGE_KEYS.CALENDARS, DEFAULT_CALENDARS);
+    return raw.map(c => c.id === 'cal_my_calendar' && (c.color === '#2563eb' || !c.color) ? { ...c, color: '#19E6C8' } : c);
   });
 
-  // Load initial events & tasks (compressed)
+  // Load initial events & tasks (compressed with teal migration)
   const [events, setEvents] = useState<CalendarEvent[]>(() => {
-    return getCompressedItem<CalendarEvent[]>(STORAGE_KEYS.EVENTS, DEMO_EVENTS);
+    const raw = getCompressedItem<CalendarEvent[]>(STORAGE_KEYS.EVENTS, DEMO_EVENTS);
+    return raw.map(e => e.colorOverride === '#2563eb' ? { ...e, colorOverride: '#19E6C8' } : e);
   });
 
   // Load initial trash (compressed)

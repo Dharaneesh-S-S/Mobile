@@ -192,7 +192,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
                 handleSaveAndClose()
                 onConvertToDocument(note)
               }}
-              className="flex items-center gap-1 px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-950/70 text-indigo-600 dark:text-indigo-400 border border-indigo-200 dark:border-indigo-800/60 text-xs font-semibold hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+              className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-teal-500/10 text-[#19E6C8] border border-teal-500/30 text-xs font-semibold hover:bg-teal-500/20 transition-colors"
               title="Expand to full Word document"
             >
               <Sparkles className="w-3.5 h-3.5" />
@@ -204,7 +204,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
               type="button"
               onClick={() => setIsPinned(!isPinned)}
               className={`p-2 rounded-full transition-colors ${
-                isPinned ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/60' : 'text-slate-400 hover:text-slate-700'
+                isPinned ? 'text-[#19E6C8] bg-teal-500/15 border border-teal-500/30' : 'text-teal-400/60 hover:text-[#F4FFFD]'
               }`}
               title={isPinned ? 'Unpin' : 'Pin'}
             >
@@ -264,7 +264,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
                       if (targetIdx !== -1) updated[targetIdx].completed = e.target.checked
                       setChecklist(updated)
                     }}
-                    className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                    className="rounded border-teal-500/30 text-[#19E6C8] focus:ring-[#19E6C8] w-4 h-4 bg-[#051211]"
                   />
                   <input
                     type="text"
@@ -325,7 +325,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
                               if (targetIdx !== -1) updated[targetIdx].completed = e.target.checked
                               setChecklist(updated)
                             }}
-                            className="rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 w-4 h-4"
+                            className="rounded border-teal-500/30 text-[#19E6C8] focus:ring-[#19E6C8] w-4 h-4 bg-[#051211]"
                           />
                           <span className="flex-1 line-through text-slate-400 text-xs">{item.text}</span>
                           <button
@@ -372,7 +372,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
                   autoFocus
                   className="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-full px-2 py-0.5 text-[11px] focus:outline-none"
                 />
-                <button type="submit" className="text-indigo-600 text-[11px] font-semibold">Add</button>
+                <button type="submit" className="text-[#19E6C8] text-[11px] font-bold">Add</button>
               </form>
             ) : (
               <button
@@ -495,7 +495,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
             <button
               type="button"
               onClick={() => setIsArchived(!isArchived)}
-              className={`p-2 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors ${isArchived ? 'text-indigo-600' : ''}`}
+              className={`p-2 rounded-full hover:bg-teal-500/10 transition-colors ${isArchived ? 'text-[#19E6C8]' : 'text-teal-400/60 hover:text-[#F4FFFD]'}`}
               title={isArchived ? 'Unarchive' : 'Archive'}
             >
               <Archive className="w-4 h-4" />
@@ -571,7 +571,7 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
                       onConvertToDocument(note)
                       setShowMoreMenu(false)
                     }}
-                    className="w-full text-left px-3 py-1.5 hover:bg-indigo-50 dark:hover:bg-indigo-950/40 text-indigo-600 dark:text-indigo-400 flex items-center gap-2 font-medium"
+                    className="w-full text-left px-3 py-1.5 hover:bg-teal-500/10 text-[#19E6C8] flex items-center gap-2 font-medium"
                   >
                     <Sparkles className="w-3.5 h-3.5" /> Expand to document
                   </button>
@@ -590,11 +590,11 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
             </div>
           </div>
 
-          {/* Close button */}
+          {/* Close button - solid white CTA pill */}
           <button
             type="button"
             onClick={handleSaveAndClose}
-            className="px-4 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-xs transition-colors"
+            className="px-4 py-1.5 rounded-full bg-white text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-slate-100 transition-all active:scale-95"
           >
             Close
           </button>

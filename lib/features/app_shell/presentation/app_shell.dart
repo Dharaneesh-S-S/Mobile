@@ -103,57 +103,73 @@ class AppShell extends StatelessWidget {
           return Scaffold(
             body: Row(
               children: [
-                NavigationRail(
-                  selectedIndex: isSettingsOpen ? null : selectedIndex,
-                  onDestinationSelected: (index) => _onDestinationSelected(context, index),
-                  labelType: NavigationRailLabelType.all,
-                  leading: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
-                    child: Container(
-                      width: 44,
-                      height: 44,
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.primary.withOpacity(0.12),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Icon(Icons.hub_rounded, color: theme.colorScheme.primary),
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF051211),
+                    border: Border(
+                      right: BorderSide(color: Color(0x1F2DD4BF), width: 1),
                     ),
                   ),
-                  trailing: Expanded(
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 20.0),
-                        child: IconButton(
-                          tooltip: 'Settings',
-                          icon: Icon(
-                            isSettingsOpen ? Icons.settings : Icons.settings_outlined,
-                            color: isSettingsOpen
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.onSurface.withOpacity(0.6),
+                  child: NavigationRail(
+                    backgroundColor: Colors.transparent,
+                    selectedIndex: isSettingsOpen ? null : selectedIndex,
+                    onDestinationSelected: (index) => _onDestinationSelected(context, index),
+                    labelType: NavigationRailLabelType.all,
+                    leading: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 20.0),
+                      child: Container(
+                        width: 46,
+                        height: 46,
+                        decoration: BoxDecoration(
+                          color: const Color(0x2619E6C8),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: const Color(0x6619E6C8)),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x3819E6C8),
+                              blurRadius: 16,
+                            ),
+                          ],
+                        ),
+                        child: const Icon(Icons.hub_rounded, color: Color(0xFF19E6C8), size: 24),
+                      ),
+                    ),
+                    trailing: Expanded(
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Padding(
+                          padding: const EdgeInsets.only(bottom: 20.0),
+                          child: IconButton(
+                            tooltip: 'Settings',
+                            icon: Icon(
+                              isSettingsOpen ? Icons.settings : Icons.settings_outlined,
+                              color: isSettingsOpen
+                                  ? const Color(0xFF19E6C8)
+                                  : const Color(0xFF94B5B0).withOpacity(0.7),
+                            ),
+                            onPressed: () => context.go('/settings'),
                           ),
-                          onPressed: () => context.go('/settings'),
                         ),
                       ),
                     ),
+                    destinations: allNavDestinations.map((item) {
+                      return NavigationRailDestination(
+                        icon: Icon(item.icon),
+                        selectedIcon: Icon(item.selectedIcon),
+                        label: Text(item.label),
+                      );
+                    }).toList(),
                   ),
-                  destinations: allNavDestinations.map((item) {
-                    return NavigationRailDestination(
-                      icon: Icon(item.icon),
-                      selectedIcon: Icon(item.selectedIcon),
-                      label: Text(item.label),
-                    );
-                  }).toList(),
                 ),
-                const VerticalDivider(width: 1),
                 Expanded(child: child),
               ],
             ),
           );
         }
 
-        // Mobile Layout with Persistent Compact Navigation Bar and More Sheet
+        // Mobile Layout with Floating Glass Navigation Pill
         return Scaffold(
+          extendBody: true,
           body: child,
           bottomNavigationBar: _MobileBottomNav(
             selectedIndex: selectedIndex,
@@ -185,109 +201,155 @@ class _MobileBottomNav extends StatelessWidget {
 
     showModalBottomSheet(
       context: context,
-      backgroundColor: theme.scaffoldBackgroundColor,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-      ),
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (ctx) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Center(
-                  child: Container(
-                    width: 36,
-                    height: 4,
-                    decoration: BoxDecoration(
-                      color: theme.colorScheme.onSurface.withOpacity(0.2),
-                      borderRadius: BorderRadius.circular(2),
+        return Container(
+          decoration: const BoxDecoration(
+            color: Color(0xF2061413),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+            border: Border(
+              top: BorderSide(color: Color(0x402DD4BF), width: 1.2),
+              left: BorderSide(color: Color(0x262DD4BF), width: 1),
+              right: BorderSide(color: Color(0x262DD4BF), width: 1),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black,
+                blurRadius: 30,
+                offset: Offset(0, -10),
+              ),
+            ],
+          ),
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Center(
+                    child: Container(
+                      width: 40,
+                      height: 4,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF19E6C8).withOpacity(0.4),
+                        borderRadius: BorderRadius.circular(2),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Color(0x3319E6C8),
+                            blurRadius: 6,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Text(
-                      'All Modules',
-                      style: theme.textTheme.titleLarge,
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      icon: const Icon(Icons.settings_outlined),
-                      tooltip: 'Settings',
-                      onPressed: () {
-                        Navigator.of(ctx).pop();
-                        onOpenSettings();
-                      },
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
-                    mainAxisSpacing: 12,
-                    crossAxisSpacing: 12,
-                    childAspectRatio: 0.85,
-                  ),
-                  itemCount: allNavDestinations.length,
-                  itemBuilder: (context, i) {
-                    final item = allNavDestinations[i];
-                    final isSelected = selectedIndex == i && !isSettingsOpen;
-
-                    return InkWell(
-                      borderRadius: BorderRadius.circular(16),
-                      onTap: () {
-                        Navigator.of(ctx).pop();
-                        onSelect(i);
-                      },
-                      child: Container(
+                  const SizedBox(height: 18),
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                         decoration: BoxDecoration(
-                          color: isSelected
-                              ? theme.colorScheme.primary.withOpacity(0.12)
-                              : theme.colorScheme.surface,
-                          borderRadius: BorderRadius.circular(16),
-                          border: Border.all(
-                            color: isSelected
-                                ? theme.colorScheme.primary
-                                : theme.colorScheme.outlineVariant.withOpacity(0.4),
+                          color: const Color(0x1F2DD4BF),
+                          borderRadius: BorderRadius.circular(9999),
+                          border: Border.all(color: const Color(0x402DD4BF)),
+                        ),
+                        child: const Text(
+                          'SUITE MODULES',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700,
+                            letterSpacing: 1.0,
+                            color: Color(0xFF19E6C8),
                           ),
                         ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              isSelected ? item.selectedIcon : item.icon,
-                              color: isSelected
-                                  ? theme.colorScheme.primary
-                                  : theme.colorScheme.onSurface,
-                              size: 26,
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              item.label,
-                              style: theme.textTheme.labelSmall?.copyWith(
-                                color: isSelected
-                                    ? theme.colorScheme.primary
-                                    : theme.colorScheme.onSurface,
-                                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                              ),
-                              textAlign: TextAlign.center,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                          ],
-                        ),
                       ),
-                    );
-                  },
-                ),
-                const SizedBox(height: 8),
-              ],
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.settings_outlined, color: Color(0xFF94B5B0)),
+                        tooltip: 'Settings',
+                        onPressed: () {
+                          Navigator.of(ctx).pop();
+                          onOpenSettings();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      mainAxisSpacing: 12,
+                      crossAxisSpacing: 12,
+                      childAspectRatio: 1.1,
+                    ),
+                    itemCount: allNavDestinations.length,
+                    itemBuilder: (context, i) {
+                      final item = allNavDestinations[i];
+                      final isSelected = selectedIndex == i && !isSettingsOpen;
+
+                      return InkWell(
+                        borderRadius: BorderRadius.circular(20),
+                        onTap: () {
+                          Navigator.of(ctx).pop();
+                          onSelect(i);
+                        },
+                        child: AnimatedContainer(
+                          duration: const Duration(milliseconds: 180),
+                          decoration: BoxDecoration(
+                            color: isSelected
+                                ? const Color(0x2619E6C8)
+                                : const Color(0x80081A18),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: isSelected
+                                  ? const Color(0xFF19E6C8)
+                                  : const Color(0x262DD4BF),
+                              width: isSelected ? 1.5 : 1,
+                            ),
+                            boxShadow: isSelected
+                                ? const [
+                                    BoxShadow(
+                                      color: Color(0x3319E6C8),
+                                      blurRadius: 16,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                isSelected ? item.selectedIcon : item.icon,
+                                color: isSelected
+                                    ? const Color(0xFF19E6C8)
+                                    : const Color(0xFF94B5B0),
+                                size: 28,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                item.label,
+                                style: TextStyle(
+                                  color: isSelected
+                                      ? const Color(0xFFF4FFFD)
+                                      : const Color(0xFF94B5B0),
+                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                  fontSize: 12,
+                                ),
+                                textAlign: TextAlign.center,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 8),
+                ],
+              ),
             ),
           ),
         );
@@ -297,54 +359,131 @@ class _MobileBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    // Primary 4 items in bottom bar: Calendar, Money, Tasks, Notes + Modules menu
     const primaryCount = 4;
     final isMoreSelected = selectedIndex >= primaryCount && !isSettingsOpen;
 
-    return Container(
-      decoration: BoxDecoration(
-        color: theme.colorScheme.surface,
-        border: Border(
-          top: BorderSide(
-            color: theme.colorScheme.outlineVariant.withOpacity(0.3),
-            width: 1,
-          ),
-        ),
-      ),
-      child: SafeArea(
-        top: false,
-        child: NavigationBar(
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+        child: Container(
           height: 64,
-          elevation: 0,
-          selectedIndex: isSettingsOpen
-              ? 0
-              : (isMoreSelected ? 4 : selectedIndex),
-          onDestinationSelected: (index) {
-            if (index == 4) {
-              _showAllModulesSheet(context);
-            } else {
-              onSelect(index);
-            }
-          },
-          destinations: [
-            ...allNavDestinations.take(primaryCount).map((item) {
-              return NavigationDestination(
-                icon: Icon(item.icon),
-                selectedIcon: Icon(item.selectedIcon),
-                label: item.label,
-              );
-            }),
-            NavigationDestination(
-              icon: Badge(
-                isLabelVisible: isMoreSelected,
-                child: const Icon(Icons.grid_view_rounded),
-              ),
-              selectedIcon: const Icon(Icons.grid_view_rounded),
-              label: 'Modules',
+          decoration: BoxDecoration(
+            color: const Color(0xE8061413),
+            borderRadius: BorderRadius.circular(36),
+            border: Border.all(
+              color: const Color(0x382DD4BF),
+              width: 1.2,
             ),
-          ],
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black54,
+                blurRadius: 24,
+                offset: Offset(0, 8),
+              ),
+              BoxShadow(
+                color: Color(0x1419E6C8),
+                blurRadius: 16,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ...allNavDestinations.take(primaryCount).toList().asMap().entries.map((entry) {
+                final idx = entry.key;
+                final item = entry.value;
+                final isSelected = selectedIndex == idx && !isSettingsOpen;
+
+                return Expanded(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(32),
+                    onTap: () => onSelect(idx),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 200),
+                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: isSelected ? const Color(0x2E19E6C8) : Colors.transparent,
+                            borderRadius: BorderRadius.circular(16),
+                            boxShadow: isSelected
+                                ? const [
+                                    BoxShadow(
+                                      color: Color(0x2619E6C8),
+                                      blurRadius: 8,
+                                    ),
+                                  ]
+                                : null,
+                          ),
+                          child: Icon(
+                            isSelected ? item.selectedIcon : item.icon,
+                            color: isSelected
+                                ? const Color(0xFF19E6C8)
+                                : const Color(0xFF5B7B76),
+                            size: 22,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          item.label,
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                            color: isSelected
+                                ? const Color(0xFFF4FFFD)
+                                : const Color(0xFF5B7B76),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }),
+              Expanded(
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(32),
+                  onTap: () => _showAllModulesSheet(context),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 200),
+                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: isMoreSelected ? const Color(0x2E19E6C8) : Colors.transparent,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Badge(
+                          isLabelVisible: isMoreSelected,
+                          backgroundColor: const Color(0xFF19E6C8),
+                          child: Icon(
+                            Icons.grid_view_rounded,
+                            color: isMoreSelected
+                                ? const Color(0xFF19E6C8)
+                                : const Color(0xFF5B7B76),
+                            size: 22,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 2),
+                      Text(
+                        'More',
+                        style: TextStyle(
+                          fontSize: 10,
+                          fontWeight: isMoreSelected ? FontWeight.w700 : FontWeight.w500,
+                          color: isMoreSelected
+                              ? const Color(0xFFF4FFFD)
+                              : const Color(0xFF5B7B76),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -2,7 +2,7 @@ import Dexie, { type Table } from 'dexie'
 import {
   Track, Playlist, EqPreset, UserSettings, PlayEvent
 } from '../types/music'
-import { generateDemoTracks } from './demoTracks'
+import { generateDemoTracks, createGradientCover } from './demoTracks'
 
 export class AuraBeatDatabase extends Dexie {
   tracks!: Table<Track, string>
@@ -44,7 +44,7 @@ export const DEFAULT_EQ_PRESETS: EqPreset[] = [
 export const DEFAULT_USER_SETTINGS: UserSettings = {
   id: 'music-settings',
   theme: 'dark',
-  accentColor: '#d946ef', // Neon Fuchsia
+  accentColor: '#19E6C8', // Neon Cyan / Teal per DESIGN_SPEC.md
   nowPlayingBackground: 'gradient',
   albumArtShape: 'rounded',
   phoneFrame: false,
@@ -71,6 +71,35 @@ export async function initializeDatabase(): Promise<void> {
   const settingsCount = await db.settings.count()
   if (settingsCount === 0) {
     await db.settings.put(DEFAULT_USER_SETTINGS)
+  } else {
+    const cur = await db.settings.get('music-settings')
+    if (cur && (!cur.accentColor || cur.accentColor.toLowerCase() === '#d946ef')) {
+      await db.settings.update('music-settings', { accentColor: '#19E6C8' })
+    }
+  }
+
+  // Ensure any existing demo tracks with legacy magenta/purple/orange covers get upgraded to teal
+  try {
+    const existingTracks = await db.tracks.toArray()
+    for (const t of existingTracks) {
+      if (t.isDemo) {
+        if (t.id === 'demo-track-1') {
+          const c = createGradientCover('Neon Horizon', 'Aura Soundscapes', '#064E3B', '#19E6C8')
+          await db.tracks.update(t.id, { coverArt: c })
+        } else if (t.id === 'demo-track-2') {
+          const c = createGradientCover('Midnight Lofi', 'Echo Drift', '#042F2E', '#2DD4BF')
+          await db.tracks.update(t.id, { coverArt: c })
+        } else if (t.id === 'demo-track-3') {
+          const c = createGradientCover('Acoustic Sunrise', 'Solar Strings', '#08332F', '#14B8A6')
+          await db.tracks.update(t.id, { coverArt: c })
+        } else if (t.id === 'demo-track-4') {
+          const c = createGradientCover('Cyber Pulse', 'HyperWave', '#062420', '#38BDF8')
+          await db.tracks.update(t.id, { coverArt: c })
+        }
+      }
+    }
+  } catch (err) {
+    console.warn('[AuraBeat] Migration error:', err)
   }
 
   const presetCount = await db.eqPresets.count()

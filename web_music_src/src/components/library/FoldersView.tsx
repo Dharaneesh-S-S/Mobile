@@ -103,12 +103,12 @@ export const FoldersView: React.FC<{
   return (
     <div className="space-y-4 pb-28 select-none">
       {/* Header & Breadcrumb Nav */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-slate-200/80 dark:border-slate-800">
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-teal-500/15">
         <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-500 overflow-x-auto py-1">
           <button
             type="button"
             onClick={() => setCurrentPath('')}
-            className={`flex items-center gap-1 hover:text-fuchsia-500 ${!currentPath ? 'text-fuchsia-600 dark:text-fuchsia-400 font-bold' : ''}`}
+            className={`flex items-center gap-1 hover:text-[#19E6C8] ${!currentPath ? 'text-[#19E6C8] font-bold' : ''}`}
           >
             <Folder className="w-3.5 h-3.5" />
             <span>All Folders</span>
@@ -123,7 +123,7 @@ export const FoldersView: React.FC<{
                 <button
                   type="button"
                   onClick={() => setCurrentPath(pathUpTo)}
-                  className={`hover:text-fuchsia-500 truncate max-w-[120px] ${isLast ? 'text-fuchsia-600 dark:text-fuchsia-400 font-bold' : ''}`}
+                  className={`hover:text-[#19E6C8] truncate max-w-[120px] ${isLast ? 'text-[#19E6C8] font-bold' : ''}`}
                 >
                   {crumb}
                 </button>
@@ -135,28 +135,28 @@ export const FoldersView: React.FC<{
         <button
           type="button"
           onClick={() => setIsImportModalOpen(true)}
-          className="px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-1.5"
+          className="px-3 py-1.5 rounded-xl bg-[#051211] hover:bg-[#071f1d] border border-teal-500/20 text-xs font-semibold text-[#19E6C8] flex items-center gap-1.5"
         >
-          <FolderOpen className="w-3.5 h-3.5 text-fuchsia-500" />
+          <FolderOpen className="w-3.5 h-3.5 text-[#19E6C8]" />
           <span>Add Folder</span>
         </button>
       </div>
 
       {/* Action to Play All in Current Folder */}
       {directTracks.length > 0 && (
-        <div className="flex items-center justify-between p-3 rounded-2xl bg-fuchsia-50 dark:bg-fuchsia-950/30 border border-fuchsia-500/20">
+        <div className="flex items-center justify-between p-3 rounded-2xl bg-[#051211]/90 border border-teal-500/20">
           <div>
             <span className="block text-xs font-bold text-slate-900 dark:text-white">
               {directTracks.length} Tracks in this folder
             </span>
-            <span className="text-[11px] text-slate-500 font-mono">
+            <span className="text-[11px] text-teal-400 font-mono">
               {formatDuration(directTracks.reduce((acc, t) => acc + (t.duration || 0), 0))}
             </span>
           </div>
           <button
             type="button"
             onClick={handlePlayFolder}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-fuchsia-600 text-white font-bold text-xs shadow-md shadow-fuchsia-600/30 active:scale-95"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_15px_rgba(255,255,255,0.22)] active:scale-95"
           >
             <Play className="w-3.5 h-3.5 fill-current" />
             <span>Play Folder</span>
@@ -171,14 +171,14 @@ export const FoldersView: React.FC<{
             <div
               key={sf.path}
               onClick={() => setCurrentPath(sf.path)}
-              className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-100 dark:bg-slate-800/60 hover:bg-slate-200/80 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 cursor-pointer transition-all group"
+              className="flex items-center justify-between p-3.5 rounded-2xl bg-[#051211]/80 hover:bg-[#071f1d] border border-teal-500/15 cursor-pointer transition-all group"
             >
               <div className="flex items-center gap-3 min-w-0">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-teal-500/10 text-[#19E6C8] flex items-center justify-center shrink-0">
                   <Folder className="w-5 h-5 fill-current" />
                 </div>
                 <div className="min-w-0">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-fuchsia-500 transition-colors">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white truncate group-hover:text-[#19E6C8] transition-colors">
                     {sf.name}
                   </h4>
                   <p className="text-[11px] text-slate-500 dark:text-slate-400">
@@ -186,7 +186,7 @@ export const FoldersView: React.FC<{
                   </p>
                 </div>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:translate-x-1 group-hover:text-[#19E6C8] transition-transform" />
             </div>
           ))}
         </div>

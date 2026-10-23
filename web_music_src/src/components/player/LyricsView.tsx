@@ -68,13 +68,13 @@ export const LyricsView: React.FC<{
   }
 
   return (
-    <div className="w-full h-80 rounded-3xl bg-slate-950/80 border border-white/10 backdrop-blur-xl p-5 flex flex-col justify-between overflow-hidden shadow-2xl text-white select-none">
+    <div className="w-full h-80 rounded-3xl bg-[#051211]/90 border border-teal-500/20 backdrop-blur-xl p-5 flex flex-col justify-between overflow-hidden shadow-2xl text-white select-none">
       {/* Header */}
-      <div className="flex items-center justify-between pb-3 border-b border-white/10 shrink-0">
+      <div className="flex items-center justify-between pb-3 border-b border-teal-500/15 shrink-0">
         <div className="flex items-center gap-2">
-          <FileText className="w-4 h-4 text-fuchsia-400" />
+          <FileText className="w-4 h-4 text-[#19E6C8]" />
           <h3 className="font-bold text-sm text-white font-display">
-            Lyrics {syncedLyrics.length > 0 && <span className="text-[10px] text-fuchsia-400 uppercase font-mono ml-1 px-1.5 py-0.5 rounded-full bg-fuchsia-950/60 border border-fuchsia-800/40">Synced</span>}
+            Lyrics {syncedLyrics.length > 0 && <span className="text-[10px] text-[#19E6C8] uppercase font-mono ml-1 px-1.5 py-0.5 rounded-full bg-teal-500/10 border border-teal-500/30">Synced</span>}
           </h3>
         </div>
 
@@ -83,17 +83,17 @@ export const LyricsView: React.FC<{
             <button
               type="button"
               onClick={handleStartEdit}
-              className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+              className="p-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-slate-300 hover:text-white transition-colors"
               title="Edit or Paste Lyrics"
             >
-              <Edit3 className="w-3.5 h-3.5" />
+              <Edit3 className="w-3.5 h-3.5 text-teal-300" />
             </button>
           ) : (
             <div className="flex items-center gap-1">
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="p-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-slate-300 hover:text-white transition-colors"
+                className="p-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/20 text-slate-300 hover:text-white transition-colors"
                 title="Import .lrc file"
               >
                 <Upload className="w-3.5 h-3.5" />
@@ -101,7 +101,7 @@ export const LyricsView: React.FC<{
               <button
                 type="button"
                 onClick={handleSaveEdit}
-                className="p-1.5 rounded-xl bg-fuchsia-600 hover:bg-fuchsia-500 text-white transition-colors"
+                className="p-1.5 rounded-xl bg-[#19E6C8] hover:bg-[#1cf2d3] text-[#030707] font-bold shadow-md shadow-teal-500/30 transition-colors"
                 title="Save Lyrics"
               >
                 <Check className="w-3.5 h-3.5" />
@@ -142,7 +142,7 @@ export const LyricsView: React.FC<{
                     onClick={() => seek(line.time)}
                     className={`cursor-pointer transition-all duration-300 py-1 ${
                       isActive
-                        ? 'text-lg font-extrabold text-white scale-105 drop-shadow-[0_0_12px_rgba(217,70,239,0.8)]'
+                        ? 'text-lg font-extrabold text-[#19E6C8] scale-105 drop-shadow-[0_0_12px_rgba(25,230,200,0.8)]'
                         : isPast
                         ? 'text-sm font-medium text-slate-500 hover:text-slate-300'
                         : 'text-sm font-medium text-slate-400 hover:text-slate-200'
@@ -165,7 +165,7 @@ export const LyricsView: React.FC<{
               <button
                 type="button"
                 onClick={handleStartEdit}
-                className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-xs transition-colors"
+                className="px-3 py-1.5 rounded-xl bg-teal-500/15 hover:bg-teal-500/25 border border-teal-500/30 text-[#19E6C8] font-semibold text-xs transition-colors"
               >
                 Add / Paste Lyrics (.lrc)
               </button>
@@ -178,7 +178,7 @@ export const LyricsView: React.FC<{
               value={editText}
               onChange={(e) => setEditText(e.target.value)}
               placeholder="Paste synced .lrc lyrics here (e.g. [00:12.50] Hello World) or plain text..."
-              className="flex-1 w-full bg-black/40 border border-white/10 rounded-2xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-fuchsia-500 font-mono resize-none leading-relaxed"
+              className="flex-1 w-full bg-[#030707]/90 border border-teal-500/20 rounded-2xl p-3 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-[#19E6C8] font-mono resize-none leading-relaxed"
             />
           </div>
         )}
