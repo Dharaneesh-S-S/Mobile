@@ -87,18 +87,18 @@ export const ScheduleView: React.FC = () => {
   const getCalendar = (calendarId: string) => calendars.find(c => c.id === calendarId);
 
   return (
-    <div className="flex-1 overflow-y-auto p-4 md:p-8 bg-white dark:bg-gray-900 select-none">
+    <div className="flex-1 overflow-y-auto p-3 sm:p-4 md:p-8 bg-[#030707] text-[#F4FFFD] select-none">
       <div className="max-w-4xl mx-auto space-y-6">
         {sortedDates.length === 0 ? (
           <div className="py-20 text-center">
-            <div className="w-16 h-16 rounded-3xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 rounded-3xl bg-teal-500/10 text-[#19E6C8] flex items-center justify-center mx-auto mb-4 border border-teal-500/20">
               <CalIcon className="w-8 h-8" />
             </div>
-            <h3 className="text-base font-semibold text-gray-800 dark:text-gray-200">
+            <h3 className="text-base font-bold text-[#F4FFFD]">
               No events scheduled
             </h3>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
-              Click on "Create" or select another view to schedule appointments.
+            <p className="text-xs text-teal-400/60 mt-1">
+              Click on the "+" Create button or select another view to schedule appointments.
             </p>
           </div>
         ) : (
@@ -114,29 +114,29 @@ export const ScheduleView: React.FC = () => {
             return (
               <div
                 key={dateStr}
-                className="flex flex-col md:flex-row gap-4 pb-6 border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+                className="flex flex-col md:flex-row gap-3 md:gap-4 pb-6 border-b border-teal-500/15 last:border-b-0"
               >
                 {/* Date header badge */}
-                <div className="w-32 flex-shrink-0 flex items-start gap-3">
+                <div className="flex items-center md:items-start gap-3 md:w-32 flex-shrink-0">
                   <div
-                    className={`w-12 h-12 rounded-2xl flex flex-col items-center justify-center font-bold transition-all ${
+                    className={`w-11 h-11 md:w-12 md:h-12 rounded-2xl flex flex-col items-center justify-center font-bold transition-all ${
                       isCurToday
                         ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_20px_rgba(25,230,200,0.4)] font-extrabold'
                         : 'bg-[#081a18] text-[#94B5B0] border border-teal-500/15'
                     }`}
                   >
-                    <span className="text-[10px] uppercase font-bold leading-none opacity-80">
+                    <span className="text-[9px] md:text-[10px] uppercase font-bold leading-none opacity-80">
                       {dateObj.toLocaleString('default', { month: 'short' })}
                     </span>
-                    <span className="text-base leading-none mt-1">{dateObj.getDate()}</span>
+                    <span className="text-sm md:text-base leading-none mt-1">{dateObj.getDate()}</span>
                   </div>
 
                   <div>
-                    <p className="text-xs font-semibold text-[#F4FFFD]">
+                    <p className="text-xs font-bold text-[#F4FFFD]">
                       {dateObj.toLocaleString('default', { weekday: 'short' })}
                     </p>
                     {isCurToday && (
-                      <span className="text-[10px] font-bold text-[#19E6C8] uppercase tracking-wider">
+                      <span className="text-[10px] font-extrabold text-[#19E6C8] uppercase tracking-wider">
                         Today
                       </span>
                     )}
@@ -144,45 +144,45 @@ export const ScheduleView: React.FC = () => {
                 </div>
 
                 {/* Event items for this date */}
-                <div className="flex-1 space-y-2">
+                <div className="flex-1 space-y-2 min-w-0">
                   {items.map(item => {
                     const cal = getCalendar(item.calendarId);
-                    const color = item.colorOverride || cal?.color || '#3b82f6';
+                    const color = item.colorOverride || cal?.color || '#19E6C8';
 
                     return (
                       <div
                         key={item.id}
                         onClick={e => openEventDetails(item, { x: e.clientX, y: e.clientY })}
-                        className="p-3 rounded-2xl border border-gray-100 dark:border-gray-800 bg-gray-50/60 dark:bg-gray-850 hover:shadow-md hover:border-gray-200 dark:hover:border-gray-700 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
+                        className="p-3 rounded-2xl border border-teal-500/15 bg-[#051211] hover:bg-[#081a18] hover:border-teal-500/30 transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-3 group"
                       >
-                        <div className="flex items-start gap-3 min-w-0">
+                        <div className="flex items-start gap-3 min-w-0 flex-1">
                           <div
-                            className="w-3.5 h-3.5 rounded-full mt-0.5 flex-shrink-0 ring-4 ring-white dark:ring-gray-800"
+                            className="w-3.5 h-3.5 rounded-full mt-0.5 flex-shrink-0 ring-4 ring-[#051211]"
                             style={{ backgroundColor: color }}
                           />
 
-                          <div className="min-w-0">
+                          <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              {item.type === 'task' && <CheckSquare className="w-3.5 h-3.5 text-amber-500" />}
-                              {item.type === 'focus_time' && <Clock className="w-3.5 h-3.5 text-indigo-500" />}
-                              {item.type === 'out_of_office' && <Plane className="w-3.5 h-3.5 text-purple-500" />}
+                              {item.type === 'task' && <CheckSquare className="w-3.5 h-3.5 text-amber-400" />}
+                              {item.type === 'focus_time' && <Clock className="w-3.5 h-3.5 text-indigo-400" />}
+                              {item.type === 'out_of_office' && <Plane className="w-3.5 h-3.5 text-purple-400" />}
                               {item.type === 'appointment_schedule' && (
-                                <CalendarRange className="w-3.5 h-3.5 text-rose-500" />
+                                <CalendarRange className="w-3.5 h-3.5 text-rose-400" />
                               )}
                               <h4
                                 className={`text-sm font-semibold truncate ${
                                   item.isCompleted
-                                    ? 'line-through text-gray-400'
-                                    : 'text-gray-900 dark:text-gray-100'
+                                    ? 'line-through text-teal-400/40'
+                                    : 'text-[#F4FFFD]'
                                 }`}
                               >
                                 {item.title}
                               </h4>
                             </div>
 
-                            <div className="flex flex-wrap items-center gap-3 mt-1 text-xs text-gray-500 dark:text-gray-400">
-                              <span className="flex items-center gap-1 font-medium text-gray-700 dark:text-gray-300">
-                                <Clock className="w-3 h-3" />
+                            <div className="flex flex-wrap items-center gap-2.5 mt-1 text-xs text-teal-400/60">
+                              <span className="flex items-center gap-1 font-medium text-teal-300">
+                                <Clock className="w-3 h-3 text-[#19E6C8]" />
                                 {item.isAllDay
                                   ? 'All day'
                                   : `${formatTimeDisplay(item.startTime, settings.timeFormat)} – ${formatTimeDisplay(
@@ -215,7 +215,7 @@ export const ScheduleView: React.FC = () => {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={e => e.stopPropagation()}
-                            className="px-4 py-1.5 rounded-full bg-white text-[#04100F] text-xs font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-slate-100 flex items-center justify-center gap-1.5 transition-all flex-shrink-0 active:scale-95"
+                            className="px-4 py-1.5 rounded-full bg-[#19E6C8] text-[#030707] text-xs font-bold shadow-[0_0_15px_rgba(25,230,200,0.3)] hover:bg-[#15caa0] flex items-center justify-center gap-1.5 transition-all flex-shrink-0 active:scale-95"
                           >
                             <Video className="w-3.5 h-3.5" />
                             <span>Join</span>

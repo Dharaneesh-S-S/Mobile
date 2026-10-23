@@ -6,10 +6,10 @@ import { PeopleSearch } from './PeopleSearch';
 import { AppointmentSchedulesList } from './AppointmentSchedulesList';
 import { WorldClock } from './WorldClock';
 import { CalendarList } from './CalendarList';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, X } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { sidebarOpen } = useCalendar();
+  const { sidebarOpen, toggleSidebar } = useCalendar();
   const [peopleOpen, setPeopleOpen] = React.useState(true);
   const [appointmentsOpen, setAppointmentsOpen] = React.useState(true);
 
@@ -18,9 +18,29 @@ export const Sidebar: React.FC = () => {
   }
 
   return (
-    <aside className="w-64 md:w-68 flex-shrink-0 h-[calc(100vh-4rem)] border-r border-teal-500/15 bg-[#051211]/90 backdrop-blur-xl overflow-y-auto overflow-x-hidden flex flex-col select-none transition-all z-20 text-[#F4FFFD]">
-      {/* Create Button with dropdown */}
-      <CreateMenu />
+    <>
+      {/* Mobile Backdrop Overlay */}
+      <div
+        className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 md:hidden"
+        onClick={toggleSidebar}
+      />
+
+      <aside className="fixed inset-y-0 left-0 w-72 max-w-[85vw] h-full z-50 md:relative md:w-64 md:flex-shrink-0 md:h-[calc(100vh-4rem)] border-r border-teal-500/15 bg-[#051211] md:bg-[#051211]/90 backdrop-blur-xl overflow-y-auto overflow-x-hidden flex flex-col select-none transition-all text-[#F4FFFD] shadow-2xl md:shadow-none animate-in slide-in-from-left duration-200">
+        {/* Mobile Drawer Header with Close Button */}
+        <div className="flex md:hidden items-center justify-between px-4 py-3 border-b border-teal-500/15">
+          <span className="text-sm font-bold text-[#F4FFFD]">Calendar Menu</span>
+          <button
+            type="button"
+            onClick={toggleSidebar}
+            aria-label="Close sidebar"
+            className="p-1 rounded-lg text-teal-400/60 hover:text-white hover:bg-teal-500/10"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Create Button with dropdown */}
+        <CreateMenu />
 
       {/* Mini month calendar */}
       <MiniCalendar />
@@ -64,6 +84,7 @@ export const Sidebar: React.FC = () => {
       <div className="flex-1 pb-6">
         <CalendarList />
       </div>
-    </aside>
+      </aside>
+    </>
   );
 };

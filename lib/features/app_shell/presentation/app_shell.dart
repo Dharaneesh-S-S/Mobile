@@ -169,7 +169,7 @@ class AppShell extends StatelessWidget {
 
         // Mobile Layout with Floating Glass Navigation Pill
         return Scaffold(
-          extendBody: true,
+          extendBody: false,
           body: child,
           bottomNavigationBar: _MobileBottomNav(
             selectedIndex: selectedIndex,

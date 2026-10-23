@@ -261,29 +261,29 @@ export const EventEditorModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 dark:bg-black/70 flex items-center justify-center p-2 sm:p-4 animate-in fade-in duration-150">
-      <div className="w-full max-w-4xl bg-white dark:bg-gray-900 rounded-3xl shadow-2xl border border-gray-100 dark:border-gray-800 overflow-hidden flex flex-col max-h-[92vh]">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+      <div className="w-full h-full sm:h-auto sm:max-h-[92vh] max-w-4xl bg-[#051211] rounded-none sm:rounded-3xl shadow-2xl border-0 sm:border border-teal-500/20 overflow-hidden flex flex-col text-[#F4FFFD]">
         {/* Header Bar */}
-        <div className="px-6 py-4 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-850">
-          <div className="flex items-center gap-3">
+        <div className="px-3 sm:px-6 py-3 sm:py-4 border-b border-teal-500/15 flex items-center justify-between bg-[#051211] flex-shrink-0">
+          <div className="flex items-center gap-2 sm:gap-3 min-w-0">
             <button
               type="button"
               onClick={closeEditor}
-              className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700"
+              className="p-1.5 rounded-full text-teal-400/70 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors flex-shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
-            <h2 className="text-base font-bold text-gray-800 dark:text-gray-100">
+            <h2 className="text-sm sm:text-base font-bold text-[#F4FFFD] truncate">
               {isEditingExisting ? 'Edit item' : 'Create new item'}
             </h2>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-shrink-0">
             {isEditingExisting && (
               <button
                 type="button"
                 onClick={handleDelete}
-                className="p-2 text-gray-400 hover:text-red-600 rounded-xl hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors"
+                className="p-1.5 sm:p-2 text-teal-400/70 hover:text-red-400 rounded-xl hover:bg-red-500/10 transition-colors"
                 title="Delete item"
               >
                 <Trash2 className="w-4 h-4" />
@@ -292,14 +292,14 @@ export const EventEditorModal: React.FC = () => {
             <button
               type="button"
               onClick={closeEditor}
-              className="px-4 py-2 text-xs font-semibold text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl"
+              className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-xs font-semibold text-teal-400/70 hover:text-[#F4FFFD] rounded-xl hover:bg-teal-500/10 transition-colors"
             >
               Discard
             </button>
             <button
               type="button"
               onClick={handleSave}
-              className="px-6 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 rounded-xl shadow-md transition-colors"
+              className="px-4 sm:px-6 py-1.5 sm:py-2 text-xs font-extrabold text-[#030707] bg-[#19E6C8] hover:bg-[#15caa0] rounded-xl shadow-[0_0_15px_rgba(25,230,200,0.3)] transition-all active:scale-95 flex-shrink-0"
             >
               Save
             </button>
@@ -307,7 +307,7 @@ export const EventEditorModal: React.FC = () => {
         </div>
 
         {/* Modal Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 sm:space-y-6">
           {/* Title and Item Type Bar */}
           <div className="space-y-3">
             <input
@@ -316,11 +316,11 @@ export const EventEditorModal: React.FC = () => {
               value={title}
               onChange={e => setTitle(e.target.value)}
               placeholder="Add title"
-              className="w-full text-2xl font-bold px-3 py-2 border-b-2 border-gray-200 dark:border-gray-700 focus:border-blue-600 dark:focus:border-blue-500 bg-transparent text-gray-900 dark:text-gray-100 placeholder-gray-400 focus:outline-none"
+              className="w-full text-xl sm:text-2xl font-bold px-2 sm:px-3 py-2 border-b-2 border-teal-500/20 focus:border-[#19E6C8] bg-transparent text-[#F4FFFD] placeholder-teal-400/40 focus:outline-none"
             />
 
             {/* Type selector chips */}
-            <div className="flex flex-wrap items-center gap-2 pt-1">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1">
               {[
                 { type: 'event', label: 'Event' },
                 { type: 'task', label: 'Task' },
@@ -333,10 +333,10 @@ export const EventEditorModal: React.FC = () => {
                   key={opt.type}
                   type="button"
                   onClick={() => setItemType(opt.type as CalendarItemType)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
                     itemType === opt.type
-                      ? 'bg-blue-600 text-white shadow-xs'
-                      : 'bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+                      ? 'bg-[#19E6C8] text-[#030707] shadow-xs'
+                      : 'bg-[#081a18] text-teal-400/70 border border-teal-500/15 hover:text-[#F4FFFD] hover:bg-teal-500/10'
                   }`}
                 >
                   {opt.label}

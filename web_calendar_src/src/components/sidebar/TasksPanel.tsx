@@ -8,13 +8,14 @@ import {
   ChevronRight,
   ChevronDown,
   Check,
+  X,
 } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
 import { CalendarEvent } from '../../types/calendar';
 import { formatDateToYYYYMMDD } from '../../utils/dateUtils';
 
 export const TasksPanel: React.FC = () => {
-  const { events, addEvent, updateEvent, deleteEvent, openEditor, settings } = useCalendar();
+  const { events, addEvent, updateEvent, deleteEvent, openEditor, settings, toggleTasksSidebar } = useCalendar();
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
@@ -79,18 +80,35 @@ export const TasksPanel: React.FC = () => {
   };
 
   return (
-    <div data-tasks-panel className="w-80 h-full border-l border-teal-500/15 bg-[#051211] text-[#F4FFFD] flex flex-col z-20 select-none animate-in slide-in-from-right duration-200">
-      <div className="p-4 border-b border-teal-500/15 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-teal-500/10 text-[#19E6C8] flex items-center justify-center">
-            <CheckSquare className="w-4 h-4" />
+    <>
+      {/* Mobile Backdrop */}
+      <div
+        className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40 md:hidden"
+        onClick={toggleTasksSidebar}
+      />
+
+      <div data-tasks-panel className="fixed inset-y-0 right-0 w-full sm:w-80 max-w-sm h-full z-50 md:relative md:w-80 md:h-full border-l border-teal-500/15 bg-[#051211] text-[#F4FFFD] flex flex-col select-none shadow-2xl md:shadow-none animate-in slide-in-from-right duration-200">
+        <div className="p-4 border-b border-teal-500/15 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-teal-500/10 text-[#19E6C8] flex items-center justify-center">
+              <CheckSquare className="w-4 h-4" />
+            </div>
+            <h2 className="font-bold text-sm text-[#F4FFFD]">Tasks</h2>
           </div>
-          <h2 className="font-bold text-sm text-[#F4FFFD]">Tasks</h2>
+          <div className="flex items-center gap-2">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-teal-500/15 text-[#19E6C8] font-bold">
+              {activeTasks.length} pending
+            </span>
+            <button
+              type="button"
+              onClick={toggleTasksSidebar}
+              className="p-1 rounded-lg text-teal-400/60 hover:text-white hover:bg-teal-500/10 transition-colors"
+              title="Close Tasks Panel"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
-        <span className="text-xs px-2 py-0.5 rounded-full bg-teal-500/15 text-[#19E6C8] font-bold">
-          {activeTasks.length} pending
-        </span>
-      </div>
 
       {/* Quick Add Task Input */}
       <form onSubmit={handleCreateTask} className="p-3 border-b border-teal-500/15">
@@ -116,13 +134,13 @@ export const TasksPanel: React.FC = () => {
           return (
             <div
               key={task.id}
-              className="p-2.5 rounded-xl border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 bg-white dark:bg-gray-850 shadow-2xs transition-all"
+              className="p-2.5 rounded-xl border border-teal-500/15 hover:border-teal-500/30 bg-[#081a18] shadow-2xs transition-all"
             >
               <div className="flex items-start gap-2.5">
                 <button
                   type="button"
                   onClick={() => handleToggleTask(task)}
-                  className="mt-0.5 text-gray-400 hover:text-blue-600 transition-colors"
+                  className="mt-0.5 text-teal-400/50 hover:text-[#19E6C8] transition-colors"
                 >
                   <Square className="w-4 h-4 rounded-md" />
                 </button>
@@ -130,18 +148,18 @@ export const TasksPanel: React.FC = () => {
                 <div className="flex-1 min-w-0">
                   <p
                     onClick={() => openEditor(task)}
-                    className="text-xs font-medium text-gray-800 dark:text-gray-200 hover:text-blue-600 cursor-pointer truncate"
+                    className="text-xs font-semibold text-[#F4FFFD] hover:text-[#19E6C8] cursor-pointer truncate"
                   >
                     {task.title}
                   </p>
 
-                  <div className="flex items-center gap-3 mt-1 text-[11px] text-gray-400">
+                  <div className="flex items-center gap-3 mt-1 text-[11px] text-teal-400/60">
                     <span className="flex items-center gap-1">
-                      <CalIcon className="w-3 h-3" />
+                      <CalIcon className="w-3 h-3 text-[#19E6C8]" />
                       {task.startDate}
                     </span>
                     {totalSubs > 0 && (
-                      <span className="text-[10px] bg-gray-100 dark:bg-gray-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] bg-teal-500/15 text-[#19E6C8] px-1.5 py-0.5 rounded font-bold">
                         {completedSubs}/{totalSubs} subtasks
                       </span>
                     )}
@@ -151,7 +169,7 @@ export const TasksPanel: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
-                  className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
+                  className="p-1 text-teal-400/60 hover:text-[#19E6C8]"
                 >
                   {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
                 </button>
@@ -159,7 +177,7 @@ export const TasksPanel: React.FC = () => {
 
               {/* Subtasks drawer */}
               {isExpanded && (
-                <div className="mt-3 pt-2.5 border-t border-gray-100 dark:border-gray-800 pl-6 space-y-1.5">
+                <div className="mt-3 pt-2.5 border-t border-teal-500/15 pl-6 space-y-1.5">
                   {task.subtasks?.map(sub => (
                     <div key={sub.id} className="flex items-center justify-between group text-xs">
                       <button
@@ -227,28 +245,28 @@ export const TasksPanel: React.FC = () => {
 
         {/* Completed Tasks section */}
         {settings.showCompletedTasks && completedTasks.length > 0 && (
-          <div className="pt-3 border-t border-gray-100 dark:border-gray-800">
-            <p className="text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2">
+          <div className="pt-3 border-t border-teal-500/15">
+            <p className="text-[11px] font-bold text-teal-400/60 uppercase tracking-wider mb-2">
               Completed ({completedTasks.length})
             </p>
             <div className="space-y-1.5 opacity-60">
               {completedTasks.map(task => (
                 <div
                   key={task.id}
-                  className="flex items-center justify-between p-2 rounded-xl bg-gray-50 dark:bg-gray-800/40 text-xs"
+                  className="flex items-center justify-between p-2 rounded-xl bg-[#081a18]/60 border border-teal-500/10 text-xs"
                 >
                   <button
                     type="button"
                     onClick={() => handleToggleTask(task)}
-                    className="flex items-center gap-2 text-left line-through text-gray-500 dark:text-gray-400 truncate"
+                    className="flex items-center gap-2 text-left line-through text-teal-400/50 truncate"
                   >
-                    <CheckSquare className="w-4 h-4 text-emerald-500 flex-shrink-0" />
+                    <CheckSquare className="w-4 h-4 text-[#19E6C8] flex-shrink-0" />
                     <span className="truncate">{task.title}</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => deleteEvent(task.id)}
-                    className="text-gray-400 hover:text-red-500 p-1"
+                    className="text-teal-400/50 hover:text-red-400 p-1"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                   </button>
@@ -259,5 +277,6 @@ export const TasksPanel: React.FC = () => {
         )}
       </div>
     </div>
+  </>
   );
 };

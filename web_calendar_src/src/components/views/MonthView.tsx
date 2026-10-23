@@ -143,22 +143,22 @@ export const MonthView: React.FC = () => {
   const maxVisiblePerDay = 3;
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-white dark:bg-gray-900 select-none overflow-hidden">
+    <div className="flex-1 flex flex-col h-full bg-[#030707] text-[#F4FFFD] select-none overflow-hidden">
       {/* Day Headers row */}
-      <div className="flex border-b border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 flex-shrink-0 z-10">
+      <div className="flex border-b border-teal-500/15 bg-[#051211]/90 flex-shrink-0 z-10">
         {settings.showWeekNumbers && (
-          <div className="w-10 p-2 text-center text-[10px] font-semibold text-gray-400 border-r border-gray-200 dark:border-gray-800">
+          <div className="w-8 md:w-10 p-2 text-center text-[10px] font-semibold text-teal-400/60 border-r border-teal-500/15">
             Wk
           </div>
         )}
         <div
-          className="flex-1 grid"
-          style={{ gridTemplateColumns: `repeat(${displayHeaders.length}, 1fr)` }}
+          className="flex-1 grid min-w-0"
+          style={{ gridTemplateColumns: `repeat(${displayHeaders.length}, minmax(0, 1fr))` }}
         >
           {displayHeaders.map((dh, idx) => (
             <div
               key={idx}
-              className="py-2 text-center text-[11px] font-semibold text-gray-500 dark:text-gray-400 border-r border-gray-200 dark:border-gray-800 last:border-r-0 tracking-wider"
+              className="py-2 text-center text-[10px] md:text-[11px] font-bold text-teal-400/60 border-r border-teal-500/15 last:border-r-0 tracking-wider uppercase truncate"
             >
               {dh}
             </div>
@@ -167,23 +167,23 @@ export const MonthView: React.FC = () => {
       </div>
 
       {/* Weeks Grid */}
-      <div className="flex-1 grid grid-rows-5 md:grid-rows-6 relative overflow-y-auto">
+      <div className="flex-1 grid grid-rows-5 md:grid-rows-6 relative overflow-y-auto min-w-0">
         {weeks.map((week, wIdx) => {
           const weekNum = getWeekNumber(week[0]);
 
           return (
-            <div key={wIdx} className="flex border-b border-gray-200 dark:border-gray-800 min-h-[90px]">
+            <div key={wIdx} className="flex border-b border-teal-500/15 min-h-[75px] md:min-h-[90px] min-w-0">
               {/* Optional Week Number */}
               {settings.showWeekNumbers && (
-                <div className="w-10 flex items-start justify-center pt-2 text-[10px] font-mono text-gray-400 border-r border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/40">
+                <div className="w-8 md:w-10 flex items-start justify-center pt-2 text-[10px] font-mono text-teal-400/60 border-r border-teal-500/15 bg-[#051211]/50">
                   {weekNum}
                 </div>
               )}
 
               {/* Days in this week */}
               <div
-                className="flex-1 grid"
-                style={{ gridTemplateColumns: `repeat(${week.length}, 1fr)` }}
+                className="flex-1 grid min-w-0"
+                style={{ gridTemplateColumns: `repeat(${week.length}, minmax(0, 1fr))` }}
               >
                 {week.map((date, dIdx) => {
                   const dateStr = formatDateToYYYYMMDD(date);
@@ -205,8 +205,8 @@ export const MonthView: React.FC = () => {
                       onClick={e => {
                         openQuickCreate(dateStr, '09:00', 'event', { x: e.clientX, y: e.clientY });
                       }}
-                      className={`border-r border-gray-200 dark:border-gray-800 last:border-r-0 p-1 flex flex-col justify-between transition-colors relative hover:bg-gray-50/60 dark:hover:bg-gray-800/30 cursor-pointer ${
-                        !isCurrentMonth ? 'bg-gray-50/40 dark:bg-gray-900/30' : ''
+                      className={`border-r border-teal-500/15 last:border-r-0 p-0.5 md:p-1 flex flex-col justify-between transition-colors relative hover:bg-teal-500/5 cursor-pointer min-w-0 overflow-hidden ${
+                        !isCurrentMonth ? 'bg-[#051211]/30 opacity-60' : 'bg-[#030707]'
                       }`}
                     >
                       {/* Date number */}
@@ -231,7 +231,7 @@ export const MonthView: React.FC = () => {
                       </div>
 
                       {/* Event Pills */}
-                      <div className="flex-1 space-y-1 mt-1">
+                      <div className="flex-1 space-y-0.5 md:space-y-1 mt-0.5 md:mt-1 min-w-0 overflow-hidden">
                         {visibleItems.map(item => {
                           const cal = getCalendar(item.calendarId);
                           const bg = item.colorOverride || cal?.color || '#19E6C8';
@@ -248,21 +248,21 @@ export const MonthView: React.FC = () => {
                                 e.stopPropagation();
                                 openEventDetails(item, { x: e.clientX, y: e.clientY });
                               }}
-                              className={`px-2 py-0.5 rounded-md text-[11px] font-semibold text-[#030707] truncate shadow-2xs hover:brightness-105 transition-all flex items-center gap-1 cursor-pointer ${
+                              className={`px-1 md:px-2 py-0.5 rounded-md text-[10px] md:text-[11px] font-semibold text-[#030707] truncate shadow-2xs hover:brightness-105 transition-all flex items-center gap-1 cursor-pointer min-w-0 ${
                                 isPast ? 'opacity-55' : ''
                               }`}
                               style={{ backgroundColor: bg }}
                             >
                               {item.startTime && !item.isAllDay && (
-                                <span className="opacity-80 text-[10px] font-normal">
+                                <span className="opacity-80 text-[9px] md:text-[10px] font-normal flex-shrink-0">
                                   {formatTimeDisplay(item.startTime, settings.timeFormat)}
                                 </span>
                               )}
-                              {item.type === 'task' && <CheckSquare className="w-3 h-3 flex-shrink-0" />}
-                              {item.type === 'out_of_office' && <Plane className="w-3 h-3 flex-shrink-0" />}
-                              {item.type === 'appointment_schedule' && <CalendarRange className="w-3 h-3 flex-shrink-0" />}
-                              {item.videoConference && <Video className="w-3 h-3 flex-shrink-0" />}
-                              <span className="truncate">{item.title}</span>
+                              {item.type === 'task' && <CheckSquare className="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0" />}
+                              {item.type === 'out_of_office' && <Plane className="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0" />}
+                              {item.type === 'appointment_schedule' && <CalendarRange className="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0" />}
+                              {item.videoConference && <Video className="w-2.5 h-2.5 md:w-3 md:h-3 flex-shrink-0" />}
+                              <span className="truncate min-w-0 flex-1">{item.title}</span>
                             </div>
                           );
                         })}
@@ -280,7 +280,7 @@ export const MonthView: React.FC = () => {
                               anchor: { x: e.clientX, y: e.clientY },
                             });
                           }}
-                          className="text-[11px] font-bold text-[#19E6C8] hover:bg-teal-500/10 rounded px-1.5 py-0.5 text-left w-fit mt-0.5 transition-colors"
+                          className="text-[10px] md:text-[11px] font-bold text-[#19E6C8] hover:bg-teal-500/10 rounded px-1 py-0.5 text-left w-fit mt-0.5 transition-colors truncate"
                         >
                           +{remainingCount} more
                         </button>
@@ -298,25 +298,25 @@ export const MonthView: React.FC = () => {
       {expandedDay && (
         <div
           ref={overflowPopoverRef}
-          className="fixed z-50 w-72 rounded-2xl bg-white dark:bg-gray-800 p-3 shadow-2xl border border-gray-100 dark:border-gray-700 animate-in fade-in zoom-in-95 duration-150"
+          className="fixed z-50 w-72 max-w-[calc(100vw-32px)] rounded-2xl bg-[#051211] p-3 shadow-2xl border border-teal-500/20 text-[#F4FFFD] animate-in fade-in zoom-in-95 duration-150"
           style={{
-            top: Math.min(window.innerHeight - 320, expandedDay.anchor.y - 40),
-            left: Math.min(window.innerWidth - 300, expandedDay.anchor.x - 60),
+            top: Math.max(16, Math.min(window.innerHeight - 320, expandedDay.anchor.y - 40)),
+            left: Math.max(16, Math.min(window.innerWidth - 300, expandedDay.anchor.x - 60)),
           }}
         >
-          <div className="flex items-center justify-between pb-2 mb-2 border-b border-gray-100 dark:border-gray-700">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-teal-500/15">
             <div>
-              <p className="text-xs font-semibold text-gray-500 uppercase">
+              <p className="text-[10px] font-bold text-teal-400/60 uppercase">
                 {dayHeaders[expandedDay.date.getDay()]}
               </p>
-              <h3 className="text-base font-bold text-gray-800 dark:text-gray-100">
+              <h3 className="text-sm md:text-base font-bold text-[#F4FFFD]">
                 {expandedDay.date.getDate()} {expandedDay.date.toLocaleString('default', { month: 'short' })}
               </h3>
             </div>
             <button
               type="button"
               onClick={() => setExpandedDay(null)}
-              className="p-1 rounded-full text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+              className="p-1 rounded-full text-teal-400/60 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -325,7 +325,7 @@ export const MonthView: React.FC = () => {
           <div className="space-y-1.5 max-h-60 overflow-y-auto">
             {expandedDay.events.map(item => {
               const cal = getCalendar(item.calendarId);
-              const bg = item.colorOverride || cal?.color || '#3b82f6';
+              const bg = item.colorOverride || cal?.color || '#19E6C8';
 
               return (
                 <div
@@ -334,12 +334,12 @@ export const MonthView: React.FC = () => {
                     setExpandedDay(null);
                     openEventDetails(item);
                   }}
-                  className="px-2.5 py-1.5 rounded-lg text-xs font-medium text-white shadow-2xs hover:opacity-90 transition-opacity flex items-center justify-between cursor-pointer"
+                  className="px-2 py-1 rounded-lg text-xs font-semibold text-[#030707] shadow-2xs hover:opacity-90 transition-opacity flex items-center justify-between cursor-pointer min-w-0"
                   style={{ backgroundColor: bg }}
                 >
-                  <div className="flex items-center gap-2 truncate">
+                  <div className="flex items-center gap-1.5 min-w-0 truncate">
                     {item.startTime && (
-                      <span className="text-[10px] opacity-80">
+                      <span className="text-[10px] opacity-80 flex-shrink-0">
                         {formatTimeDisplay(item.startTime, settings.timeFormat)}
                       </span>
                     )}

@@ -26,35 +26,35 @@ export const HelpModal: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/40 dark:bg-black/60 flex items-center justify-center p-4 animate-in fade-in duration-150">
-      <div className="w-full max-w-xl bg-white dark:bg-gray-800 rounded-3xl p-6 shadow-2xl border border-gray-100 dark:border-gray-700 animate-in zoom-in-95 duration-150 select-none">
+    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-in fade-in duration-150">
+      <div className="w-full max-w-xl bg-[#051211] text-[#F4FFFD] rounded-3xl p-5 sm:p-6 shadow-2xl border border-teal-500/20 animate-in zoom-in-95 duration-150 select-none">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-gray-100 dark:border-gray-700 mb-4">
+        <div className="flex items-center justify-between pb-3 border-b border-teal-500/15 mb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20 flex items-center justify-center">
               <Keyboard className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-gray-800 dark:text-gray-100">
+              <h3 className="text-sm sm:text-base font-bold text-[#F4FFFD]">
                 Keyboard Shortcuts & Help
               </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                Navigate Chronos Calendar at the speed of thought
+              <p className="text-xs text-teal-400/60">
+                Navigate Chronos Calendar quickly
               </p>
             </div>
           </div>
           <button
             type="button"
             onClick={closeHelp}
-            className="p-1.5 rounded-full text-gray-400 hover:text-gray-700 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+            className="p-1.5 rounded-full text-teal-400/60 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Shortcuts toggle */}
-        <div className="flex items-center justify-between p-3 rounded-2xl bg-gray-50 dark:bg-gray-700/50 mb-4 text-xs">
-          <span className="font-medium text-gray-700 dark:text-gray-300">
+        <div className="flex items-center justify-between p-3 rounded-2xl bg-[#081a18] border border-teal-500/15 mb-4 text-xs">
+          <span className="font-semibold text-teal-300">
             Enable keyboard shortcuts
           </span>
           <label className="relative inline-flex items-center cursor-pointer">
@@ -64,7 +64,7 @@ export const HelpModal: React.FC = () => {
               onChange={e => updateSettings({ enableShortcuts: e.target.checked })}
               className="sr-only peer"
             />
-            <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600" />
+            <div className="w-9 h-5 bg-teal-950/60 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-[#F4FFFD] after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#19E6C8]" />
           </label>
         </div>
 
@@ -73,10 +73,10 @@ export const HelpModal: React.FC = () => {
           {shortcuts.map((sc, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between p-2 rounded-xl bg-gray-50/70 dark:bg-gray-750 text-xs text-gray-700 dark:text-gray-300"
+              className="flex items-center justify-between p-2 rounded-xl bg-[#081a18] border border-teal-500/10 text-xs text-teal-300"
             >
               <span>{sc.label}</span>
-              <kbd className="px-2 py-0.5 rounded-md bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 font-mono text-[11px] font-bold text-gray-600 dark:text-gray-300 shadow-2xs">
+              <kbd className="px-2 py-0.5 rounded-md bg-[#051211] border border-teal-500/20 font-mono text-[11px] font-bold text-[#19E6C8] shadow-2xs">
                 {sc.key}
               </kbd>
             </div>
@@ -84,14 +84,14 @@ export const HelpModal: React.FC = () => {
         </div>
 
         {/* Chronos Tips */}
-        <div className="mt-4 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between text-xs text-gray-500">
-          <span className="flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium">
-            <Sparkles className="w-3.5 h-3.5" /> Chronos Pro Tip: Drag bottom edge of any event to resize!
+        <div className="mt-4 pt-3 border-t border-teal-500/15 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs text-teal-400/70">
+          <span className="flex items-center gap-1.5 text-[#19E6C8] font-medium">
+            <Sparkles className="w-3.5 h-3.5 flex-shrink-0" /> Chronos Pro Tip: Drag bottom edge of any event to resize!
           </span>
           <button
             type="button"
             onClick={closeHelp}
-            className="px-4 py-1.5 rounded-xl bg-blue-600 text-white font-medium hover:bg-blue-700"
+            className="w-full sm:w-auto px-4 py-1.5 rounded-xl bg-[#19E6C8] text-[#030707] font-bold hover:bg-[#15caa0] shadow-[0_0_15px_rgba(25,230,200,0.3)] transition-all"
           >
             Got it
           </button>

@@ -308,8 +308,8 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
       {/* Top Days Header */}
       <div className="flex border-b border-teal-500/15 bg-[#051211]/90 flex-shrink-0 z-10 shadow-2xs">
         {/* Time zone gutter label */}
-        <div className="w-16 md:w-20 p-2 flex flex-col justify-end items-end pr-3 border-r border-teal-500/15 flex-shrink-0">
-          <span className="text-[10px] text-teal-400/60 font-semibold uppercase tracking-wider">
+        <div className="w-12 md:w-20 p-1 md:p-2 flex flex-col justify-end items-end pr-1.5 md:pr-3 border-r border-teal-500/15 flex-shrink-0">
+          <span className="text-[9px] md:text-[10px] text-teal-400/60 font-semibold uppercase tracking-wider">
             {settings.timeFormat === '24h' ? '24h' : 'GMT'}
           </span>
         </div>
@@ -322,16 +322,16 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             return (
               <div
                 key={idx}
-                className={`py-2 px-1 text-center border-r border-teal-500/15 transition-colors min-w-0 overflow-hidden ${
+                className={`py-1.5 md:py-2 px-0.5 md:px-1 text-center border-r border-teal-500/15 transition-colors min-w-0 overflow-hidden ${
                   isCurDayToday ? 'bg-teal-500/10' : ''
                 }`}
               >
-                <div className="text-[11px] font-bold text-teal-400/60 tracking-wider uppercase truncate">
+                <div className="text-[10px] md:text-[11px] font-bold text-teal-400/60 tracking-wider uppercase truncate">
                   {dayHeaders[day.getDay()]}
                 </div>
-                <div className="mt-1 flex items-center justify-center">
+                <div className="mt-0.5 md:mt-1 flex items-center justify-center">
                   <div
-                    className={`w-9 h-9 rounded-full flex items-center justify-center text-sm md:text-base font-extrabold transition-all ${
+                    className={`w-7 h-7 sm:w-8 sm:h-8 md:w-9 md:h-9 rounded-full flex items-center justify-center text-xs sm:text-sm md:text-base font-extrabold transition-all ${
                       isCurDayToday
                         ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_20px_rgba(25,230,200,0.4)]'
                         : 'text-[#F4FFFD] hover:bg-teal-500/10'
@@ -353,7 +353,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
 
       {/* All-Day Items Shelf */}
       <div className="flex border-b border-teal-500/15 bg-[#051211]/60 flex-shrink-0 min-h-[36px]">
-        <div className="w-16 md:w-20 p-1.5 flex items-center justify-end pr-3 text-[10px] font-bold text-teal-400/60 border-r border-teal-500/15 flex-shrink-0">
+        <div className="w-12 md:w-20 p-1 md:p-1.5 flex items-center justify-end pr-1.5 md:pr-3 text-[9px] md:text-[10px] font-bold text-teal-400/60 border-r border-teal-500/15 flex-shrink-0">
           all-day
         </div>
         <div className="flex-1 grid min-w-0" style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}>
@@ -369,7 +369,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             return (
               <div
                 key={idx}
-                className="p-1 border-r border-teal-500/15 space-y-1 min-h-[36px] min-w-0 overflow-hidden flex flex-col justify-start"
+                className="p-0.5 md:p-1 border-r border-teal-500/15 space-y-1 min-h-[36px] min-w-0 overflow-hidden flex flex-col justify-start"
               >
                 {visibleItems.map(item => {
                   const cal = getCalendar(item.calendarId);
@@ -384,7 +384,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         e.stopPropagation();
                         openEventDetails(item, { x: e.clientX, y: e.clientY });
                       }}
-                      className="w-full text-left px-2 py-0.5 rounded-md text-[11px] font-semibold text-[#030707] shadow-2xs hover:opacity-90 flex items-center gap-1 transition-opacity min-w-0 overflow-hidden"
+                      className="w-full text-left px-1.5 md:px-2 py-0.5 rounded-md text-[10px] md:text-[11px] font-semibold text-[#030707] shadow-2xs hover:opacity-90 flex items-center gap-1 transition-opacity min-w-0 overflow-hidden"
                       style={{ backgroundColor: bg }}
                     >
                       {item.type === 'task' && <CheckSquare className="w-3 h-3 flex-shrink-0" />}
@@ -405,7 +405,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         openEventDetails(allDayItems[maxVisible], { x: e.clientX, y: e.clientY });
                       }
                     }}
-                    className="text-[10px] text-teal-400/80 hover:text-[#19E6C8] font-bold text-left px-1 truncate block hover:underline"
+                    className="text-[9px] md:text-[10px] text-teal-400/80 hover:text-[#19E6C8] font-bold text-left px-1 truncate block hover:underline"
                     title={`${hiddenCount} more all-day event${hiddenCount > 1 ? 's' : ''}`}
                   >
                     +{hiddenCount} more
@@ -429,15 +429,15 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
         style={{ scrollbarGutter: 'stable' }}
       >
         {/* Hour Labels Column */}
-        <div className="w-16 md:w-20 flex-shrink-0 border-r border-teal-500/15 select-none bg-[#051211]/90 z-10">
+        <div className="w-12 md:w-20 flex-shrink-0 border-r border-teal-500/15 select-none bg-[#051211]/90 z-10">
           {hours.map(hour => (
             <div
               key={hour}
               data-hour-row
-              className="h-14 relative flex items-start justify-end pr-3 border-b border-transparent"
+              className="h-14 relative flex items-start justify-end pr-1.5 md:pr-3 border-b border-transparent"
             >
               {hour !== 0 && (
-                <span className="text-[11px] text-teal-400/60 font-semibold -translate-y-2.5">
+                <span className="text-[9px] md:text-[11px] text-teal-400/60 font-semibold -translate-y-2.5">
                   {formatTimeDisplay(`${hour}:00`, settings.timeFormat)}
                 </span>
               )}

@@ -6,7 +6,7 @@ export const RightDock: React.FC = () => {
   const { tasksSidebarOpen, toggleTasksSidebar, openHelp, seedDemoData } = useCalendar();
 
   return (
-    <aside data-right-dock className="w-14 border-l border-teal-500/15 bg-[#051211]/90 backdrop-blur-xl flex flex-col items-center py-3 gap-2 flex-shrink-0 z-20 select-none">
+    <aside data-right-dock className="hidden md:flex w-14 border-l border-teal-500/15 bg-[#051211]/90 backdrop-blur-xl flex-col items-center py-3 gap-2 flex-shrink-0 z-20 select-none">
       {/* Tasks Toggle */}
       <button
         type="button"

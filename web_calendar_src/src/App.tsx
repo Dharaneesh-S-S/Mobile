@@ -19,9 +19,11 @@ import { PublicBookingModal } from './components/modals/PublicBookingModal';
 import { RecurringConfirmDialog } from './components/modals/RecurringConfirmDialog';
 import { ToastContainer } from './components/common/ToastContainer';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
+import { Plus } from 'lucide-react';
+import { formatDateToYYYYMMDD } from './utils/dateUtils';
 
 const CalendarApp: React.FC = () => {
-  const { currentView, tasksSidebarOpen } = useCalendar();
+  const { currentView, tasksSidebarOpen, openQuickCreate } = useCalendar();
   useKeyboardShortcuts();
 
   const renderActiveView = () => {
@@ -63,6 +65,22 @@ const CalendarApp: React.FC = () => {
 
         {/* Right Slim Utility Rail */}
         <RightDock />
+      </div>
+
+      {/* Floating Action Button for Create (Mobile Only) */}
+      <div className="md:hidden fixed bottom-6 right-5 z-30">
+        <button
+          type="button"
+          onClick={() => {
+            const todayStr = formatDateToYYYYMMDD(new Date());
+            openQuickCreate(todayStr, '09:00', 'event');
+          }}
+          className="w-14 h-14 rounded-full bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_25px_rgba(25,230,200,0.5)] flex items-center justify-center hover:scale-105 active:scale-95 transition-all"
+          title="Create event or task"
+          aria-label="Create new item"
+        >
+          <Plus className="w-7 h-7 stroke-[2.5]" />
+        </button>
       </div>
 
       {/* Modals, Popovers & Dialogs */}
