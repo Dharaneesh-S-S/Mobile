@@ -381,23 +381,7 @@ export const SettingsModal: React.FC = () => {
                     </div>
                   )}
 
-                  {/* Demo data management */}
-                  <div className="pt-3 border-t border-gray-100 dark:border-gray-800 flex items-center gap-3">
-                    <button
-                      type="button"
-                      onClick={seedDemoData}
-                      className="px-3 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 font-semibold hover:bg-blue-100 transition-colors"
-                    >
-                      Restore demo data
-                    </button>
-                    <button
-                      type="button"
-                      onClick={clearDemoData}
-                      className="px-3 py-1.5 rounded-xl border border-gray-300 dark:border-gray-700 text-gray-600 dark:text-gray-300 font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    >
-                      Clear demo data
-                    </button>
-                  </div>
+
                 </div>
               </div>
             )}
@@ -636,8 +620,8 @@ export const SettingsModal: React.FC = () => {
                         Share with specific people:
                       </p>
                       <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-                        <span>alex.chen@chronos.io</span>
-                        <span className="text-gray-400 font-medium">Make changes to events</span>
+                        <span>Personal Workspace</span>
+                        <span className="text-gray-400 font-medium">Owner</span>
                       </div>
                     </div>
 

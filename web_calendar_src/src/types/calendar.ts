@@ -1,12 +1,14 @@
 export type CalendarItemType = 
   | 'event' 
   | 'task' 
+  | 'holiday'
+  | 'birthday'
   | 'out_of_office' 
   | 'focus_time' 
   | 'working_location' 
   | 'appointment_schedule';
 
-export type ViewType = 'day' | 'week' | 'month' | 'year' | 'schedule' | 'four_day';
+export type ViewType = 'day' | 'three_day' | 'week' | 'month' | 'year' | 'schedule' | 'four_day';
 
 export type RecurrenceFrequency = 'none' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'every_weekday' | 'custom';
 
@@ -99,6 +101,8 @@ export interface CalendarEvent {
   // Tasks
   isCompleted?: boolean;
   subtasks?: Subtask[];
+  taskListId?: string;
+  taskListName?: string;
   
   // Appointment schedule
   appointmentSchedule?: {

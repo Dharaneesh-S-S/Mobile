@@ -230,7 +230,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
       </div>
 
       {/* Task Rows List */}
-      <div className="flex-1 overflow-y-auto px-2 space-y-1 scrollbar-thin">
+      <div className="flex-1 overflow-y-auto px-2 space-y-2 scrollbar-thin">
         {activeTasks.map(task => {
           const dateInfo = formatRelativeDate(task.dueDate, task.dueTime, settings.timeFormat);
           const isOverdue = dateInfo.isOverdue;
@@ -249,8 +249,10 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                 setFocusedTaskId(task.id);
                 setEditingTaskId(task.id);
               }}
-              className={`group rounded-xl p-2.5 transition flex flex-col gap-1 cursor-pointer hover:bg-teal-500/10 ${
-                isSelected ? 'bg-teal-500/15 border border-teal-500/30' : 'bg-transparent'
+              className={`group rounded-xl p-2.5 transition-all duration-150 flex flex-col gap-1 cursor-pointer border select-none ${
+                isSelected
+                  ? 'bg-[#081a18] border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_15px_rgba(25,230,200,0.25)] ring-1 ring-[#19E6C8]/40'
+                  : 'bg-[#081a18]/85 hover:bg-[#081a18] border-teal-500/25 border-l-4 border-l-[#19E6C8] hover:border-teal-500/50 hover:shadow-[0_0_12px_rgba(25,230,200,0.15)] shadow-xs'
               }`}
             >
               <div className="flex items-start gap-3">
@@ -261,32 +263,36 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                     e.stopPropagation();
                     toggleTaskComplete(task.id);
                   }}
-                  className="w-4 h-4 rounded-full border border-teal-500/40 hover:border-[#19E6C8] transition flex items-center justify-center flex-shrink-0 mt-0.5"
-                  title="Mark complete"
+                  className={`w-4 h-4 rounded-full border flex items-center justify-center flex-shrink-0 mt-0.5 transition-all ${
+                    task.isCompleted
+                      ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707] shadow-[0_0_8px_rgba(25,230,200,0.4)]'
+                      : 'border-[#19E6C8]/60 hover:border-[#19E6C8] hover:shadow-[0_0_6px_rgba(25,230,200,0.3)]'
+                  }`}
+                  title={task.isCompleted ? 'Mark incomplete' : 'Mark complete'}
                 >
-                  {task.isCompleted && <Check className="w-2.5 h-2.5 text-[#19E6C8]" />}
+                  {task.isCompleted && <Check className="w-2.5 h-2.5 stroke-[3] text-[#030707]" />}
                 </button>
 
                 {/* Title & Date Chips */}
                 <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium text-[#F4FFFD] leading-snug break-words">
+                  <div className={`text-sm font-semibold leading-snug break-words ${task.isCompleted ? 'line-through text-teal-400/40' : 'text-[#F4FFFD]'}`}>
                     {task.title}
                   </div>
 
                   {/* Overdue / Due Date Badge */}
                   {task.dueDate && dateInfo.text && (
-                    <div className="mt-1 flex items-center gap-1.5 flex-wrap">
+                    <div className="mt-1.5 flex items-center gap-1.5 flex-wrap">
                       <span
                         className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full ${
                           isOverdue
                             ? 'bg-rose-950/60 text-rose-300 border border-rose-800/60'
-                            : 'bg-teal-500/15 text-teal-300 border border-teal-500/30'
+                            : 'bg-teal-500/15 text-[#19E6C8] border border-teal-500/30'
                         }`}
                       >
-                        <Clock className="w-3 h-3" />
+                        <Clock className="w-3 h-3 text-[#19E6C8]" />
                         <span>{dateInfo.text}</span>
                         {task.recurrence && task.recurrence.frequency !== 'none' && (
-                          <Repeat className="w-3 h-3 ml-0.5" />
+                          <Repeat className="w-3 h-3 ml-0.5 text-[#19E6C8]" />
                         )}
                       </span>
                     </div>
@@ -294,7 +300,7 @@ export const ListColumn: React.FC<ListColumnProps> = ({
 
                   {/* Subtasks (if any) */}
                   {task.subtasks.length > 0 && (
-                    <div className="mt-2 pl-3 border-l-2 border-teal-500/20 space-y-1.5">
+                    <div className="mt-2.5 pl-3 border-l-2 border-teal-500/30 space-y-1.5">
                       {task.subtasks.map(sub => (
                         <div
                           key={sub.id}
@@ -310,20 +316,20 @@ export const ListColumn: React.FC<ListColumnProps> = ({
                               );
                               updateTask({ ...task, subtasks: updated });
                             }}
-                            className={`w-3.5 h-3.5 rounded-full border mt-0.5 flex items-center justify-center flex-shrink-0 ${
+                            className={`w-3.5 h-3.5 rounded-full border mt-0.5 flex items-center justify-center flex-shrink-0 transition-all ${
                               sub.isCompleted
                                 ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707]'
-                                : 'border-teal-500/40 hover:border-[#19E6C8]'
+                                : 'border-[#19E6C8]/60 hover:border-[#19E6C8]'
                             }`}
                           >
-                            {sub.isCompleted && <Check className="w-2 h-2 stroke-[3]" />}
+                            {sub.isCompleted && <Check className="w-2 h-2 stroke-[3] text-[#030707]" />}
                           </button>
                           <div className="flex-1 min-w-0">
-                            <span className={sub.isCompleted ? 'line-through opacity-60 text-teal-400/50' : 'text-[#F4FFFD]'}>
+                            <span className={sub.isCompleted ? 'line-through opacity-60 text-teal-400/40' : 'text-[#F4FFFD]'}>
                               {sub.title}
                             </span>
                             {sub.details && (
-                              <div className="text-[11px] text-teal-400/60 font-normal leading-tight mt-0.5">
+                              <div className="text-[11px] text-[#94B5B0] font-normal leading-tight mt-0.5">
                                 {sub.details}
                               </div>
                             )}
@@ -375,18 +381,18 @@ export const ListColumn: React.FC<ListColumnProps> = ({
               {completedTasks.map(t => (
                 <div
                   key={t.id}
-                  className="flex items-center justify-between gap-2 py-1 px-1 text-xs text-teal-400/60"
+                  className="flex items-center justify-between gap-2 py-1.5 px-2 rounded-lg bg-[#081a18]/50 border border-teal-500/15 border-l-2 border-l-teal-500/30 text-xs text-teal-400/60"
                 >
                   <div className="flex items-center gap-2 truncate flex-1">
                     <button
                       type="button"
                       onClick={() => toggleTaskComplete(t.id)}
-                      className="w-3.5 h-3.5 rounded-full border border-[#19E6C8] bg-[#19E6C8] text-[#030707] flex items-center justify-center flex-shrink-0"
+                      className="w-3.5 h-3.5 rounded-full border border-[#19E6C8] bg-[#19E6C8] text-[#030707] flex items-center justify-center flex-shrink-0 shadow-[0_0_6px_rgba(25,230,200,0.3)]"
                       title="Click to restore"
                     >
-                      <Check className="w-2.5 h-2.5 stroke-[3]" />
+                      <Check className="w-2.5 h-2.5 stroke-[3] text-[#030707]" />
                     </button>
-                    <span className="line-through truncate text-teal-400/50">{t.title}</span>
+                    <span className="line-through truncate text-teal-400/40">{t.title}</span>
                   </div>
 
                   <button

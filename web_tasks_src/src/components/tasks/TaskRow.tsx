@@ -80,12 +80,12 @@ export const TaskRow: React.FC<TaskRowProps> = ({
 
   return (
     <div
-      className={`relative group rounded-xl transition-all duration-150 ${
+      className={`relative group rounded-xl transition-all duration-150 border select-none ${
         isSelected
-          ? 'bg-teal-500/20 ring-1 ring-[#19E6C8] text-[#F4FFFD]'
+          ? 'bg-[#081a18] border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_15px_rgba(25,230,200,0.25)] ring-1 ring-[#19E6C8]/40'
           : isFocused
-          ? 'bg-teal-500/10 text-[#F4FFFD]'
-          : 'hover:bg-teal-500/5 text-[#94B5B0] hover:text-[#F4FFFD]'
+          ? 'bg-[#081a18] border-[#19E6C8]/70 border-l-4 border-l-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.2)]'
+          : 'bg-[#081a18]/85 hover:bg-[#081a18] border-teal-500/25 border-l-4 border-l-[#19E6C8] hover:border-teal-500/50 hover:shadow-[0_0_12px_rgba(25,230,200,0.15)] shadow-xs'
       } ${
         dropPosition === 'top'
           ? 'drop-indicator drop-indicator-top'
@@ -119,12 +119,12 @@ export const TaskRow: React.FC<TaskRowProps> = ({
           }}
           className={`w-4 h-4 rounded-full border mt-1 flex items-center justify-center transition flex-shrink-0 ${
             task.isCompleted
-              ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707] animate-check-pop'
-              : 'border-teal-500/40 hover:border-[#19E6C8]'
+              ? 'border-[#19E6C8] bg-[#19E6C8] text-[#030707] shadow-[0_0_8px_rgba(25,230,200,0.4)]'
+              : 'border-[#19E6C8]/60 hover:border-[#19E6C8] hover:shadow-[0_0_6px_rgba(25,230,200,0.3)]'
           }`}
           title={task.isCompleted ? 'Mark incomplete' : 'Mark complete'}
         >
-          {task.isCompleted && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+          {task.isCompleted && <Check className="w-2.5 h-2.5 stroke-[3] text-[#030707]" />}
         </button>
 
         {/* Task Title & Details */}
@@ -137,15 +137,15 @@ export const TaskRow: React.FC<TaskRowProps> = ({
                 onChange={e => setInlineTitle(e.target.value)}
                 onBlur={handleInlineSubmit}
                 autoFocus
-                className="w-full bg-transparent border-none outline-none font-medium text-xs sm:text-sm text-slate-800 dark:text-slate-100"
+                className="w-full bg-transparent border-none outline-none font-medium text-xs sm:text-sm text-[#F4FFFD]"
               />
             </form>
           ) : (
             <div
-              className={`text-xs sm:text-sm font-medium tracking-tight truncate leading-snug ${
+              className={`text-xs sm:text-sm font-semibold tracking-tight truncate leading-snug ${
                 task.isCompleted
-                  ? 'line-through text-slate-400 dark:text-slate-500'
-                  : 'text-slate-800 dark:text-slate-100'
+                  ? 'line-through text-teal-400/40'
+                  : 'text-[#F4FFFD]'
               }`}
             >
               {task.title}
@@ -154,7 +154,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
 
           {/* Details Preview line */}
           {task.details && (
-            <div className="text-[11px] text-slate-400 dark:text-slate-500 truncate mt-0.5 max-w-[280px] sm:max-w-md">
+            <div className="text-[11px] text-[#94B5B0] truncate mt-0.5 max-w-[280px] sm:max-w-md">
               {task.details}
             </div>
           )}
@@ -165,18 +165,18 @@ export const TaskRow: React.FC<TaskRowProps> = ({
               <span
                 className={`inline-flex items-center gap-1 text-[11px] font-medium px-2 py-0.5 rounded-full border ${
                   isOverdueTask
-                    ? 'bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900/50'
-                    : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-slate-200 dark:border-slate-700/60'
+                    ? 'bg-rose-950/60 text-rose-300 border-rose-800/60'
+                    : 'bg-teal-500/15 text-[#19E6C8] border-teal-500/30'
                 }`}
               >
-                <CalIcon className="w-3 h-3 flex-shrink-0" />
+                <CalIcon className="w-3 h-3 flex-shrink-0 text-[#19E6C8]" />
                 <span>{dateChipText}</span>
               </span>
             )}
 
             {task.recurrence && task.recurrence.frequency !== 'none' && (
               <span
-                className="text-slate-400 dark:text-slate-500 flex items-center"
+                className="text-[#19E6C8] flex items-center"
                 title={`Repeats ${task.recurrence.frequency}`}
               >
                 <Repeat className="w-3 h-3" />
@@ -190,9 +190,9 @@ export const TaskRow: React.FC<TaskRowProps> = ({
                   e.stopPropagation();
                   toggleSubtasksCollapse(task.id);
                 }}
-                className="inline-flex items-center gap-1 text-[11px] font-medium text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:hover:text-slate-200 bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded-md"
+                className="inline-flex items-center gap-1 text-[11px] font-medium text-[#94B5B0] hover:text-[#F4FFFD] bg-[#051211] border border-teal-500/25 px-1.5 py-0.5 rounded-md"
               >
-                <ListTree className="w-3 h-3" />
+                <ListTree className="w-3 h-3 text-[#19E6C8]" />
                 <span>
                   {completedSubtasksCount}/{totalSubtasksCount}
                 </span>
@@ -214,12 +214,12 @@ export const TaskRow: React.FC<TaskRowProps> = ({
               e.stopPropagation();
               toggleTaskStar(task.id);
             }}
-            className="p-1 rounded-lg text-slate-400 hover:text-amber-500 transition"
+            className="p-1 rounded-lg text-teal-400/40 hover:text-amber-400 transition"
             title={task.isStarred ? 'Unstar task' : 'Star task'}
           >
             <Star
               className={`w-4 h-4 ${
-                task.isStarred ? 'text-amber-500 fill-amber-500' : 'text-slate-300 dark:text-slate-600'
+                task.isStarred ? 'text-amber-400 fill-amber-400' : 'text-teal-400/30'
               }`}
             />
           </button>
@@ -230,7 +230,7 @@ export const TaskRow: React.FC<TaskRowProps> = ({
               e.stopPropagation();
               deleteTask(task.id);
             }}
-            className="p-1 rounded-lg text-slate-300 dark:text-slate-600 hover:text-rose-600 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="p-1 rounded-lg text-teal-400/40 hover:text-rose-400 opacity-0 group-hover:opacity-100 transition-opacity"
             title="Delete task"
           >
             <Trash2 className="w-4 h-4" />

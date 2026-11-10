@@ -4,26 +4,18 @@
 
 @layer base {
   :root {
-    --color-bg-primary: #030707;
-    --color-bg-secondary: #051211;
-    --color-border: rgba(45, 212, 191, 0.12);
-    --color-text-primary: #F4FFFD;
-    --color-text-secondary: #94B5B0;
-    --glow-teal-primary: #19E6C8;
-  }
-
-  .dark {
-    --color-bg-primary: #030707;
-    --color-bg-secondary: #051211;
-    --color-border: rgba(45, 212, 191, 0.12);
-    --color-text-primary: #F4FFFD;
-    --color-text-secondary: #94B5B0;
+    --color-bg-primary: #131314;
+    --color-bg-secondary: #1e1f23;
+    --color-border: #282a2d;
+    --color-text-primary: #e3e3e3;
+    --color-text-secondary: #9aa0a6;
+    --accent-blue: #a8c7fa;
   }
 
   body {
-    background-color: #030707;
-    color: #F4FFFD;
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #131314;
+    color: #e3e3e3;
+    font-family: 'Roboto', 'Inter', system-ui, -apple-system, sans-serif;
     user-select: none;
     margin: 0;
     padding: 0;
@@ -37,27 +29,35 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    background: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(25, 230, 200, 0.12), transparent);
+    background-color: #131314;
   }
 }
 
-/* Custom Sleek Cyan/Teal Scrollbar */
+/* Custom Sleek Dark Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(45, 212, 191, 0.2);
+  background: rgba(255, 255, 255, 0.15);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(25, 230, 200, 0.45);
+  background: rgba(255, 255, 255, 0.3);
 }
 
-/* Prevent text selection while dragging events */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Prevent text selection */
 .no-select {
   user-select: none;
   -webkit-user-select: none;
@@ -73,7 +73,6 @@
   animation: fadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* Print View Styles */
 @media print {
   body {
     background: #ffffff !important;
@@ -82,8 +81,6 @@
 
   header,
   aside,
-  [data-right-dock],
-  [data-tasks-panel],
   .fixed,
   button:not([data-printable]),
   input,
@@ -98,7 +95,7 @@
   }
 
   #root {
+    background: none !important;
     height: auto !important;
-    overflow: visible !important;
   }
 }

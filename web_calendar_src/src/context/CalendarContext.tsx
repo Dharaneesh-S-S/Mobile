@@ -29,6 +29,15 @@ import {
   getStorageStats,
   OverallStorageStats,
 } from '../utils/compressedStorage';
+import {
+  ZenithTaskList,
+  loadZenithLists,
+  loadZenithTasks,
+  addOrUpdateZenithTask,
+  toggleZenithTaskCompletion,
+  deleteZenithTask,
+  convertZenithTaskToCalendarEvent,
+} from '../utils/taskIntegration';
 
 export interface ToastItem {
   id: string;
@@ -49,6 +58,8 @@ interface CalendarContextType {
   // State
   events: CalendarEvent[];
   calendars: CalendarCategory[];
+  taskLists: ZenithTaskList[];
+  refreshTaskLists: () => void;
   settings: Settings;
   trash: CalendarEvent[];
   currentDate: Date;
@@ -164,17 +175,50 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     return getCompressedItem<Settings>(STORAGE_KEYS.SETTINGS, DEFAULT_SETTINGS);
   });
 
-  // Load initial calendars (compressed with teal migration)
+  // Load task lists from Zenith storage
+  const [taskLists, setTaskLists] = useState<ZenithTaskList[]>(() => loadZenithLists());
+
+  const refreshTaskLists = useCallback(() => {
+    setTaskLists(loadZenithLists());
+  }, []);
+
+  // Load initial calendars
   const [calendars, setCalendars] = useState<CalendarCategory[]>(() => {
     const raw = getCompressedItem<CalendarCategory[]>(STORAGE_KEYS.CALENDARS, DEFAULT_CALENDARS);
-    return raw.map(c => c.id === 'cal_my_calendar' && (c.color === '#2563eb' || !c.color) ? { ...c, color: '#19E6C8' } : c);
+    return raw && raw.length > 0 ? raw : DEFAULT_CALENDARS;
   });
 
-  // Load initial events & tasks (compressed with teal migration)
+  // Load initial events & tasks (merged with zenith tasks from task feature)
   const [events, setEvents] = useState<CalendarEvent[]>(() => {
-    const raw = getCompressedItem<CalendarEvent[]>(STORAGE_KEYS.EVENTS, DEMO_EVENTS);
-    return raw.map(e => e.colorOverride === '#2563eb' ? { ...e, colorOverride: '#19E6C8' } : e);
+    const raw = getCompressedItem<CalendarEvent[]>(STORAGE_KEYS.EVENTS, []);
+    let baseEvents = raw && raw.length > 0 ? raw : DEMO_EVENTS;
+    const zTasks = loadZenithTasks();
+    if (zTasks.length > 0) {
+      const zEvents = zTasks.filter(t => t.dueDate).map(t => convertZenithTaskToCalendarEvent(t));
+      const filteredBase = baseEvents.filter(e => !zEvents.some(ze => ze.id === e.id || ze.id === `task_${e.id}`));
+      baseEvents = [...filteredBase, ...zEvents];
+    }
+    return baseEvents;
   });
+
+  // Listen for background task changes from Zenith Tasks
+  useEffect(() => {
+    const handleTaskSync = () => {
+      setTaskLists(loadZenithLists());
+      const zTasks = loadZenithTasks();
+      setEvents(prev => {
+        const nonZenith = prev.filter(e => !e.id.startsWith('task_'));
+        const zEvents = zTasks.filter(t => t.dueDate).map(t => convertZenithTaskToCalendarEvent(t));
+        return [...nonZenith, ...zEvents];
+      });
+    };
+    window.addEventListener('storage', handleTaskSync);
+    window.addEventListener('zenith_tasks_sync', handleTaskSync);
+    return () => {
+      window.removeEventListener('storage', handleTaskSync);
+      window.removeEventListener('zenith_tasks_sync', handleTaskSync);
+    };
+  }, []);
 
   // Load initial trash (compressed)
   const [trash, setTrash] = useState<CalendarEvent[]>(() => {
@@ -441,6 +485,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       focusTime: eventData.focusTime,
       workingLocation: eventData.workingLocation,
       workingLocationDetails: eventData.workingLocationDetails,
+      taskListId: eventData.taskListId,
+      taskListName: eventData.taskListName,
       isCompleted: eventData.isCompleted ?? false,
       subtasks: eventData.subtasks || [],
       appointmentSchedule: eventData.appointmentSchedule,
@@ -448,12 +494,28 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       updatedAt: nowISO,
     };
 
+    if (newEvent.type === 'task') {
+      const zTask = addOrUpdateZenithTask({
+        id: newEvent.id.replace(/^task_/, ''),
+        listId: newEvent.taskListId || 'list_valeo_work',
+        title: newEvent.title,
+        details: newEvent.description,
+        dueDate: newEvent.startDate,
+        dueTime: newEvent.isAllDay ? undefined : newEvent.startTime,
+        isCompleted: newEvent.isCompleted,
+      });
+      newEvent.id = zTask.id.startsWith('task_') ? zTask.id : `task_${zTask.id}`;
+    }
+
     setEvents(prev => [...prev, newEvent]);
     showToast(
       `${newEvent.type === 'task' ? 'Task' : 'Event'} created`,
       'Undo',
       () => {
         setEvents(prev => prev.filter(e => e.id !== newEvent.id));
+        if (newEvent.type === 'task') {
+          deleteZenithTask(newEvent.id.replace(/^task_/, ''));
+        }
       },
       'success'
     );
@@ -464,6 +526,18 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const previousEvents = [...events];
     const nowISO = new Date().toISOString();
     const cleanUpdated = { ...updated, updatedAt: nowISO };
+
+    if (cleanUpdated.type === 'task') {
+      addOrUpdateZenithTask({
+        id: cleanUpdated.id.replace(/^task_/, ''),
+        listId: cleanUpdated.taskListId || 'list_valeo_work',
+        title: cleanUpdated.title,
+        details: cleanUpdated.description,
+        dueDate: cleanUpdated.startDate,
+        dueTime: cleanUpdated.isAllDay ? undefined : cleanUpdated.startTime,
+        isCompleted: cleanUpdated.isCompleted,
+      });
+    }
 
     // Check if updating an instance of a recurring event
     if (updated.recurringEventId && updated.recurringEventId !== updated.id) {
@@ -566,6 +640,9 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       // Non-instance or base recurring event
       setEvents(prev => prev.filter(e => e.id !== targetId));
       setTrash(prev => [...prev, { ...targetEvent, deletedAt: nowISO }]);
+      if (targetEvent.type === 'task') {
+        deleteZenithTask(targetId.replace(/^task_/, ''));
+      }
     }
 
     showToast(
@@ -625,9 +702,11 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [showToast]);
 
   const quickToggleTaskCompletion = useCallback((taskId: string) => {
+    const rawId = taskId.replace(/^task_/, '');
+    toggleZenithTaskCompletion(rawId);
     setEvents(prev =>
       prev.map(e => {
-        if (e.id === taskId) {
+        if (e.id === taskId || e.id === `task_${rawId}` || e.id === rawId) {
           const isCompleted = !e.isCompleted;
           return { ...e, isCompleted };
         }
@@ -750,11 +829,12 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 
   // Demo data and Reset
   const seedDemoData = useCallback(() => {
-    setEvents(DEMO_EVENTS);
+    setEvents([]);
     setCalendars(DEFAULT_CALENDARS);
     setSettings(DEFAULT_SETTINGS);
     setTrash([]);
-    showToast('Reset to demo data with sample events', undefined, undefined, 'success');
+    setCompressedItem(STORAGE_KEYS.EVENTS, []);
+    showToast('All calendar items cleared and reset', undefined, undefined, 'info');
   }, [showToast]);
 
   const clearAllData = useCallback(() => {
@@ -899,6 +979,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     () => ({
       events,
       calendars,
+      taskLists,
+      refreshTaskLists,
       settings,
       trash,
       currentDate,
@@ -978,6 +1060,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     [
       events,
       calendars,
+      taskLists,
+      refreshTaskLists,
       settings,
       trash,
       currentDate,

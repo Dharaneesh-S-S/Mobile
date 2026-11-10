@@ -21,19 +21,6 @@ export const RightDock: React.FC = () => {
         <CheckSquare className="w-5 h-5" />
       </button>
 
-      {/* Demo Data Reset */}
-      <button
-        type="button"
-        onClick={() => {
-          if (window.confirm('Reset calendar to sample demo events?')) {
-            seedDemoData();
-          }
-        }}
-        className="p-2.5 rounded-2xl text-teal-400/60 hover:bg-teal-500/10 hover:text-[#19E6C8] transition-colors"
-        title="Restore Demo Data"
-      >
-        <Sparkles className="w-5 h-5" />
-      </button>
 
       {/* Shortcuts Help */}
       <button

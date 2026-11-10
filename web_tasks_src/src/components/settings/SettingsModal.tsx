@@ -117,16 +117,16 @@ export const SettingsModal: React.FC = () => {
 
           {/* Default List */}
           <div>
-            <label className="font-semibold block mb-1 text-slate-800 dark:text-slate-200">
+            <label className="font-bold block mb-1 text-[#F4FFFD]">
               Default List for New Tasks
             </label>
             <select
               value={settings.defaultListId}
               onChange={e => updateSettings({ defaultListId: e.target.value })}
-              className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 rounded-xl border border-teal-500/30 bg-[#081a18] text-[#F4FFFD] text-xs focus:ring-2 focus:ring-[#19E6C8]/40"
             >
               {lists.map(l => (
-                <option key={l.id} value={l.id}>
+                <option key={l.id} value={l.id} className="bg-[#051211] text-[#F4FFFD]">
                   {l.name}
                 </option>
               ))}
@@ -136,81 +136,81 @@ export const SettingsModal: React.FC = () => {
           {/* Time & Calendar Settings */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="font-semibold block mb-1 text-slate-800 dark:text-slate-200">
+              <label className="font-bold block mb-1 text-[#F4FFFD]">
                 Time Format
               </label>
               <select
                 value={settings.timeFormat}
                 onChange={e => updateSettings({ timeFormat: e.target.value as '12h' | '24h' })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs"
+                className="w-full px-3 py-2 rounded-xl border border-teal-500/30 bg-[#081a18] text-[#F4FFFD] text-xs focus:ring-2 focus:ring-[#19E6C8]/40"
               >
-                <option value="12h">12-hour (5:00 PM)</option>
-                <option value="24h">24-hour (17:00)</option>
+                <option value="12h" className="bg-[#051211] text-[#F4FFFD]">12-hour (5:00 PM)</option>
+                <option value="24h" className="bg-[#051211] text-[#F4FFFD]">24-hour (17:00)</option>
               </select>
             </div>
 
             <div>
-              <label className="font-semibold block mb-1 text-slate-800 dark:text-slate-200">
+              <label className="font-bold block mb-1 text-[#F4FFFD]">
                 Density
               </label>
               <select
                 value={settings.density}
                 onChange={e => updateSettings({ density: e.target.value as 'compact' | 'comfortable' })}
-                className="w-full px-3 py-2 rounded-xl border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs"
+                className="w-full px-3 py-2 rounded-xl border border-teal-500/30 bg-[#081a18] text-[#F4FFFD] text-xs focus:ring-2 focus:ring-[#19E6C8]/40"
               >
-                <option value="comfortable">Comfortable</option>
-                <option value="compact">Compact</option>
+                <option value="comfortable" className="bg-[#051211] text-[#F4FFFD]">Comfortable</option>
+                <option value="compact" className="bg-[#051211] text-[#F4FFFD]">Compact</option>
               </select>
             </div>
           </div>
 
           {/* Notification Toggle */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-700">
+          <div className="flex items-center justify-between p-3 rounded-xl bg-[#081a18] border border-teal-500/25">
             <div className="flex items-center gap-2">
-              <Bell className="w-4 h-4 text-blue-500" />
+              <Bell className="w-4 h-4 text-[#19E6C8]" />
               <div>
-                <div className="font-semibold text-slate-800 dark:text-slate-100">Task Reminders</div>
-                <div className="text-[11px] text-slate-400">Trigger notifications for tasks with scheduled times</div>
+                <div className="font-bold text-[#F4FFFD]">Task Reminders</div>
+                <div className="text-[11px] text-[#94B5B0]">Trigger notifications for tasks with scheduled times</div>
               </div>
             </div>
             <input
               type="checkbox"
               checked={settings.notificationsEnabled}
               onChange={e => updateSettings({ notificationsEnabled: e.target.checked })}
-              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500"
+              className="w-4 h-4 rounded accent-[#19E6C8]"
             />
           </div>
 
           {/* Export & Backup */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60">
-            <label className="font-semibold block mb-2 text-slate-800 dark:text-slate-200">
+          <div className="pt-2 border-t border-teal-500/20">
+            <label className="font-bold block mb-2 text-[#F4FFFD]">
               Data Management & Backup
             </label>
             <div className="grid grid-cols-3 gap-2">
               <button
                 type="button"
                 onClick={() => exportTasksAsJson(tasks, lists)}
-                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-medium transition"
+                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-teal-500/25 bg-[#081a18] hover:bg-teal-500/15 text-xs font-semibold text-[#F4FFFD] transition"
               >
-                <Download className="w-3.5 h-3.5 text-blue-500" />
+                <Download className="w-3.5 h-3.5 text-[#19E6C8]" />
                 <span>Export JSON</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => exportTasksAsCsv(tasks, lists)}
-                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-medium transition"
+                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-teal-500/25 bg-[#081a18] hover:bg-teal-500/15 text-xs font-semibold text-[#F4FFFD] transition"
               >
-                <FileSpreadsheet className="w-3.5 h-3.5 text-emerald-500" />
+                <FileSpreadsheet className="w-3.5 h-3.5 text-[#19E6C8]" />
                 <span>Export CSV</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => fileInputRef.current?.click()}
-                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-700/50 text-xs font-medium transition"
+                className="flex items-center justify-center gap-1.5 py-2 px-2.5 rounded-xl border border-teal-500/25 bg-[#081a18] hover:bg-teal-500/15 text-xs font-semibold text-[#F4FFFD] transition"
               >
-                <Upload className="w-3.5 h-3.5 text-indigo-500" />
+                <Upload className="w-3.5 h-3.5 text-[#19E6C8]" />
                 <span>Import JSON</span>
               </button>
               <input
@@ -224,20 +224,20 @@ export const SettingsModal: React.FC = () => {
           </div>
 
           {/* Reset / Clear Demo Data */}
-          <div className="pt-2 border-t border-slate-100 dark:border-slate-700/60 flex items-center justify-between">
+          <div className="pt-2 border-t border-teal-500/20 flex items-center justify-between">
             <button
               type="button"
               onClick={resetToDemo}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-700/50 text-slate-700 dark:text-slate-300 hover:bg-slate-200 text-xs font-medium transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#081a18] border border-teal-500/25 text-[#94B5B0] hover:text-[#F4FFFD] hover:bg-teal-500/15 text-xs font-semibold transition"
             >
-              <RefreshCw className="w-3.5 h-3.5" />
+              <RefreshCw className="w-3.5 h-3.5 text-[#19E6C8]" />
               <span>Load demo data</span>
             </button>
 
             <button
               type="button"
               onClick={clearAll}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 text-xs font-medium transition"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-rose-400 hover:bg-rose-950/40 text-xs font-semibold transition"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Clear all data</span>

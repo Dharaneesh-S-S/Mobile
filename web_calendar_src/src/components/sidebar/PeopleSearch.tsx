@@ -8,9 +8,9 @@ export const PeopleSearch: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFocused, setIsFocused] = useState(false);
 
-  const filteredContacts = MOCK_CONTACTS.filter(c =>
-    c.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    c.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredContacts = MOCK_CONTACTS.filter((c: any) =>
+    c.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    c.email?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -31,7 +31,7 @@ export const PeopleSearch: React.FC = () => {
 
       {/* Contact Pills / List */}
       <div className="space-y-1">
-        {(searchTerm || isFocused ? filteredContacts : MOCK_CONTACTS).map(person => {
+        {(searchTerm || isFocused ? filteredContacts : MOCK_CONTACTS).map((person: any) => {
           const isOverlaid = activeOverlaidPeople.includes(person.id);
 
           return (

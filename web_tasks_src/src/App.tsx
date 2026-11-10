@@ -54,7 +54,7 @@ export const App: React.FC = () => {
 
         {/* Task Detail Pane / Drawer on Right */}
         {editingTaskId && (
-          <div className="w-[360px] flex-shrink-0 h-full border-l border-[#282a2c] bg-[#1e1f20] shadow-2xl z-30 animate-slide-up">
+          <div className="w-[360px] flex-shrink-0 h-full border-l border-teal-500/20 bg-[#051211] shadow-2xl z-30 animate-slide-up">
             <TaskDetailPane
               taskId={editingTaskId}
               onClose={() => setEditingTaskId(null)}

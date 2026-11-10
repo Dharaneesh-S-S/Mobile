@@ -19,20 +19,20 @@ export const ShortcutsHelpModal: React.FC = () => {
   ];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-      <div className="w-full max-w-md bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in">
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-slate-100 dark:border-slate-700/60">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+      <div className="w-full max-w-md bg-[#051211]/95 text-[#F4FFFD] rounded-2xl shadow-2xl border border-teal-500/25 p-5 animate-pop-in">
+        <div className="flex items-center justify-between pb-3 mb-4 border-b border-teal-500/20">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-[#19E6C8] border border-teal-500/30 flex items-center justify-center">
               <Keyboard className="w-4 h-4" />
             </div>
-            <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">
+            <h3 className="text-base font-bold text-[#F4FFFD]">
               Keyboard Shortcuts
             </h3>
           </div>
           <button
             onClick={() => setShowShortcutsHelp(false)}
-            className="p-1 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+            className="p-1 rounded-lg text-teal-400/60 hover:text-white"
           >
             <X className="w-4 h-4" />
           </button>
@@ -42,20 +42,20 @@ export const ShortcutsHelpModal: React.FC = () => {
           {shortcuts.map((s, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-700/40 transition"
+              className="flex items-center justify-between py-1.5 px-2 rounded-lg hover:bg-teal-500/10 transition"
             >
-              <span className="text-slate-600 dark:text-slate-300 font-medium">{s.desc}</span>
-              <kbd className="px-2 py-1 rounded bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-200 font-mono text-[11px] shadow-xs border border-slate-200 dark:border-slate-600">
+              <span className="text-[#94B5B0] font-medium">{s.desc}</span>
+              <kbd className="px-2 py-1 rounded bg-[#081a18] text-[#19E6C8] font-mono text-[11px] shadow-xs border border-teal-500/30">
                 {s.key}
               </kbd>
             </div>
           ))}
         </div>
 
-        <div className="mt-5 pt-3 border-t border-slate-100 dark:border-slate-700/60 flex justify-end">
+        <div className="mt-5 pt-3 border-t border-teal-500/20 flex justify-end">
           <button
             onClick={() => setShowShortcutsHelp(false)}
-            className="px-4 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium transition shadow-sm"
+            className="px-4 py-1.5 rounded-full bg-[#19E6C8] text-[#030707] font-bold text-xs transition shadow-[0_0_15px_rgba(25,230,200,0.3)] hover:bg-[#2DD4BF]"
           >
             Got it
           </button>

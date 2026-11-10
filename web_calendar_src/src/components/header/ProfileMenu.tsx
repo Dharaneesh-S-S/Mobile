@@ -16,9 +16,9 @@ export const ProfileMenu: React.FC<ProfileMenuProps> = ({ onClose }) => {
           <div className="absolute bottom-0 right-0 w-4 h-4 rounded-full bg-emerald-500 border-2 border-white dark:border-gray-800" />
         </div>
         <h4 className="mt-2 text-sm font-semibold text-gray-800 dark:text-gray-100">
-          Chronos Workspace User
+          Personal Calendar
         </h4>
-        <p className="text-xs text-gray-500 dark:text-gray-400">user@chronos.local</p>
+        <p className="text-xs text-gray-500 dark:text-gray-400">Offline Local Storage</p>
         <span className="mt-1.5 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-blue-50 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400">
           <Shield className="w-3 h-3" />
           Pro Offline Workspace

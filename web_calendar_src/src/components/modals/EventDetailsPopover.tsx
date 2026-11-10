@@ -1,431 +1,241 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   X,
   Edit2,
-  Trash2,
-  Mail,
   MoreVertical,
-  Clock,
-  MapPin,
-  Video,
-  Users,
-  AlignLeft,
+  Bell,
+  Lock,
   Calendar as CalIcon,
-  Check,
-  HelpCircle,
-  Copy,
-  Printer,
-  Share2,
-  Paperclip,
-  Palette,
+  Trash2,
+  CheckCircle2,
+  Circle,
+  List as ListIcon,
+  MapPin,
+  AlignLeft,
 } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
-import { formatTimeDisplay } from '../../utils/dateUtils';
-import { Guest } from '../../types/calendar';
 
 export const EventDetailsPopover: React.FC = () => {
   const {
     selectedEvent,
-    popoverAnchor,
     closeEventDetails,
     openEditor,
     deleteEvent,
-    duplicateEvent,
-    updateEvent,
+    quickToggleTaskCompletion,
     calendars,
-    settings,
+    taskLists,
   } = useCalendar();
 
-  const [showMoreMenu, setShowMoreMenu] = useState(false);
-  const [showColorPicker, setShowColorPicker] = useState(false);
-  const moreMenuRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (moreMenuRef.current && !moreMenuRef.current.contains(e.target as Node)) {
-        setShowMoreMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const [showMenu, setShowMenu] = useState(false);
 
   if (!selectedEvent) return null;
 
+  const isBirthday = selectedEvent.type === 'birthday' || selectedEvent.calendarId === 'cal_birthdays';
+  const isHoliday = selectedEvent.type === 'holiday' || selectedEvent.calendarId === 'cal_holidays';
+  const isTask = selectedEvent.type === 'task' || selectedEvent.calendarId === 'cal_tasks';
   const cal = calendars.find(c => c.id === selectedEvent.calendarId);
-  const eventColor = selectedEvent.colorOverride || cal?.color || '#3b82f6';
+  const color = selectedEvent.colorOverride || cal?.color || (isTask ? '#c58af9' : isBirthday ? '#81c995' : isHoliday ? '#00897b' : '#8ab4f8');
 
-  const handleRSVP = (status: 'yes' | 'no' | 'maybe') => {
-    const currentGuests = selectedEvent.guests || [];
-    const myGuest = currentGuests.find(g => g.email === 'user@chronos.local');
+  const taskList = selectedEvent.taskListId ? taskLists.find(l => l.id === selectedEvent.taskListId) : undefined;
 
-    let updatedGuests: Guest[];
-    if (myGuest) {
-      updatedGuests = currentGuests.map(g =>
-        g.email === 'user@chronos.local' ? { ...g, status } : g
-      );
-    } else {
-      updatedGuests = [
-        ...currentGuests,
-        { email: 'user@chronos.local', name: 'You', status },
-      ];
+  const formatEventDate = () => {
+    try {
+      const [y, m, d] = selectedEvent.startDate.split('-').map(Number);
+      const dt = new Date(y, m - 1, d);
+      return dt.toLocaleDateString('en-US', { day: 'numeric', month: 'short' });
+    } catch {
+      return selectedEvent.startDate;
     }
-    updateEvent({ ...selectedEvent, guests: updatedGuests });
   };
-
-  const myRsvpStatus = selectedEvent.guests?.find(g => g.email === 'user@chronos.local')?.status;
-
-  const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
-  const style: React.CSSProperties = isMobile
-    ? {
-        position: 'fixed',
-        bottom: '16px',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        width: 'calc(100vw - 24px)',
-        maxWidth: '420px',
-        maxHeight: '85vh',
-        zIndex: 50,
-      }
-    : popoverAnchor
-    ? {
-        position: 'fixed',
-        top: Math.max(70, Math.min(window.innerHeight - 440, popoverAnchor.y - 100)),
-        left: Math.max(16, Math.min(window.innerWidth - 440, popoverAnchor.x + 20)),
-        zIndex: 50,
-      }
-    : {
-        position: 'fixed',
-        top: '20%',
-        left: '50%',
-        transform: 'translateX(-50%)',
-        zIndex: 50,
-      };
 
   return (
     <>
       {/* Backdrop */}
       <div
-        className="fixed inset-0 bg-black/70 backdrop-blur-xs z-40"
+        className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 animate-in fade-in duration-150"
         onClick={closeEventDetails}
       />
 
-      <div
-        style={style}
-        className="w-full sm:w-96 md:w-[420px] rounded-3xl bg-[#051211] shadow-[0_12px_40px_rgba(0,0,0,0.8)] border border-teal-500/20 p-4 sm:p-5 select-none animate-in fade-in zoom-in-95 duration-150 z-50 flex flex-col max-h-[85vh] overflow-y-auto text-[#F4FFFD]"
-      >
-        {/* Header Action Bar */}
-        <div className="flex items-center justify-between pb-3 border-b border-teal-500/15 mb-4">
-          <div className="flex items-center gap-1.5">
-            <div
-              className="w-3.5 h-3.5 rounded-full ring-2 ring-teal-500/30"
-              style={{ backgroundColor: eventColor }}
-            />
-            <span className="text-xs font-semibold text-teal-400/80 truncate max-w-[150px]">
-              {cal?.name || 'Calendar'}
-            </span>
-          </div>
+      {/* Bottom Sheet / Modal (Screenshot 14) */}
+      <div className="fixed bottom-0 sm:bottom-auto sm:top-1/2 left-1/2 -translate-x-1/2 sm:-translate-y-1/2 w-full max-w-md bg-[#1b1b1f] text-[#e3e3e3] rounded-t-3xl sm:rounded-3xl shadow-2xl border-t sm:border border-[#2d2f34] z-50 overflow-hidden select-none animate-in slide-in-from-bottom-4 duration-200">
+        {/* Hero Illustration Header (Screenshot 14) */}
+        <div className="relative h-44 w-full bg-gradient-to-br from-[#2a1b3d] via-[#1a233a] to-[#122329] overflow-hidden flex items-center justify-center">
+          {isBirthday ? (
+            /* Birthday graphic with cake, candles, balloons, and stars */
+            <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
+              <svg className="w-full h-full" viewBox="0 0 400 180" fill="none">
+                {/* Background soft glow */}
+                <circle cx="200" cy="90" r="100" fill="#f48fb1" fillOpacity="0.15" />
+                {/* Balloons */}
+                <ellipse cx="60" cy="80" rx="35" ry="45" fill="#f06292" fillOpacity="0.8" />
+                <path d="M60 125 L65 170" stroke="#f06292" strokeWidth="1.5" />
+                <ellipse cx="100" cy="70" rx="30" ry="40" fill="#ba68c8" fillOpacity="0.8" />
+                <path d="M100 110 L95 170" stroke="#ba68c8" strokeWidth="1.5" />
+                <ellipse cx="330" cy="70" rx="32" ry="42" fill="#ab47bc" fillOpacity="0.8" />
+                <ellipse cx="365" cy="90" rx="30" ry="40" fill="#f06292" fillOpacity="0.8" />
+                {/* Star Balloons */}
+                <polygon points="320,100 325,115 340,115 328,125 332,140 320,130 308,140 312,125 300,115 315,115" fill="#ffd54f" fillOpacity="0.9" />
+                {/* Birthday Cake */}
+                <rect x="150" y="80" width="100" height="40" rx="6" fill="#f48fb1" />
+                <rect x="150" y="100" width="100" height="20" fill="#ffffff" fillOpacity="0.85" />
+                <rect x="145" y="115" width="110" height="40" rx="8" fill="#f06292" />
+                {/* Cake frosting dots */}
+                <circle cx="160" cy="80" r="4" fill="#ffffff" />
+                <circle cx="180" cy="80" r="4" fill="#ffffff" />
+                <circle cx="200" cy="80" r="4" fill="#ffffff" />
+                <circle cx="220" cy="80" r="4" fill="#ffffff" />
+                <circle cx="240" cy="80" r="4" fill="#ffffff" />
+                {/* Candle */}
+                <rect x="197" y="50" width="6" height="30" rx="3" fill="#ffffff" />
+                <polygon points="200,32 195,46 205,46" fill="#ffd54f" />
+                <circle cx="200" cy="38" r="14" fill="#ffeb3b" fillOpacity="0.4" />
+              </svg>
+            </div>
+          ) : isTask ? (
+            /* Task hero banner */
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-[#2e1d47] to-[#1a2b47]">
+              <CheckCircle2 className="w-16 h-16 text-[#c58af9] opacity-40" />
+            </div>
+          ) : (
+            /* Regular event / holiday banner */
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-r from-[#004d40] to-[#006064]">
+              <CalIcon className="w-16 h-16 text-[#4db6ac] opacity-35" />
+            </div>
+          )}
 
-          <div className="flex items-center gap-1">
-            {/* Edit (Pencil) */}
+          {/* Floating Top Buttons over Illustration (Screenshot 14) */}
+          <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10">
             <button
               type="button"
-              onClick={() => {
-                closeEventDetails();
-                openEditor(selectedEvent);
-              }}
-              className="p-1.5 rounded-full text-teal-400/70 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors"
-              title="Edit event"
+              onClick={closeEventDetails}
+              className="w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-colors"
+              title="Close"
             >
-              <Edit2 className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
 
-            {/* Delete (Trash) */}
-            <button
-              type="button"
-              onClick={() => {
-                closeEventDetails();
-                deleteEvent(selectedEvent.id);
-              }}
-              className="p-1.5 rounded-full text-teal-400/70 hover:text-red-400 hover:bg-red-500/10 transition-colors"
-              title="Delete event"
-            >
-              <Trash2 className="w-4 h-4" />
-            </button>
-
-            {/* Email Guests */}
-            {selectedEvent.guests && selectedEvent.guests.length > 0 && (
-              <a
-                href={`mailto:${selectedEvent.guests.map(g => g.email).join(',')}`}
-                className="p-1.5 rounded-full text-teal-400/70 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors"
-                title="Email guests"
-              >
-                <Mail className="w-4 h-4" />
-              </a>
-            )}
-
-            {/* More Options Dropdown */}
-            <div className="relative" ref={moreMenuRef}>
+            <div className="flex items-center gap-2 relative">
               <button
                 type="button"
-                onClick={() => setShowMoreMenu(prev => !prev)}
-                className="p-1.5 rounded-full text-teal-400/70 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors"
+                onClick={() => {
+                  closeEventDetails();
+                  openEditor(selectedEvent);
+                }}
+                className="w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-colors"
+                title="Edit"
+              >
+                <Edit2 className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowMenu(prev => !prev)}
+                className="w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-colors"
                 title="More options"
               >
-                <MoreVertical className="w-4 h-4" />
+                <MoreVertical className="w-5 h-5" />
               </button>
 
-              {showMoreMenu && (
-                <div className="absolute right-0 top-full mt-1 w-48 rounded-2xl bg-[#081a18] p-1.5 shadow-2xl border border-teal-500/20 z-50 text-xs text-[#F4FFFD] animate-in fade-in zoom-in-95 duration-150">
+              {showMenu && (
+                <div className="absolute right-0 top-full mt-2 w-40 rounded-2xl bg-[#282a2d] p-1.5 shadow-2xl border border-[#3c4043] z-20">
                   <button
                     type="button"
                     onClick={() => {
-                      duplicateEvent(selectedEvent);
-                      setShowMoreMenu(false);
+                      deleteEvent(selectedEvent.id);
                       closeEventDetails();
                     }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-teal-500/10 text-left text-teal-300"
+                    className="w-full flex items-center gap-2 px-3 py-2 text-xs font-semibold text-[#f28b82] hover:bg-[#f28b82]/10 rounded-xl"
                   >
-                    <Copy className="w-3.5 h-3.5 text-teal-400/60" />
-                    <span>Duplicate</span>
-                  </button>
-
-                  {/* Change color */}
-                  <div className="relative">
-                    <button
-                      type="button"
-                      onClick={() => setShowColorPicker(prev => !prev)}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-xl hover:bg-teal-500/10 text-left text-teal-300"
-                    >
-                      <div className="flex items-center gap-2.5">
-                        <Palette className="w-3.5 h-3.5 text-teal-400/60" />
-                        <span>Change color</span>
-                      </div>
-                      <div
-                        className="w-3 h-3 rounded-full border border-teal-500/30"
-                        style={{ backgroundColor: eventColor }}
-                      />
-                    </button>
-
-                    {showColorPicker && (
-                      <div className="p-2 my-1 rounded-xl bg-[#051211] border border-teal-500/20">
-                        <div className="grid grid-cols-6 gap-1.5 mb-1.5">
-                          {[
-                            '#19E6C8', '#0284c7', '#0d9488', '#10b981', '#16a34a', '#ca8a04',
-                            '#d97706', '#ea580c', '#dc2626', '#e11d48', '#9333ea', '#4f46e5',
-                          ].map(color => (
-                            <button
-                              key={color}
-                              type="button"
-                              onClick={() => {
-                                updateEvent({ ...selectedEvent, colorOverride: color });
-                                setShowColorPicker(false);
-                                setShowMoreMenu(false);
-                              }}
-                              className="w-4 h-4 rounded-full flex items-center justify-center transition-transform hover:scale-125"
-                              style={{ backgroundColor: color }}
-                            >
-                              {eventColor.toLowerCase() === color.toLowerCase() && (
-                                <Check className="w-2.5 h-2.5 text-[#030707] stroke-[3]" />
-                              )}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="flex items-center gap-1.5 pt-1 border-t border-teal-500/15">
-                          <input
-                            type="color"
-                            value={eventColor}
-                            onChange={e => {
-                              updateEvent({ ...selectedEvent, colorOverride: e.target.value });
-                            }}
-                            className="w-5 h-4 rounded cursor-pointer border-0 bg-transparent"
-                            title="Custom color"
-                          />
-                          <span className="text-[10px] text-teal-400/60 font-mono uppercase">{eventColor}</span>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      window.print();
-                      setShowMoreMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-teal-500/10 text-left text-teal-300"
-                  >
-                    <Printer className="w-3.5 h-3.5 text-teal-400/60" />
-                    <span>Print</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      navigator.clipboard.writeText(
-                        `${selectedEvent.title} on ${selectedEvent.startDate} at ${selectedEvent.startTime || 'all day'}`
-                      );
-                      alert('Event details copied to clipboard!');
-                      setShowMoreMenu(false);
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-teal-500/10 text-left text-teal-300"
-                  >
-                    <Share2 className="w-3.5 h-3.5 text-teal-400/60" />
-                    <span>Publish / Share event</span>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Delete</span>
                   </button>
                 </div>
               )}
             </div>
-
-            {/* Close Button */}
-            <button
-              type="button"
-              onClick={closeEventDetails}
-              className="p-1.5 rounded-full text-teal-400/70 hover:text-[#19E6C8] hover:bg-teal-500/10 transition-colors ml-1"
-            >
-              <X className="w-4 h-4" />
-            </button>
           </div>
         </div>
 
-        {/* Title */}
-        <h3 className="text-xl font-bold text-[#F4FFFD] mb-4 leading-snug">
-          {selectedEvent.title}
-        </h3>
-
-        {/* Information rows */}
-        <div className="space-y-3.5 text-xs text-teal-300">
-          {/* Time & Date */}
+        {/* Content Body (Screenshot 14) */}
+        <div className="px-6 py-5 space-y-5">
+          {/* Title row with colored square or checkbox */}
           <div className="flex items-start gap-3">
-            <Clock className="w-4 h-4 text-[#19E6C8] mt-0.5 flex-shrink-0" />
+            {isTask ? (
+              <button
+                type="button"
+                onClick={() => quickToggleTaskCompletion(selectedEvent.id)}
+                className="mt-1 text-[#c58af9] hover:scale-110 transition-transform"
+              >
+                {selectedEvent.isCompleted ? (
+                  <CheckCircle2 className="w-6 h-6 fill-[#c58af9] text-[#1b1b1f]" />
+                ) : (
+                  <Circle className="w-6 h-6 stroke-[2]" />
+                )}
+              </button>
+            ) : (
+              <span
+                className="w-4 h-4 rounded-xs mt-1.5 flex-shrink-0"
+                style={{ backgroundColor: color }}
+              />
+            )}
             <div>
-              <p className="font-semibold text-[#F4FFFD]">
-                {selectedEvent.startDate}
-                {selectedEvent.endDate !== selectedEvent.startDate ? ` – ${selectedEvent.endDate}` : ''}
-              </p>
-              <p className="text-teal-400/60 mt-0.5">
-                {selectedEvent.isAllDay
-                  ? 'All day'
-                  : `${formatTimeDisplay(selectedEvent.startTime, settings.timeFormat)} – ${formatTimeDisplay(
-                      selectedEvent.endTime,
-                      settings.timeFormat
-                    )}`}
-              </p>
+              <h2
+                className={`text-xl font-normal text-white ${
+                  selectedEvent.isCompleted ? 'line-through text-[#9aa0a6]' : ''
+                }`}
+              >
+                {selectedEvent.title}
+              </h2>
+              <div className="text-sm text-[#c4c7c5] mt-1 font-medium">
+                {formatEventDate()}
+              </div>
             </div>
           </div>
 
-          {/* Video Link */}
-          {selectedEvent.videoConference && (
-            <div className="flex items-center justify-between p-3 rounded-2xl bg-[#081a18] border border-teal-500/20">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <Video className="w-4 h-4 text-[#19E6C8] flex-shrink-0" />
-                <div className="truncate">
-                  <p className="font-semibold text-[#F4FFFD]">Join with Video</p>
-                  <p className="text-[11px] text-teal-400/70 truncate font-mono">
-                    {selectedEvent.videoConference.url}
-                  </p>
-                </div>
-              </div>
-              <a
-                href={selectedEvent.videoConference.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="px-3.5 py-1.5 rounded-xl bg-[#19E6C8] hover:bg-[#15caa0] text-[#030707] font-bold text-xs shadow-xs transition-colors flex-shrink-0"
-              >
-                Join
-              </a>
+          {/* Task list indicator */}
+          {isTask && (
+            <div className="flex items-center gap-4 text-sm text-[#c4c7c5]">
+              <ListIcon className="w-5 h-5 text-[#9aa0a6] flex-shrink-0" />
+              <span>List: <strong className="text-white">{selectedEvent.taskListName || taskList?.name || 'Valeo Work'}</strong></span>
             </div>
           )}
 
           {/* Location */}
           {selectedEvent.location && (
-            <div className="flex items-start gap-3">
-              <MapPin className="w-4 h-4 text-[#19E6C8] mt-0.5 flex-shrink-0" />
-              <span className="text-[#F4FFFD]">{selectedEvent.location}</span>
+            <div className="flex items-center gap-4 text-sm text-[#c4c7c5]">
+              <MapPin className="w-5 h-5 text-[#9aa0a6] flex-shrink-0" />
+              <span>{selectedEvent.location}</span>
             </div>
           )}
 
-          {/* Guests */}
-          {selectedEvent.guests && selectedEvent.guests.length > 0 && (
-            <div className="flex items-start gap-3">
-              <Users className="w-4 h-4 text-[#19E6C8] mt-0.5 flex-shrink-0" />
-              <div className="flex-1">
-                <p className="font-semibold text-[#F4FFFD] mb-1">
-                  {selectedEvent.guests.length} guests
-                </p>
-                <div className="space-y-1">
-                  {selectedEvent.guests.map((g, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-[11px]">
-                      <span className="text-teal-300">{g.name || g.email}</span>
-                      <span
-                        className={`capitalize font-medium ${
-                          g.status === 'yes'
-                            ? 'text-[#19E6C8]'
-                            : g.status === 'no'
-                            ? 'text-red-400'
-                            : 'text-amber-400'
-                        }`}
-                      >
-                        {g.status === 'needs_action' ? 'invited' : g.status}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+          {/* Notifications (Screenshot 14) */}
+          <div className="flex items-start gap-4 text-sm text-[#c4c7c5]">
+            <Bell className="w-5 h-5 text-[#9aa0a6] mt-0.5 flex-shrink-0" />
+            <div className="space-y-1">
+              <div>On the day at 6 am</div>
+              <div>The day before at 9 pm</div>
             </div>
-          )}
+          </div>
+
+          {/* Lock Privacy (Screenshot 14) */}
+          <div className="flex items-center gap-4 text-sm text-[#c4c7c5]">
+            <Lock className="w-5 h-5 text-[#9aa0a6] flex-shrink-0" />
+            <span>Only me</span>
+          </div>
+
+          {/* Calendar category & info */}
+          <div className="flex items-start gap-4 text-sm text-[#c4c7c5]">
+            <CalIcon className="w-5 h-5 text-[#9aa0a6] mt-0.5 flex-shrink-0" />
+            <div>
+              <div className="text-white font-medium">{cal?.name || (isBirthday ? 'Birthdays' : isHoliday ? 'Holidays' : 'My calendar')}</div>
+            </div>
+          </div>
 
           {/* Description */}
           {selectedEvent.description && (
-            <div className="flex items-start gap-3">
-              <AlignLeft className="w-4 h-4 text-teal-400/60 mt-0.5 flex-shrink-0" />
-              <div className="whitespace-pre-wrap text-teal-200 leading-relaxed font-sans">
-                {selectedEvent.description}
-              </div>
+            <div className="flex items-start gap-4 text-sm text-[#c4c7c5] pt-1 border-t border-[#2d2f34]">
+              <AlignLeft className="w-5 h-5 text-[#9aa0a6] mt-0.5 flex-shrink-0" />
+              <p className="whitespace-pre-line text-xs">{selectedEvent.description}</p>
             </div>
           )}
-
-          {/* Attachments */}
-          {selectedEvent.attachments && selectedEvent.attachments.length > 0 && (
-            <div className="flex items-start gap-3">
-              <Paperclip className="w-4 h-4 text-teal-400/60 mt-0.5 flex-shrink-0" />
-              <div className="flex flex-wrap gap-1.5">
-                {selectedEvent.attachments.map(att => (
-                  <span
-                    key={att.id}
-                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#081a18] border border-teal-500/20 text-[#19E6C8] text-[11px]"
-                  >
-                    {att.name}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* RSVP Bottom Row */}
-        <div className="mt-5 pt-3.5 border-t border-teal-500/15 flex items-center justify-between">
-          <span className="text-xs font-semibold text-teal-400/80">
-            Going?
-          </span>
-          <div className="flex items-center gap-1.5">
-            {[
-              { id: 'yes', label: 'Yes' },
-              { id: 'no', label: 'No' },
-              { id: 'maybe', label: 'Maybe' },
-            ].map(r => (
-              <button
-                key={r.id}
-                type="button"
-                onClick={() => handleRSVP(r.id as any)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                  myRsvpStatus === r.id
-                    ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.3)]'
-                    : 'bg-[#081a18] text-teal-400/70 border border-teal-500/15 hover:text-[#F4FFFD] hover:bg-teal-500/10'
-                }`}
-              >
-                {r.label}
-              </button>
-            ))}
-          </div>
         </div>
       </div>
     </>

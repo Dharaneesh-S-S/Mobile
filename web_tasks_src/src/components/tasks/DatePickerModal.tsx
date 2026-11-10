@@ -164,21 +164,21 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
           <button
             type="button"
             onClick={() => handleQuickOption('today')}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700/60 hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-600 dark:hover:text-blue-400 text-slate-700 dark:text-slate-300 transition"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-[#081a18] hover:bg-teal-500/20 text-[#94B5B0] hover:text-[#19E6C8] border border-teal-500/20 transition"
           >
             Today
           </button>
           <button
             type="button"
             onClick={() => handleQuickOption('tomorrow')}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700/60 hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-600 dark:hover:text-blue-400 text-slate-700 dark:text-slate-300 transition"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-[#081a18] hover:bg-teal-500/20 text-[#94B5B0] hover:text-[#19E6C8] border border-teal-500/20 transition"
           >
             Tomorrow
           </button>
           <button
             type="button"
             onClick={() => handleQuickOption('nextWeek')}
-            className="px-2.5 py-1.5 rounded-lg text-xs font-medium bg-slate-100 dark:bg-slate-700/60 hover:bg-blue-50 dark:hover:bg-blue-900/40 hover:text-blue-600 dark:hover:text-blue-400 text-slate-700 dark:text-slate-300 transition"
+            className="px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-[#081a18] hover:bg-teal-500/20 text-[#94B5B0] hover:text-[#19E6C8] border border-teal-500/20 transition"
           >
             Next week
           </button>
@@ -186,12 +186,12 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
 
         {/* Month Navigation */}
         <div className="flex items-center justify-between mb-2 px-1">
-          <span className="text-sm font-semibold text-slate-800 dark:text-slate-100">{monthTitle}</span>
+          <span className="text-sm font-bold text-[#F4FFFD]">{monthTitle}</span>
           <div className="flex items-center gap-1">
-            <button onClick={handlePrevMonth} className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">
+            <button onClick={handlePrevMonth} className="p-1 rounded-lg text-teal-400/70 hover:bg-teal-500/10 hover:text-white">
               <ChevronLeft className="w-4 h-4" />
             </button>
-            <button onClick={handleNextMonth} className="p-1 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700">
+            <button onClick={handleNextMonth} className="p-1 rounded-lg text-teal-400/70 hover:bg-teal-500/10 hover:text-white">
               <ChevronRight className="w-4 h-4" />
             </button>
           </div>
@@ -200,7 +200,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
         {/* Calendar Grid */}
         <div className="grid grid-cols-7 gap-1 text-center mb-4">
           {WEEKDAYS.map((w, idx) => (
-            <div key={idx} className="text-[11px] font-semibold text-slate-400 py-1">
+            <div key={idx} className="text-[11px] font-bold text-teal-400/60 py-1 uppercase">
               {w}
             </div>
           ))}
@@ -215,7 +215,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                 onClick={() => setSelectedDate(d.dateStr)}
                 className={`h-8 rounded-lg text-xs font-medium flex items-center justify-center transition relative ${
                   isSelected
-                    ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-md shadow-teal-500/25'
+                    ? 'bg-[#19E6C8] text-[#030707] font-extrabold shadow-md shadow-teal-500/25'
                     : isCurrentToday
                     ? 'border border-[#19E6C8] text-[#19E6C8] font-bold'
                     : d.isCurrentMonth
@@ -230,11 +230,11 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
         </div>
 
         {/* Time Selector */}
-        <div className="border-t border-slate-100 dark:border-slate-700/60 pt-3 mb-3">
+        <div className="border-t border-teal-500/20 pt-3 mb-3">
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4 text-slate-400" />
-              <span className="text-xs font-medium text-slate-700 dark:text-slate-300">Set time</span>
+              <Clock className="w-4 h-4 text-[#19E6C8]" />
+              <span className="text-xs font-semibold text-[#F4FFFD]">Set time</span>
             </div>
             <input
               type="checkbox"
@@ -246,7 +246,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                   setSelectedTime('09:00');
                 }
               }}
-              className="w-4 h-4 rounded text-blue-600 focus:ring-blue-500 cursor-pointer"
+              className="w-4 h-4 rounded accent-[#19E6C8] cursor-pointer"
             />
           </div>
 
@@ -254,10 +254,10 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
             <select
               value={selectedTime || '09:00'}
               onChange={e => setSelectedTime(e.target.value)}
-              className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-1.5 rounded-lg border border-teal-500/30 bg-[#081a18] text-[#F4FFFD] text-xs focus:ring-2 focus:ring-[#19E6C8]/40"
             >
               {timeSlots.map(t => (
-                <option key={t} value={t}>
+                <option key={t} value={t} className="bg-[#051211] text-[#F4FFFD]">
                   {formatTime(t, timeFormat)}
                 </option>
               ))}
@@ -266,10 +266,10 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
         </div>
 
         {/* Recurrence Dropdown */}
-        <div className="border-t border-slate-100 dark:border-slate-700/60 pt-3 mb-4">
+        <div className="border-t border-teal-500/20 pt-3 mb-4">
           <div className="flex items-center gap-2 mb-2">
-            <Repeat className="w-4 h-4 text-slate-400" />
-            <span className="text-xs font-medium text-slate-700 dark:text-slate-300">Repeat</span>
+            <Repeat className="w-4 h-4 text-[#19E6C8]" />
+            <span className="text-xs font-semibold text-[#F4FFFD]">Repeat</span>
           </div>
 
           <select
@@ -279,19 +279,19 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
               setRecurrence({ ...recurrence, frequency: freq });
               setIsCustomRepeat(freq === 'custom');
             }}
-            className="w-full px-3 py-1.5 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-100 text-xs focus:ring-2 focus:ring-blue-500 mb-2"
+            className="w-full px-3 py-1.5 rounded-lg border border-teal-500/30 bg-[#081a18] text-[#F4FFFD] text-xs focus:ring-2 focus:ring-[#19E6C8]/40 mb-2"
           >
-            <option value="none">Does not repeat</option>
-            <option value="daily">Daily</option>
-            <option value="weekly">Weekly</option>
-            <option value="monthly">Monthly</option>
-            <option value="yearly">Yearly</option>
-            <option value="custom">Custom repeat...</option>
+            <option value="none" className="bg-[#051211] text-[#F4FFFD]">Does not repeat</option>
+            <option value="daily" className="bg-[#051211] text-[#F4FFFD]">Daily</option>
+            <option value="weekly" className="bg-[#051211] text-[#F4FFFD]">Weekly</option>
+            <option value="monthly" className="bg-[#051211] text-[#F4FFFD]">Monthly</option>
+            <option value="yearly" className="bg-[#051211] text-[#F4FFFD]">Yearly</option>
+            <option value="custom" className="bg-[#051211] text-[#F4FFFD]">Custom repeat...</option>
           </select>
 
           {/* Custom repeat options */}
           {isCustomRepeat && (
-            <div className="p-3 bg-slate-50 dark:bg-slate-900/60 rounded-xl space-y-2.5 text-xs text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+            <div className="p-3 bg-[#081a18] rounded-xl space-y-2.5 text-xs text-[#94B5B0] border border-teal-500/25">
               <div className="flex items-center gap-2">
                 <span>Every</span>
                 <input
@@ -300,7 +300,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                   max="99"
                   value={recurrence.interval}
                   onChange={e => setRecurrence({ ...recurrence, interval: Math.max(1, parseInt(e.target.value) || 1) })}
-                  className="w-14 px-2 py-1 rounded border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 text-center"
+                  className="w-14 px-2 py-1 rounded border border-teal-500/30 bg-[#051211] text-[#F4FFFD] text-center"
                 />
                 <span>day(s) / week(s)</span>
               </div>
@@ -314,10 +314,10 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                       key={idx}
                       type="button"
                       onClick={() => toggleDayOfWeek(idx)}
-                      className={`w-7 h-7 rounded-full text-[11px] font-semibold transition ${
+                      className={`w-7 h-7 rounded-full text-[11px] font-bold transition ${
                         active
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700'
+                          ? 'bg-[#19E6C8] text-[#030707] shadow-xs'
+                          : 'bg-[#051211] text-[#94B5B0] border border-teal-500/20'
                       }`}
                     >
                       {name[0]}
@@ -328,7 +328,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
 
               {/* Ends */}
               <div className="pt-1 space-y-1.5">
-                <div className="font-semibold text-slate-500 text-[11px]">Ends</div>
+                <div className="font-bold text-teal-400 text-[11px]">Ends</div>
                 <div className="flex items-center gap-3">
                   <label className="flex items-center gap-1.5 cursor-pointer">
                     <input
@@ -336,6 +336,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                       name="endType"
                       checked={recurrence.endType === 'never'}
                       onChange={() => setRecurrence({ ...recurrence, endType: 'never' })}
+                      className="accent-[#19E6C8]"
                     />
                     <span>Never</span>
                   </label>
@@ -345,6 +346,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
                       name="endType"
                       checked={recurrence.endType === 'after_count'}
                       onChange={() => setRecurrence({ ...recurrence, endType: 'after_count', endCount: 5 })}
+                      className="accent-[#19E6C8]"
                     />
                     <span>After times</span>
                   </label>
@@ -355,11 +357,11 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex items-center justify-between pt-2 border-t border-slate-100 dark:border-slate-700/60">
+        <div className="flex items-center justify-between pt-2 border-t border-teal-500/20">
           <button
             type="button"
             onClick={handleClear}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/40 transition"
+            className="px-3 py-1.5 rounded-lg text-xs font-semibold text-rose-400 hover:bg-rose-950/40 transition"
           >
             Clear
           </button>
@@ -367,7 +369,7 @@ export const DatePickerModal: React.FC<DatePickerModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+              className="px-3 py-1.5 rounded-lg text-xs font-semibold text-[#94B5B0] hover:bg-teal-500/10 transition"
             >
               Cancel
             </button>

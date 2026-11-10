@@ -224,13 +224,13 @@ export const TaskList: React.FC<TaskListProps> = ({
 
       {isAllCompleted && (
         <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-          <div className="w-14 h-14 rounded-2xl bg-emerald-50 dark:bg-emerald-950/40 text-emerald-500 flex items-center justify-center mb-3">
+          <div className="w-14 h-14 rounded-2xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20 flex items-center justify-center mb-3 shadow-[0_0_15px_rgba(25,230,200,0.15)]">
             <CheckCircle2 className="w-7 h-7 stroke-[1.8]" />
           </div>
-          <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-100 mb-1">
+          <h4 className="text-sm font-bold text-[#F4FFFD] mb-1">
             All tasks complete!
           </h4>
-          <p className="text-xs text-slate-400 max-w-xs">
+          <p className="text-xs text-[#94B5B0] max-w-xs">
             Nicely done. You have completed everything in this list.
           </p>
         </div>

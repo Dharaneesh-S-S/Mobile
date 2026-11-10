@@ -104,6 +104,7 @@ export const DEFAULT_LISTS: TaskList[] = [
 ];
 
 export function getDemoTasks(): Task[] {
+  return [];
   const now = new Date();
 
   // Date offsets
@@ -511,19 +512,21 @@ export function loadTasks(): Task[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.TASKS);
     if (!raw) {
-      const demo = getDemoTasks();
-      saveTasks(demo);
-      return demo;
+      saveTasks([]);
+      return [];
     }
 
     const decompressed = LZString.decompressFromUTF16(raw);
-    if (decompressed) {
-      return JSON.parse(decompressed);
+    const parsed: Task[] = decompressed ? JSON.parse(decompressed) : JSON.parse(raw);
+    // Purge any legacy sample/demo tasks
+    const cleaned = parsed.filter(t => !t.id.match(/^task_(valeo_|buy_|ssd_|learn_|anime_|movie_|draw_|list_)/));
+    if (cleaned.length !== parsed.length) {
+      saveTasks(cleaned);
     }
-    return JSON.parse(raw);
+    return cleaned;
   } catch (err) {
-    console.warn('Failed to parse tasks from localStorage, returning demo data:', err);
-    return getDemoTasks();
+    console.warn('Failed to parse tasks from localStorage, returning empty list:', err);
+    return [];
   }
 }
 

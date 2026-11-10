@@ -131,34 +131,6 @@ export const SettingsDropdown: React.FC<SettingsDropdownProps> = ({
         <button
           type="button"
           onClick={() => {
-            if (window.confirm('Reset to initial sample demo data? This will restore sample events.')) {
-              onResetDemo();
-              onClose();
-            }
-          }}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-teal-500/15 text-[#19E6C8] transition-colors text-left font-bold"
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>Restore Demo Data</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
-            if (window.confirm('Clear all demo data and sample events?')) {
-              onClearDemo();
-              onClose();
-            }
-          }}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition-colors text-left"
-        >
-          <RefreshCw className="w-4 h-4 text-teal-400/60" />
-          <span className="font-medium">Clear Demo Data</span>
-        </button>
-
-        <button
-          type="button"
-          onClick={() => {
             if (window.confirm('Are you sure you want to clear all calendar data?')) {
               onClearAll();
               onClose();

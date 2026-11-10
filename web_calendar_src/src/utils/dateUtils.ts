@@ -220,7 +220,7 @@ export function calculateEventPositions(events: CalendarEvent[]): PositionedEven
     const totalCols = columns.length;
     for (const item of cluster) {
       const topPercent = (item.startMins / (24 * 60)) * 100;
-      const durationMins = Math.max(20, item.endMins - item.startMins);
+      const durationMins = Math.max(30, item.endMins - item.startMins);
       const heightPercent = (durationMins / (24 * 60)) * 100;
       const leftPercent = (item.colIndex / totalCols) * 100;
       const widthPercent = (1 / totalCols) * 100;
