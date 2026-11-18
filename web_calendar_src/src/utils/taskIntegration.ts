@@ -239,7 +239,8 @@ export function addOrUpdateZenithTask(taskData: {
 
 export function toggleZenithTaskCompletion(taskId: string): boolean {
   const tasks = loadZenithTasks();
-  const task = tasks.find(t => t.id === taskId);
+  const cleanId = taskId.replace(/^task_/, '');
+  const task = tasks.find(t => t.id === cleanId || t.id === taskId || `task_${t.id}` === taskId);
   if (!task) return false;
 
   task.isCompleted = !task.isCompleted;
@@ -251,7 +252,10 @@ export function toggleZenithTaskCompletion(taskId: string): boolean {
 
 export function deleteZenithTask(taskId: string): void {
   const tasks = loadZenithTasks();
-  const filtered = tasks.filter(t => t.id !== taskId);
+  const cleanId = taskId.replace(/^task_/, '');
+  const filtered = tasks.filter(
+    t => t.id !== cleanId && t.id !== taskId && `task_${t.id}` !== taskId
+  );
   saveZenithTasks(filtered);
 }
 

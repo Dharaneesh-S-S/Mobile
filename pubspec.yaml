@@ -68,6 +68,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/preloaded_data/
 
 dependency_overrides:
   intl: ^0.20.2

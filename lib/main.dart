@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 
 import 'core/constants/app_constants.dart';
+import 'core/database/preloaded_database_service.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/providers/core_providers.dart';
 import 'core/theme/app_theme.dart';
@@ -26,6 +27,13 @@ void main() async {
     await NotificationService.instance.initialize();
   } catch (e) {
     debugPrint('NotificationService initialization note: $e');
+  }
+
+  // Check and seed preloaded SQLite database on fresh mobile installation
+  try {
+    await PreloadedDatabaseService.instance.initializePreloadedDataIfNeeded();
+  } catch (e) {
+    debugPrint('PreloadedDatabaseService initialization note: $e');
   }
 
   runApp(

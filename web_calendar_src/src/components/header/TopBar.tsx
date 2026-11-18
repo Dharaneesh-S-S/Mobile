@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Menu,
   ChevronDown,
@@ -7,12 +7,10 @@ import {
 } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
 import { DatePickerDropdown } from './DatePickerDropdown';
-import { ProfileMenu } from './ProfileMenu';
 
 export const TopBar: React.FC = () => {
   const {
     currentDate,
-    currentView,
     toggleSidebar,
     goToToday,
     setCurrentDate,
@@ -21,20 +19,18 @@ export const TopBar: React.FC = () => {
   } = useCalendar();
 
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
 
-  const profileRef = useRef<HTMLDivElement>(null);
-
+  // Close dropdown or search on Escape key
   useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      const target = e.target as Node;
-      if (profileRef.current && !profileRef.current.contains(target)) {
-        setShowProfileMenu(false);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setShowDatePicker(false);
+        setShowSearch(false);
       }
     };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
   const monthNames = [
@@ -43,7 +39,6 @@ export const TopBar: React.FC = () => {
   ];
 
   const currentMonthName = monthNames[currentDate.getMonth()];
-  const currentYear = currentDate.getFullYear();
   const todayDateNum = new Date().getDate();
 
   return (
@@ -62,7 +57,7 @@ export const TopBar: React.FC = () => {
             <Menu className="w-5 h-5" />
           </button>
 
-          {/* Month Dropdown Button (Screenshots 2 & 10) */}
+          {/* Month Dropdown Button */}
           <button
             type="button"
             onClick={() => setShowDatePicker(prev => !prev)}
@@ -73,22 +68,24 @@ export const TopBar: React.FC = () => {
               {currentMonthName}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-[#19E6C8] transition-transform duration-200 ${
-                showDatePicker ? 'rotate-180' : ''
-              }`}
+              className={`w-4 h-4 text-[#19E6C8] transition-transform duration-200 ${showDatePicker ? 'rotate-180' : ''
+                }`}
             />
           </button>
         </div>
 
-        {/* Right side: Search, Today icon, Avatar Profile (NO task button per user request!) */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Right side: Search, Today icon (User Profile Icon removed per requirement #20) */}
+        <div className="flex items-center gap-2">
           {/* Search Button */}
           <button
             type="button"
             onClick={() => setShowSearch(prev => !prev)}
             aria-label="Search"
             title="Search"
-            className="p-2 rounded-full text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#19E6C8] transition-colors"
+            className={`p-2 rounded-full transition-colors ${showSearch
+              ? 'bg-teal-500/20 text-[#19E6C8]'
+              : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#19E6C8]'
+              }`}
           >
             <Search className="w-5 h-5" />
           </button>
@@ -105,26 +102,10 @@ export const TopBar: React.FC = () => {
               <span>{todayDateNum}</span>
             </div>
           </button>
-
-          {/* User Profile Avatar */}
-          <div className="relative ml-1" ref={profileRef}>
-            <button
-              type="button"
-              onClick={() => setShowProfileMenu(prev => !prev)}
-              className="w-8 h-8 rounded-full overflow-hidden border border-teal-500/40 focus:outline-none ring-2 ring-transparent hover:ring-[#19E6C8] transition-all flex items-center justify-center bg-[#081a18]"
-              title="Profile"
-            >
-              <div className="w-full h-full bg-gradient-to-tr from-[#0b332f] to-[#19E6C8] flex items-center justify-center text-xs font-bold text-[#030707]">
-                P
-              </div>
-            </button>
-
-            {showProfileMenu && <ProfileMenu onClose={() => setShowProfileMenu(false)} />}
-          </div>
         </div>
       </header>
 
-      {/* Inline Month Picker Dropdown (Screenshot 10) */}
+      {/* Dynamic Month/View Picker Dropdown */}
       {showDatePicker && (
         <DatePickerDropdown
           currentDate={currentDate}
@@ -136,7 +117,7 @@ export const TopBar: React.FC = () => {
         />
       )}
 
-      {/* Search Input Bar (when search icon is pressed) */}
+      {/* Independent Search Input Bar */}
       {showSearch && (
         <div className="px-3 py-2 bg-[#051211] border-b border-teal-500/20 flex items-center gap-2 z-20 animate-in slide-in-from-top-1 duration-150">
           <Search className="w-4 h-4 text-teal-400/60 flex-shrink-0" />

@@ -108,9 +108,6 @@ export const EventEditorModal: React.FC = () => {
     { type: 'task', label: 'Task' },
     { type: 'birthday', label: 'Birthday' },
     { type: 'holiday', label: 'Holiday' },
-    { type: 'out_of_office', label: 'Out of office' },
-    { type: 'focus_time', label: 'Focus time' },
-    { type: 'working_location', label: 'Working location' },
   ];
 
   const colorsList = [

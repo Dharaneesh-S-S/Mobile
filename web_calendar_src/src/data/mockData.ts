@@ -24,7 +24,7 @@ export const DEFAULT_CALENDARS: CalendarCategory[] = [
   {
     id: 'cal_my_calendar',
     name: 'My calendar',
-    color: '#8ab4f8', // Google Blue
+    color: '#38BDF8', // Light Blue (Events)
     isPrimary: true,
     isVisible: true,
     description: 'Personal events and schedule',
@@ -39,14 +39,14 @@ export const DEFAULT_CALENDARS: CalendarCategory[] = [
   {
     id: 'cal_birthdays',
     name: 'Birthdays',
-    color: '#81c995', // Google Birthdays Green
+    color: '#EC4899', // Pink (Birthdays)
     isVisible: true,
     description: 'Family and friends birthdays',
   },
   {
     id: 'cal_holidays',
     name: 'Holidays in India',
-    color: '#4db6ac', // Teal
+    color: '#EF4444', // Red (Holidays)
     isVisible: true,
     isSubscribed: true,
     description: 'Official national and regional holidays',

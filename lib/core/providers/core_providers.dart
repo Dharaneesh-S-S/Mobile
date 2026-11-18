@@ -5,6 +5,12 @@ import '../backup/backup_service.dart';
 import '../database/app_database.dart';
 import '../notifications/notification_service.dart';
 import '../security/security_service.dart';
+import '../update/app_update_service.dart';
+
+/// App update service provider for direct OTA Git updates
+final appUpdateServiceProvider = Provider<AppUpdateService>((ref) {
+  return AppUpdateService();
+});
 
 /// Database provider (singleton lifecycle)
 final databaseProvider = Provider<AppDatabase>((ref) {

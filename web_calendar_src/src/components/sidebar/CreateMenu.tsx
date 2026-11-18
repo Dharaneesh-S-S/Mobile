@@ -30,37 +30,19 @@ export const CreateMenu: React.FC = () => {
     {
       type: 'event',
       label: 'Event',
-      icon: <EventIcon className="w-4 h-4 text-blue-600 dark:text-blue-400" />,
+      icon: <EventIcon className="w-4 h-4 text-sky-400" />,
       desc: 'Meetings, syncs & milestones',
     },
     {
       type: 'task',
       label: 'Task',
-      icon: <CheckSquare className="w-4 h-4 text-amber-500" />,
+      icon: <CheckSquare className="w-4 h-4 text-[#19E6C8]" />,
       desc: 'To-do item with subtasks & deadline',
-    },
-    {
-      type: 'out_of_office',
-      label: 'Out of office',
-      icon: <Plane className="w-4 h-4 text-purple-600 dark:text-purple-400" />,
-      desc: 'Vacation with auto-decline',
-    },
-    {
-      type: 'focus_time',
-      label: 'Focus time',
-      icon: <Clock className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />,
-      desc: 'Deep work & mute notifications',
-    },
-    {
-      type: 'working_location',
-      label: 'Working location',
-      icon: <MapPin className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />,
-      desc: 'Office, Home, or Other',
     },
     {
       type: 'appointment_schedule',
       label: 'Appointment schedule',
-      icon: <CalendarRange className="w-4 h-4 text-rose-600 dark:text-rose-400" />,
+      icon: <CalendarRange className="w-4 h-4 text-rose-500" />,
       desc: 'Bookable schedule & public page',
     },
   ];

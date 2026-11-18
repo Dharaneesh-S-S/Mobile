@@ -15,7 +15,16 @@ import { CalendarEvent } from '../../types/calendar';
 import { formatDateToYYYYMMDD } from '../../utils/dateUtils';
 
 export const TasksPanel: React.FC = () => {
-  const { events, addEvent, updateEvent, deleteEvent, openEditor, settings, toggleTasksSidebar } = useCalendar();
+  const {
+    events,
+    addEvent,
+    updateEvent,
+    deleteEvent,
+    openEditor,
+    quickToggleTaskCompletion,
+    settings,
+    toggleTasksSidebar,
+  } = useCalendar();
   const [newTaskTitle, setNewTaskTitle] = useState('');
   const [expandedTaskId, setExpandedTaskId] = useState<string | null>(null);
   const [newSubtaskTitle, setNewSubtaskTitle] = useState('');
@@ -41,7 +50,7 @@ export const TasksPanel: React.FC = () => {
   };
 
   const handleToggleTask = (task: CalendarEvent) => {
-    updateEvent({ ...task, isCompleted: !task.isCompleted }, 'all');
+    quickToggleTaskCompletion(task.id);
   };
 
   const handleAddSubtask = (taskId: string) => {
@@ -166,13 +175,26 @@ export const TasksPanel: React.FC = () => {
                   </div>
                 </div>
 
-                <button
-                  type="button"
-                  onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
-                  className="p-1 text-teal-400/60 hover:text-[#19E6C8]"
-                >
-                  {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      deleteEvent(task.id);
+                    }}
+                    className="p-1 text-teal-400/40 hover:text-red-400 transition-colors"
+                    title="Delete task"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setExpandedTaskId(isExpanded ? null : task.id)}
+                    className="p-1 text-teal-400/60 hover:text-[#19E6C8]"
+                  >
+                    {isExpanded ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+                  </button>
+                </div>
               </div>
 
               {/* Subtasks drawer */}

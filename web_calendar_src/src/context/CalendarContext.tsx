@@ -18,6 +18,7 @@ import {
   addMonths,
   addYears,
   subDays,
+  subMonths,
   formatDateToYYYYMMDD,
   exportEventsToICS,
   parseICSContent,
@@ -70,7 +71,7 @@ interface CalendarContextType {
   searchQuery: string;
   advancedFilters: AdvancedSearchFilters | null;
   isSearchOpen: boolean;
-  
+
   // Active UI / Popovers / Modals
   selectedEvent: CalendarEvent | null;
   popoverAnchor: { x: number; y: number } | null;
@@ -350,6 +351,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switch (currentView) {
         case 'day':
           return addDays(prev, 1);
+        case 'three_day':
+          return addDays(prev, 3);
         case 'week':
           return addDays(prev, 7);
         case 'four_day':
@@ -359,7 +362,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         case 'year':
           return addYears(prev, 1);
         case 'schedule':
-          return addDays(prev, 14);
+          return addMonths(prev, 1);
         default:
           return addDays(prev, 7);
       }
@@ -371,16 +374,18 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       switch (currentView) {
         case 'day':
           return subDays(prev, 1);
+        case 'three_day':
+          return subDays(prev, 3);
         case 'week':
           return subDays(prev, 7);
         case 'four_day':
           return subDays(prev, 4);
         case 'month':
-          return addMonths(prev, -1);
+          return subMonths(prev, 1);
         case 'year':
           return addYears(prev, -1);
         case 'schedule':
-          return subDays(prev, 14);
+          return subMonths(prev, 1);
         default:
           return subDays(prev, 7);
       }
@@ -462,7 +467,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const addEvent = useCallback((eventData: Partial<CalendarEvent>): CalendarEvent => {
     const nowISO = new Date().toISOString();
     const primaryCal = calendars.find(c => c.isPrimary) || calendars[0];
-    
+
     const newEvent: CalendarEvent = {
       id: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
       calendarId: eventData.calendarId || primaryCal?.id || 'cal_my_calendar',

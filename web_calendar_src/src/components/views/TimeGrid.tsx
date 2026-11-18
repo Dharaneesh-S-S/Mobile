@@ -1,24 +1,15 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useCalendar } from '../../context/CalendarContext';
-import { CalendarEvent } from '../../types/calendar';
 import {
   getDayHours,
   formatTimeDisplay,
   formatDateToYYYYMMDD,
-  isSameDay,
   isToday,
   calculateEventPositions,
-  snapTo15Minutes,
-  getTimeStrFromMinutes,
-  getMinutesFromTimeStr,
   expandRecurringEvents,
 } from '../../utils/dateUtils';
 import {
-  Check,
   Cake,
-  Clock,
-  Video,
-  MapPin,
   Sparkles,
 } from 'lucide-react';
 
@@ -34,31 +25,31 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
     settings,
     openEditor,
     openEventDetails,
-    updateEvent,
     quickToggleTaskCompletion,
     searchQuery,
   } = useCalendar();
 
   const hours = getDayHours();
   const gridContainerRef = useRef<HTMLDivElement>(null);
+  const [scrollbarWidth, setScrollbarWidth] = useState<number>(0);
+
   const [currentTimeMins, setCurrentTimeMins] = useState<number>(() => {
     const now = new Date();
     return now.getHours() * 60 + now.getMinutes();
   });
 
-  // Track dragging state
-  const [dragState, setDragState] = useState<{
-    event: CalendarEvent;
-    type: 'move' | 'resize';
-    startY: number;
-    initialStartMins: number;
-    initialEndMins: number;
-    currentStartMins: number;
-    currentEndMins: number;
-    currentDayIndex: number;
-    dayWidth: number;
-    hourHeight: number;
-  } | null>(null);
+  // Calculate scrollbar width for exact alignment between header/all-day and scrollable timeline
+  useEffect(() => {
+    const el = gridContainerRef.current;
+    if (!el) return;
+    const updateScrollbar = () => {
+      const sw = el.offsetWidth - el.clientWidth;
+      setScrollbarWidth(sw);
+    };
+    updateScrollbar();
+    window.addEventListener('resize', updateScrollbar);
+    return () => window.removeEventListener('resize', updateScrollbar);
+  }, []);
 
   // Update current time indicator every 30s
   useEffect(() => {
@@ -76,10 +67,11 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
 
   const expanded = expandRecurringEvents(events, rangeStart, rangeEnd);
 
+  // Filter events: always exclude completed tasks from the calendar (Requirement #6)
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
     if (!visibleCalendarIds.includes(e.calendarId)) return false;
-    if (!settings.showCompletedTasks && e.type === 'task' && e.isCompleted) return false;
+    if (e.type === 'task' && e.isCompleted) return false;
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
@@ -91,8 +83,6 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
     }
     return true;
   });
-
-  const getCalendar = (calendarId: string) => calendars.find(c => c.id === calendarId);
 
   // Scroll to roughly 9 AM or current time on mount
   useEffect(() => {
@@ -107,8 +97,11 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
 
   return (
     <div className="flex-1 flex flex-col h-full bg-[#030707] text-[#e3e3e3] select-none overflow-hidden">
-      {/* Top Days Header (Screenshots 5, 12, 13) */}
-      <div className="flex border-b border-[#0e2624] bg-[#030707] flex-shrink-0 z-10">
+      {/* Top Days Header (Compensated with scrollbar width for exact timeline alignment) */}
+      <div
+        className="flex border-b border-[#0e2624] bg-[#030707] flex-shrink-0 z-10"
+        style={{ paddingRight: `${scrollbarWidth}px` }}
+      >
         {/* Time gutter spacer */}
         <div className="w-14 md:w-16 flex-shrink-0 border-r border-[#0e2624] flex items-center justify-center text-[10px] font-semibold text-[#94B5B0]">
           GMT
@@ -129,11 +122,10 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                 </div>
                 <div className="mt-1 flex items-center justify-center">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
-                      isCurDayToday
-                        ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.5)]'
-                        : 'text-[#F4FFFD]'
-                    }`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${isCurDayToday
+                      ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.5)]'
+                      : 'text-[#F4FFFD]'
+                      }`}
                   >
                     {day.getDate()}
                   </div>
@@ -144,8 +136,11 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
         </div>
       </div>
 
-      {/* All-Day Items Shelf / Pending Tasks (Screenshots 5, 12, 13) */}
-      <div className="flex border-b border-[#0e2624] bg-[#051211] flex-shrink-0 min-h-[38px]">
+      {/* All-Day Items Shelf / Pending Tasks (Compensated for exact alignment with timeline) */}
+      <div
+        className="flex border-b border-[#0e2624] bg-[#051211] flex-shrink-0 min-h-[38px]"
+        style={{ paddingRight: `${scrollbarWidth}px` }}
+      >
         <div className="w-14 md:w-16 p-1 flex items-center justify-end pr-2 text-[10px] font-medium text-[#94B5B0] border-r border-[#0e2624] flex-shrink-0">
           all-day
         </div>
@@ -155,36 +150,57 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             const allDayItems = filteredEvents.filter(
               e => (e.isAllDay || !e.startTime) && e.startDate <= dateStr && e.endDate >= dateStr
             );
-            const tasksOnDay = allDayItems.filter(e => e.type === 'task');
-            const nonTasks = allDayItems.filter(e => e.type !== 'task');
-
-            const hasPendingTasks = tasksOnDay.length > 0 && !tasksOnDay.every(t => t.isCompleted);
+            const tasksOnDay = allDayItems.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
+            const nonTasks = allDayItems.filter(e => e.type !== 'task' && e.calendarId !== 'cal_tasks');
 
             return (
               <div
                 key={idx}
                 className="p-1 border-r border-[#0e2624] last:border-r-0 space-y-1 min-w-0 overflow-hidden flex flex-col justify-start"
               >
-                {/* Pending Tasks Pill (Screenshots 5, 12, 13) */}
-                {hasPendingTasks && (
+                {/* All-Day Tasks: Rendered with details click handler & hollow circle (Requirements #15, #21, #24) */}
+                {tasksOnDay.map(task => (
                   <div
+                    key={task.id}
                     onClick={e => {
                       e.stopPropagation();
-                      openEventDetails(tasksOnDay[0], { x: e.clientX, y: e.clientY });
+                      openEventDetails(task, { x: e.clientX, y: e.clientY });
                     }}
-                    className="w-full px-2 py-0.5 rounded-full bg-[#081a18] border border-teal-500/40 border-l-2 border-l-[#19E6C8] text-[#19E6C8] text-[11px] font-medium truncate flex items-center gap-1 shadow-2xs cursor-pointer hover:opacity-90"
+                    style={{
+                      backgroundColor: 'rgba(25, 230, 200, 0.2)',
+                    }}
+                    className="w-full px-2 py-0.5 rounded-full border border-[#19E6C8] border-l-2 border-l-[#19E6C8] text-white text-[11px] font-medium truncate flex items-center gap-1.5 shadow-2xs cursor-pointer hover:brightness-110 active:scale-98 transition-all"
+                    title={task.title}
                   >
-                    <Check className="w-3 h-3 stroke-[2.5] flex-shrink-0" />
-                    <span className="truncate">{tasksOnDay.length} pending task{tasksOnDay.length > 1 ? 's' : ''}</span>
+                    {/* Hollow circle completion indicator */}
+                    <button
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation();
+                        quickToggleTaskCompletion(task.id);
+                      }}
+                      className="w-2.5 h-2.5 rounded-full border border-[#19E6C8] hover:bg-[#19E6C8]/40 transition-all flex-shrink-0"
+                      title="Mark task completed"
+                    />
+                    <span className="truncate">{task.title}</span>
                   </div>
-                )}
+                ))}
 
-                {/* Non-task all-day events (e.g. Holidays, Birthdays, Events) */}
+                {/* Non-task all-day events (Holidays = Red, Birthdays = Pink, Events = Light Blue) */}
                 {nonTasks.slice(0, 3).map(item => {
-                  const cal = getCalendar(item.calendarId);
                   const isBday = item.type === 'birthday' || item.calendarId === 'cal_birthdays';
                   const isHoliday = item.type === 'holiday' || item.calendarId === 'cal_holidays';
-                  const bg = item.colorOverride || cal?.color || (isBday ? '#81c995' : isHoliday ? '#00897b' : '#26c6da');
+
+                  const chipBg = isHoliday
+                    ? 'rgba(239, 68, 68, 0.2)'
+                    : isBday
+                    ? 'rgba(236, 72, 153, 0.2)'
+                    : 'rgba(56, 189, 248, 0.2)';
+                  const chipBorder = isHoliday
+                    ? '#EF4444'
+                    : isBday
+                    ? '#EC4899'
+                    : '#38BDF8';
 
                   return (
                     <button
@@ -194,11 +210,18 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         e.stopPropagation();
                         openEventDetails(item, { x: e.clientX, y: e.clientY });
                       }}
-                      className="w-full text-left px-2 py-0.5 rounded-full text-[11px] font-medium text-white truncate flex items-center gap-1 shadow-2xs hover:opacity-90 transition-opacity"
-                      style={{ backgroundColor: bg }}
+                      className="w-full text-left px-2 py-0.5 rounded-full text-[11px] font-medium text-white truncate flex items-center gap-1 shadow-2xs hover:opacity-90 transition-opacity border border-l-2"
+                      style={{
+                        backgroundColor: chipBg,
+                        borderColor: `${chipBorder}66`,
+                        borderLeftColor: chipBorder,
+                      }}
                     >
-                      {isBday && <Cake className="w-3 h-3 flex-shrink-0" />}
-                      {isHoliday && <Sparkles className="w-3 h-3 flex-shrink-0" />}
+                      {isBday && <Cake className="w-3 h-3 text-[#EC4899] flex-shrink-0" />}
+                      {isHoliday && <Sparkles className="w-3 h-3 text-[#EF4444] flex-shrink-0" />}
+                      {!isBday && !isHoliday && (
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] flex-shrink-0" />
+                      )}
                       <span className="truncate">{item.title}</span>
                     </button>
                   );
@@ -209,7 +232,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
         </div>
       </div>
 
-      {/* Hourly Grid Scrollable Area (Screenshots 5, 12, 13) */}
+      {/* Hourly Grid Scrollable Area */}
       <div
         ref={gridContainerRef}
         className="flex-1 overflow-y-auto relative flex min-w-0 bg-[#030707]"
@@ -267,7 +290,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                   />
                 ))}
 
-                {/* Neon Cyan Current Time Line */}
+                {/* Current Time Indicator */}
                 {isCurDayToday && (
                   <div
                     className="absolute inset-x-0 z-20 pointer-events-none flex items-center"
@@ -283,9 +306,25 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                 {/* Positioned Events for this day */}
                 {positioned.map(p => {
                   const e = p.event;
-                  const cal = getCalendar(e.calendarId);
                   const isTask = e.type === 'task' || e.calendarId === 'cal_tasks';
-                  const bg = e.colorOverride || (isTask ? '#19E6C8' : cal?.color || '#19E6C8');
+                  const isBday = e.type === 'birthday' || e.calendarId === 'cal_birthdays';
+                  const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays';
+
+                  const accentColor = isTask
+                    ? '#19E6C8'
+                    : isHoliday
+                    ? '#EF4444'
+                    : isBday
+                    ? '#EC4899'
+                    : '#38BDF8';
+
+                  const bg = isTask
+                    ? 'rgba(25, 230, 200, 0.2)'
+                    : isHoliday
+                    ? 'rgba(239, 68, 68, 0.2)'
+                    : isBday
+                    ? 'rgba(236, 72, 153, 0.2)'
+                    : 'rgba(56, 189, 248, 0.2)';
 
                   return (
                     <div
@@ -296,7 +335,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       }}
                       className={`absolute px-2.5 py-1 cursor-pointer transition-all overflow-hidden select-none hover:brightness-110 flex flex-col justify-center items-center text-center ${
                         isTask
-                          ? 'rounded-full bg-[#081a18]/90 border border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.25)]'
+                          ? 'rounded-full border border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.25)]'
                           : 'rounded-xl border border-l-4 shadow-sm'
                       }`}
                       style={{
@@ -305,22 +344,35 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         minHeight: '26px',
                         left: `${p.leftPercent}%`,
                         width: `${p.widthPercent}%`,
-                        ...(isTask
-                          ? { backgroundColor: 'rgba(25, 230, 200, 0.2)', borderColor: '#19E6C8', borderLeftWidth: '4px' }
-                          : { backgroundColor: `${bg}33`, borderColor: bg, borderLeftWidth: '4px' }),
+                        backgroundColor: bg,
+                        borderColor: accentColor,
+                        borderLeftColor: accentColor,
+                        borderLeftWidth: '4px',
                       }}
                       title={`${e.title} (${formatTimeDisplay(e.startTime, settings.timeFormat)} – ${formatTimeDisplay(e.endTime, settings.timeFormat)})`}
                     >
-                      <div className="w-full min-w-0 flex flex-col items-center justify-center text-center">
-                        <p className="text-xs font-semibold text-white truncate text-center leading-normal w-full">
+                      <div className="w-full min-w-0 flex items-center justify-center gap-1.5">
+                        {/* If task, show hollow circle indicator */}
+                        {isTask && (
+                          <button
+                            type="button"
+                            onClick={ev => {
+                              ev.stopPropagation();
+                              quickToggleTaskCompletion(e.id);
+                            }}
+                            className="w-3 h-3 rounded-full border border-[#19E6C8] hover:bg-[#19E6C8]/40 transition-all flex-shrink-0"
+                            title="Mark task completed"
+                          />
+                        )}
+                        <p className="text-xs font-semibold text-white truncate text-center leading-normal">
                           {e.title}
                         </p>
-                        {p.heightPercent >= 3.5 && (
-                          <p className="text-[10px] text-[#94B5B0] truncate text-center mt-0.5 leading-none w-full">
-                            {formatTimeDisplay(e.startTime, settings.timeFormat)} – {formatTimeDisplay(e.endTime, settings.timeFormat)}
-                          </p>
-                        )}
                       </div>
+                      {p.heightPercent >= 3.5 && (
+                        <p className="text-[10px] text-[#94B5B0] truncate text-center mt-0.5 leading-none w-full">
+                          {formatTimeDisplay(e.startTime, settings.timeFormat)} – {formatTimeDisplay(e.endTime, settings.timeFormat)}
+                        </p>
+                      )}
                     </div>
                   );
                 })}

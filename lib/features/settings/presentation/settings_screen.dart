@@ -5,7 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/constants/app_constants.dart';
+import '../../../core/database/preloaded_database_service.dart';
 import '../../../core/providers/core_providers.dart';
+import '../../../core/update/app_update_service.dart';
 import '../../../core/utils/date_time_utils.dart';
 import '../../pattern_lock/presentation/pattern_change_sheet.dart';
 import '../../pattern_lock/providers/pattern_lock_provider.dart';
@@ -21,6 +23,10 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   bool _isExporting = false;
   bool _isRestoring = false;
+  bool _isCheckingUpdate = false;
+  bool _isDownloadingUpdate = false;
+  double _downloadProgress = 0.0;
+  bool _isExportingSnapshot = false;
 
   void _handleChangeTheme(ThemeMode? mode) {
     if (mode != null) {
@@ -229,6 +235,170 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
   }
 
+  void _handleCheckForUpdates() async {
+    setState(() => _isCheckingUpdate = true);
+    try {
+      final updateService = ref.read(appUpdateServiceProvider);
+      final updateInfo = await updateService.checkForUpdate();
+
+      if (!mounted) return;
+      if (updateInfo.hasUpdate) {
+        _showUpdateDialog(updateInfo);
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Personal Hub is up to date! (v${updateInfo.currentVersion})'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Update check failed: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isCheckingUpdate = false);
+    }
+  }
+
+  void _showUpdateDialog(UpdateInfo update) {
+    showDialog(
+      context: context,
+      builder: (ctx) => StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.system_update_rounded, color: Color(0xFF19E6C8)),
+                SizedBox(width: 8),
+                Text('Update Available'),
+              ],
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'A new version (${update.latestVersion}) is ready on Git.',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  update.changelog,
+                  style: TextStyle(color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8)),
+                ),
+                if (_isDownloadingUpdate) ...[
+                  const SizedBox(height: 16),
+                  LinearProgressIndicator(value: _downloadProgress > 0 ? _downloadProgress : null),
+                  const SizedBox(height: 6),
+                  Text('Downloading APK: ${(_downloadProgress * 100).toStringAsFixed(0)}%'),
+                ],
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: _isDownloadingUpdate ? null : () => Navigator.of(ctx).pop(),
+                child: const Text('Later'),
+              ),
+              ElevatedButton.icon(
+                onPressed: _isDownloadingUpdate
+                    ? null
+                    : () async {
+                        setDialogState(() {
+                          _isDownloadingUpdate = true;
+                          _downloadProgress = 0.0;
+                        });
+                        setState(() {
+                          _isDownloadingUpdate = true;
+                          _downloadProgress = 0.0;
+                        });
+
+                        try {
+                          final updateService = ref.read(appUpdateServiceProvider);
+                          await updateService.downloadAndInstallApk(
+                            downloadUrl: update.apkUrl,
+                            onProgress: (progress) {
+                              setDialogState(() => _downloadProgress = progress);
+                              if (mounted) setState(() => _downloadProgress = progress);
+                            },
+                          );
+                          if (ctx.mounted) Navigator.of(ctx).pop();
+                        } catch (e) {
+                          if (mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Direct installation failed: $e'),
+                                backgroundColor: Theme.of(context).colorScheme.error,
+                              ),
+                            );
+                          }
+                        } finally {
+                          setDialogState(() {
+                            _isDownloadingUpdate = false;
+                            _downloadProgress = 0.0;
+                          });
+                          if (mounted) {
+                            setState(() {
+                              _isDownloadingUpdate = false;
+                              _downloadProgress = 0.0;
+                            });
+                          }
+                        }
+                      },
+                icon: const Icon(Icons.download_rounded),
+                label: const Text('Update Directly'),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+
+  void _handleExportSnapshotForApk() async {
+    if (kIsWeb) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Database snapshot export is only supported on Android devices.'),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+
+    setState(() => _isExportingSnapshot = true);
+    try {
+      final db = ref.read(databaseProvider);
+      await PreloadedDatabaseService.instance.shareDatabaseSnapshot(db);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Database snapshot exported with all current data (birthdays, tasks, etc.).'),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Snapshot export failed: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isExportingSnapshot = false);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -382,13 +552,80 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         ),
                       ],
                     ),
+                    const Divider(height: 32),
+                    Text(
+                      'Preloaded APK Data Preservation',
+                      style: theme.textTheme.titleSmall?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Snapshot your current live database (all birthdays, tasks, notes, etc.) so that newly shared/installed APKs start with all your records preserved.',
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton.icon(
+                        onPressed: _isExportingSnapshot ? null : _handleExportSnapshotForApk,
+                        icon: _isExportingSnapshot
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.folder_zip_rounded, color: Color(0xFF19E6C8)),
+                        label: Text(_isExportingSnapshot ? 'Exporting Snapshot...' : 'Export DB Snapshot for APK'),
+                      ),
+                    ),
                   ],
                 ),
               ),
             ),
             const SizedBox(height: 24),
 
-            // 4. App Information Section
+            // 4. Git Direct Updates Section
+            _buildSectionHeader('Direct Updates (Git OTA)', Icons.system_update_rounded),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Direct In-App Mobile Updates',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'When code changes are pushed to Git, update directly on this mobile device with zero APK re-sharing.',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: _isCheckingUpdate || _isDownloadingUpdate ? null : _handleCheckForUpdates,
+                        icon: _isCheckingUpdate
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(strokeWidth: 2),
+                              )
+                            : const Icon(Icons.cloud_sync_rounded),
+                        label: Text(_isCheckingUpdate ? 'Checking Git Releases...' : 'Check for Direct Git Update'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 24),
+
+            // 5. App Information Section
             _buildSectionHeader('Application Information', Icons.info_outline_rounded),
             Card(
               child: Column(
