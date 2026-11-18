@@ -777,7 +777,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         endDate: initialData.endDate || initialData.startDate || formatDateToYYYYMMDD(currentDate),
         startTime: initialData.startTime || '10:00',
         endTime: initialData.endTime || '11:00',
-        isAllDay: initialData.isAllDay || false,
+        isAllDay: initialData.isAllDay !== undefined ? Boolean(initialData.isAllDay) : false,
         guests: initialData.guests || [],
         notifications: [{ type: 'notification', minutesBefore: 10 }],
         createdAt: '',

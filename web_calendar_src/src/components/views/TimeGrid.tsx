@@ -142,7 +142,19 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
         className="flex border-b border-[#0e2624] bg-[#051211] flex-shrink-0 min-h-[38px]"
         style={{ paddingRight: `${scrollbarWidth}px` }}
       >
-        <div className="w-14 md:w-16 p-1 flex items-center justify-end pr-2 text-[10px] font-medium text-[#94B5B0] border-r border-[#0e2624] flex-shrink-0">
+        <div
+          onClick={() => {
+            const firstDate = formatDateToYYYYMMDD(days[0] || new Date());
+            openEditor(null, {
+              startDate: firstDate,
+              endDate: firstDate,
+              isAllDay: true,
+              type: 'event',
+            });
+          }}
+          className="w-14 md:w-16 p-1 flex items-center justify-end pr-2 text-[10px] font-medium text-[#94B5B0] border-r border-[#0e2624] flex-shrink-0 cursor-pointer hover:bg-teal-500/5 hover:text-[#19E6C8] transition-colors"
+          title="Click to add all-day event"
+        >
           all-day
         </div>
         <div className="flex-1 grid min-w-0" style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}>
@@ -157,7 +169,16 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             return (
               <div
                 key={idx}
-                className="p-1 border-r border-[#0e2624] last:border-r-0 space-y-1 min-w-0 overflow-hidden flex flex-col justify-start"
+                onClick={() => {
+                  openEditor(null, {
+                    startDate: dateStr,
+                    endDate: dateStr,
+                    isAllDay: true,
+                    type: 'event',
+                  });
+                }}
+                className="p-1 border-r border-[#0e2624] last:border-r-0 space-y-1 min-w-0 overflow-hidden flex flex-col justify-start cursor-pointer hover:bg-teal-500/5 transition-colors h-full min-h-[38px]"
+                title="Click to add all-day event"
               >
                 {/* All-Day Tasks: Rendered with details click handler & hollow circle (Requirements #15, #21, #24) */}
                 {tasksOnDay.map(task => (
