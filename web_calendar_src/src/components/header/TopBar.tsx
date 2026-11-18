@@ -42,8 +42,8 @@ export const TopBar: React.FC = () => {
   const todayDateNum = new Date().getDate();
 
   return (
-    <>
-      <header className="h-14 px-3 md:px-4 bg-[#030707] border-b border-[#0e2624] flex items-center justify-between select-none relative z-30 transition-colors text-[#F4FFFD]">
+    <div className="relative z-50">
+      <header className="h-14 px-3 md:px-4 bg-[#030707] border-b border-[#0e2624] flex items-center justify-between select-none relative z-50 transition-colors text-[#F4FFFD]">
         {/* Left side: Hamburger + Month dropdown */}
         <div className="flex items-center gap-2">
           {/* Hamburger Menu Button */}
@@ -68,8 +68,9 @@ export const TopBar: React.FC = () => {
               {currentMonthName}
             </span>
             <ChevronDown
-              className={`w-4 h-4 text-[#19E6C8] transition-transform duration-200 ${showDatePicker ? 'rotate-180' : ''
-                }`}
+              className={`w-4 h-4 text-[#19E6C8] transition-transform duration-200 ${
+                showDatePicker ? 'rotate-180' : ''
+              }`}
             />
           </button>
         </div>
@@ -82,10 +83,11 @@ export const TopBar: React.FC = () => {
             onClick={() => setShowSearch(prev => !prev)}
             aria-label="Search"
             title="Search"
-            className={`p-2 rounded-full transition-colors ${showSearch
-              ? 'bg-teal-500/20 text-[#19E6C8]'
-              : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#19E6C8]'
-              }`}
+            className={`p-2 rounded-full transition-colors ${
+              showSearch
+                ? 'bg-teal-500/20 text-[#19E6C8]'
+                : 'text-[#94B5B0] hover:bg-teal-500/10 hover:text-[#19E6C8]'
+            }`}
           >
             <Search className="w-5 h-5" />
           </button>
@@ -105,21 +107,9 @@ export const TopBar: React.FC = () => {
         </div>
       </header>
 
-      {/* Dynamic Month/View Picker Dropdown */}
-      {showDatePicker && (
-        <DatePickerDropdown
-          currentDate={currentDate}
-          onSelectDate={date => {
-            setCurrentDate(date);
-            setShowDatePicker(false);
-          }}
-          onClose={() => setShowDatePicker(false)}
-        />
-      )}
-
       {/* Independent Search Input Bar */}
       {showSearch && (
-        <div className="px-3 py-2 bg-[#051211] border-b border-teal-500/20 flex items-center gap-2 z-20 animate-in slide-in-from-top-1 duration-150">
+        <div className="px-3 py-2 bg-[#051211] border-b border-teal-500/20 flex items-center gap-2 relative z-50 animate-in slide-in-from-top-1 duration-150">
           <Search className="w-4 h-4 text-teal-400/60 flex-shrink-0" />
           <input
             type="text"
@@ -147,6 +137,18 @@ export const TopBar: React.FC = () => {
           </button>
         </div>
       )}
-    </>
+
+      {/* Dynamic Month/View Picker Dropdown */}
+      {showDatePicker && (
+        <DatePickerDropdown
+          currentDate={currentDate}
+          onSelectDate={date => {
+            setCurrentDate(date);
+            setShowDatePicker(false);
+          }}
+          onClose={() => setShowDatePicker(false)}
+        />
+      )}
+    </div>
   );
 };

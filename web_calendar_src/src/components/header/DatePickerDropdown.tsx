@@ -366,11 +366,11 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
     <>
       {/* Click-outside backdrop overlay to ensure dropdown can always be closed cleanly */}
       <div
-        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-2xs"
+        className="fixed inset-0 z-40 bg-black/50 backdrop-blur-2xs"
         onClick={onClose}
       />
 
-      <div className="absolute top-14 left-0 right-0 z-50 bg-[#051211] border-b border-[#0e2624] shadow-2xl px-4 py-3 select-none animate-in slide-in-from-top-2 duration-150">
+      <div className="relative z-50 bg-[#051211] border-b border-[#0e2624] shadow-2xl px-4 py-3 select-none animate-in slide-in-from-top-2 duration-150">
         <div className="max-w-md mx-auto">
           {currentView === 'month' && renderMonthViewContent()}
           {(currentView === 'week' || currentView === 'four_day') && renderWeekViewContent()}

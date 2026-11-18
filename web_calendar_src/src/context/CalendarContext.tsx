@@ -195,7 +195,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     let baseEvents = raw && raw.length > 0 ? raw : DEMO_EVENTS;
     const zTasks = loadZenithTasks();
     if (zTasks.length > 0) {
-      const zEvents = zTasks.filter(t => t.dueDate).map(t => convertZenithTaskToCalendarEvent(t));
+      const zEvents = zTasks.map(t => convertZenithTaskToCalendarEvent(t));
       const filteredBase = baseEvents.filter(e => !zEvents.some(ze => ze.id === e.id || ze.id === `task_${e.id}`));
       baseEvents = [...filteredBase, ...zEvents];
     }
@@ -208,8 +208,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       setTaskLists(loadZenithLists());
       const zTasks = loadZenithTasks();
       setEvents(prev => {
-        const nonZenith = prev.filter(e => !e.id.startsWith('task_'));
-        const zEvents = zTasks.filter(t => t.dueDate).map(t => convertZenithTaskToCalendarEvent(t));
+        const nonZenith = prev.filter(e => !e.id.startsWith('task_') && e.type !== 'task');
+        const zEvents = zTasks.map(t => convertZenithTaskToCalendarEvent(t));
         return [...nonZenith, ...zEvents];
       });
     };
