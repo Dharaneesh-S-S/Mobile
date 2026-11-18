@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getMonthDays, isSameDay, isToday, addMonths, subMonths, getWeekStart } from '../../utils/dateUtils';
+import { getMonthDays, isSameDay, isToday, addMonths, subMonths, getWeekStart, formatDateToYYYYMMDD } from '../../utils/dateUtils';
 import { useCalendar } from '../../context/CalendarContext';
 
 export const MiniCalendar: React.FC = () => {
-  const { currentDate, setCurrentDate, settings } = useCalendar();
+  const { currentDate, setCurrentDate, settings, events } = useCalendar();
   const [viewDate, setViewDate] = useState<Date>(new Date(currentDate));
 
   const monthNames = [
@@ -67,6 +67,10 @@ export const MiniCalendar: React.FC = () => {
                 const isSelected = isSameDay(date, currentDate);
                 const isCurToday = isToday(date);
                 const isCurrentMonth = date.getMonth() === viewDate.getMonth();
+                const dStr = formatDateToYYYYMMDD(date);
+                const hasHoliday = events.some(
+                  e => !e.deletedAt && (e.type === 'holiday' || e.calendarId === 'cal_holidays') && e.startDate <= dStr && e.endDate >= dStr
+                );
 
                 return (
                   <button
@@ -77,7 +81,13 @@ export const MiniCalendar: React.FC = () => {
                       setViewDate(new Date(date));
                     }}
                     className={`h-7 w-7 mx-auto flex items-center justify-center rounded-full text-xs font-semibold transition-all ${
-                      isSelected
+                      hasHoliday
+                        ? isSelected
+                          ? 'bg-[#EF4444] text-white font-extrabold shadow-[0_0_15px_rgba(239,68,68,0.5)]'
+                          : isCurToday
+                          ? 'text-[#EF4444] font-bold border border-[#EF4444]'
+                          : 'text-[#EF4444] font-bold hover:bg-red-500/10'
+                        : isSelected
                         ? 'bg-[#19E6C8] text-[#030707] font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.4)]'
                         : isCurToday
                         ? 'text-[#19E6C8] font-bold border border-[#19E6C8]'

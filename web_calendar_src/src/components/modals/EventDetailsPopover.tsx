@@ -34,7 +34,7 @@ export const EventDetailsPopover: React.FC = () => {
   const isHoliday = selectedEvent.type === 'holiday' || selectedEvent.calendarId === 'cal_holidays';
   const isTask = selectedEvent.type === 'task' || selectedEvent.calendarId === 'cal_tasks';
   const cal = calendars.find(c => c.id === selectedEvent.calendarId);
-  const color = selectedEvent.colorOverride || cal?.color || (isTask ? '#c58af9' : isBirthday ? '#81c995' : isHoliday ? '#00897b' : '#8ab4f8');
+  const color = selectedEvent.colorOverride || cal?.color || (isTask ? '#19E6C8' : isBirthday ? '#EC4899' : isHoliday ? '#EF4444' : '#38BDF8');
 
   const taskList = selectedEvent.taskListId ? taskLists.find(l => l.id === selectedEvent.taskListId) : undefined;
 

@@ -112,21 +112,41 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
         <div className="flex-1 grid min-w-0" style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}>
           {days.map((day, idx) => {
             const isCurDayToday = isToday(day);
+            const dateStr = formatDateToYYYYMMDD(day);
+            const hasHoliday = filteredEvents.some(
+              e => (e.type === 'holiday' || e.calendarId === 'cal_holidays') &&
+                   e.startDate <= dateStr && e.endDate >= dateStr
+            );
 
             return (
               <div
                 key={idx}
-                className="py-2.5 px-1 text-center border-r border-[#0e2624] last:border-r-0 min-w-0"
+                className={`py-2.5 px-1 text-center border-r border-[#0e2624] last:border-r-0 min-w-0 transition-colors ${
+                  hasHoliday ? 'bg-red-950/35 border-b-2 border-b-[#EF4444]' : ''
+                }`}
               >
-                <div className={`text-xs font-bold tracking-wider uppercase ${isCurDayToday ? 'text-[#19E6C8]' : 'text-[#94B5B0]'}`}>
+                <div
+                  className={`text-xs font-bold tracking-wider uppercase ${
+                    hasHoliday
+                      ? 'text-[#EF4444]'
+                      : isCurDayToday
+                      ? 'text-[#19E6C8]'
+                      : 'text-[#94B5B0]'
+                  }`}
+                >
                   {dayHeaders[day.getDay()]}
                 </div>
                 <div className="mt-1 flex items-center justify-center">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${isCurDayToday
-                      ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.5)]'
-                      : 'text-[#F4FFFD]'
-                      }`}
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                      hasHoliday
+                        ? isCurDayToday
+                          ? 'bg-[#EF4444] text-white shadow-[0_0_12px_rgba(239,68,68,0.7)]'
+                          : 'bg-[#EF4444]/20 border border-[#EF4444] text-[#EF4444] shadow-[0_0_8px_rgba(239,68,68,0.3)]'
+                        : isCurDayToday
+                        ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.5)]'
+                        : 'text-[#F4FFFD]'
+                    }`}
                   >
                     {day.getDate()}
                   </div>

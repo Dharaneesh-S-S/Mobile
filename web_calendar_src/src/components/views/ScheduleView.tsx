@@ -116,15 +116,25 @@ export const ScheduleView: React.FC = () => {
           const dayName = dt.toLocaleDateString('en-US', { weekday: 'short' });
           const dayNum = dt.getDate();
           const isCurToday = isToday(dt);
+          const hasHoliday = dayItems.some(
+            item => item.type === 'holiday' || item.calendarId === 'cal_holidays'
+          );
 
           return (
             <div key={dateStr} className="flex items-start gap-4">
               {/* Left Date Column */}
               <div className="flex flex-col items-center flex-shrink-0 w-10 pt-1">
-                <span className="text-xs text-[#94B5B0] font-medium">{dayName}</span>
+                <span className={`text-xs font-medium ${hasHoliday ? 'text-[#EF4444]' : 'text-[#94B5B0]'}`}>
+                  {dayName}
+                </span>
                 <span
-                  className={`text-lg mt-0.5 ${isCurToday ? 'text-[#19E6C8] font-bold' : 'text-[#F4FFFD] font-normal'
-                    }`}
+                  className={`text-lg mt-0.5 ${
+                    hasHoliday
+                      ? 'text-[#EF4444] font-bold'
+                      : isCurToday
+                      ? 'text-[#19E6C8] font-bold'
+                      : 'text-[#F4FFFD] font-normal'
+                  }`}
                 >
                   {dayNum}
                 </span>

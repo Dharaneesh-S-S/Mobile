@@ -154,9 +154,9 @@ export const EventEditorModal: React.FC = () => {
         (itemType === 'task'
           ? '#19E6C8'
           : itemType === 'birthday'
-          ? '#81c995'
+          ? '#EC4899'
           : itemType === 'holiday'
-          ? '#00897b'
+          ? '#EF4444'
           : undefined),
       calendarId:
         itemType === 'task'
@@ -288,7 +288,7 @@ export const EventEditorModal: React.FC = () => {
               </>
             ) : itemType === 'holiday' ? (
               <>
-                <span className="w-3 h-3 rounded-full bg-[#00897b] ml-1 flex-shrink-0" />
+                <span className="w-3 h-3 rounded-full bg-[#EF4444] ml-1 flex-shrink-0" />
                 <div className="text-sm">
                   <span className="font-semibold text-white">Holidays</span>
                 </div>

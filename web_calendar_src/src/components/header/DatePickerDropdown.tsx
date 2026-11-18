@@ -61,14 +61,16 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
     const dayEvents = events.filter(e => e.startDate <= dStr && e.endDate >= dStr && !e.deletedAt);
     if (dayEvents.length === 0) return null;
 
+    const hasHoliday = dayEvents.some(e => e.type === 'holiday' || e.calendarId === 'cal_holidays');
     const hasBirthday = dayEvents.some(e => e.type === 'birthday' || e.calendarId === 'cal_birthdays');
     const hasTask = dayEvents.some(
       e => (e.type === 'task' || e.calendarId === 'cal_tasks') && !e.isCompleted && e.createdFromCalendar
     );
-    const hasEvent = dayEvents.some(e => e.type === 'event' || e.calendarId === 'cal_my_calendar' || e.calendarId === 'cal_holidays');
+    const hasEvent = dayEvents.some(e => (e.type === 'event' || e.calendarId === 'cal_my_calendar') && !hasHoliday);
 
     return (
       <div className="flex items-center justify-center gap-0.5 mt-0.5">
+        {hasHoliday && <span className="w-1 h-1 rounded-full bg-[#EF4444]" />}
         {hasBirthday && <span className="w-1 h-1 rounded-full bg-[#EC4899]" />}
         {hasTask && <span className="w-1 h-1 rounded-full bg-[#19E6C8]" />}
         {hasEvent && <span className="w-1 h-1 rounded-full bg-[#38BDF8]" />}
@@ -330,6 +332,10 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
             const isSelected = isSameDay(date, currentDate);
             const isCurToday = isToday(date);
             const isCurMonth = date.getMonth() === viewDate.getMonth();
+            const dStr = formatDateToYYYYMMDD(date);
+            const hasHoliday = events.some(
+              e => !e.deletedAt && (e.type === 'holiday' || e.calendarId === 'cal_holidays') && e.startDate <= dStr && e.endDate >= dStr
+            );
 
             return (
               <button
@@ -342,14 +348,21 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
                 className="flex flex-col items-center justify-center py-1 rounded-full group focus:outline-none"
               >
                 <div
-                  className={`w-7 h-7 flex items-center justify-center rounded-full text-xs transition-all ${isCurToday
-                    ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_10px_rgba(25,230,200,0.5)]'
-                    : isSelected
+                  className={`w-7 h-7 flex items-center justify-center rounded-full text-xs transition-all ${
+                    hasHoliday
+                      ? isCurToday
+                        ? 'bg-[#EF4444] text-white font-bold shadow-[0_0_10px_rgba(239,68,68,0.6)]'
+                        : isSelected
+                        ? 'border border-[#EF4444] text-[#EF4444] font-bold bg-[#EF4444]/20'
+                        : 'text-[#EF4444] font-bold hover:bg-red-500/15'
+                      : isCurToday
+                      ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_10px_rgba(25,230,200,0.5)]'
+                      : isSelected
                       ? 'border border-[#19E6C8] text-[#19E6C8] font-bold'
                       : isCurMonth
-                        ? 'text-[#e3e3e3] group-hover:bg-teal-500/15'
-                        : 'text-[#4b5563] group-hover:bg-teal-500/5'
-                    }`}
+                      ? 'text-[#e3e3e3] group-hover:bg-teal-500/15'
+                      : 'text-[#4b5563] group-hover:bg-teal-500/5'
+                  }`}
                 >
                   {date.getDate()}
                 </div>

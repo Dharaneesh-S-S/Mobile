@@ -82,6 +82,7 @@ export const MonthView: React.FC = () => {
 
               const tasksOnDay = dayEvents.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
               const nonTaskEvents = dayEvents.filter(e => e.type !== 'task' && e.calendarId !== 'cal_tasks');
+              const hasHoliday = dayEvents.some(e => e.type === 'holiday' || e.calendarId === 'cal_holidays');
 
               return (
                 <div
@@ -93,8 +94,13 @@ export const MonthView: React.FC = () => {
                       type: 'event',
                     });
                   }}
-                  className={`border-r border-[#0e2624] last:border-r-0 p-1 flex flex-col justify-start transition-colors relative hover:bg-teal-500/5 cursor-pointer overflow-hidden ${!isCurrentMonth ? 'bg-[#051211]/40' : 'bg-[#030707]'
-                    }`}
+                  className={`border-r border-[#0e2624] last:border-r-0 p-1 flex flex-col justify-start transition-colors relative cursor-pointer overflow-hidden ${
+                    hasHoliday
+                      ? 'bg-red-950/30 hover:bg-red-950/45 border-t-2 border-t-[#EF4444]'
+                      : !isCurrentMonth
+                      ? 'bg-[#051211]/40 hover:bg-teal-500/5'
+                      : 'bg-[#030707] hover:bg-teal-500/5'
+                  }`}
                 >
                   {/* Date Number Header */}
                   <div className="flex items-center justify-center md:justify-start mb-1">
@@ -105,12 +111,17 @@ export const MonthView: React.FC = () => {
                         setCurrentDate(date);
                         setCurrentView('day');
                       }}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all ${isCurToday
-                        ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_12px_rgba(25,230,200,0.5)]'
-                        : isCurrentMonth
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all ${
+                        hasHoliday
+                          ? isCurToday
+                            ? 'bg-[#EF4444] text-white font-bold shadow-[0_0_12px_rgba(239,68,68,0.7)]'
+                            : 'text-[#EF4444] font-bold bg-[#EF4444]/20 border border-[#EF4444]/40 hover:bg-[#EF4444]/30'
+                          : isCurToday
+                          ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_12px_rgba(25,230,200,0.5)]'
+                          : isCurrentMonth
                           ? 'text-[#F4FFFD] hover:bg-teal-500/15'
                           : 'text-[#4b5563]'
-                        }`}
+                      }`}
                     >
                       {date.getDate()}
                     </button>
