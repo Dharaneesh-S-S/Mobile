@@ -493,6 +493,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       taskListId: eventData.taskListId,
       taskListName: eventData.taskListName,
       isCompleted: eventData.isCompleted ?? false,
+      createdFromCalendar: eventData.createdFromCalendar ?? true,
       subtasks: eventData.subtasks || [],
       appointmentSchedule: eventData.appointmentSchedule,
       createdAt: nowISO,
@@ -505,9 +506,10 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         listId: newEvent.taskListId || 'list_valeo_work',
         title: newEvent.title,
         details: newEvent.description,
-        dueDate: newEvent.startDate,
+        dueDate: newEvent.createdFromCalendar ? newEvent.startDate : undefined,
         dueTime: newEvent.isAllDay ? undefined : newEvent.startTime,
         isCompleted: newEvent.isCompleted,
+        createdFromCalendar: newEvent.createdFromCalendar,
       });
       newEvent.id = zTask.id.startsWith('task_') ? zTask.id : `task_${zTask.id}`;
     }
@@ -538,9 +540,10 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         listId: cleanUpdated.taskListId || 'list_valeo_work',
         title: cleanUpdated.title,
         details: cleanUpdated.description,
-        dueDate: cleanUpdated.startDate,
+        dueDate: cleanUpdated.createdFromCalendar ? cleanUpdated.startDate : undefined,
         dueTime: cleanUpdated.isAllDay ? undefined : cleanUpdated.startTime,
         isCompleted: cleanUpdated.isCompleted,
+        createdFromCalendar: cleanUpdated.createdFromCalendar,
       });
     }
 

@@ -62,7 +62,9 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
     if (dayEvents.length === 0) return null;
 
     const hasBirthday = dayEvents.some(e => e.type === 'birthday' || e.calendarId === 'cal_birthdays');
-    const hasTask = dayEvents.some(e => (e.type === 'task' || e.calendarId === 'cal_tasks') && !e.isCompleted);
+    const hasTask = dayEvents.some(
+      e => (e.type === 'task' || e.calendarId === 'cal_tasks') && !e.isCompleted && e.createdFromCalendar
+    );
     const hasEvent = dayEvents.some(e => e.type === 'event' || e.calendarId === 'cal_my_calendar' || e.calendarId === 'cal_holidays');
 
     return (

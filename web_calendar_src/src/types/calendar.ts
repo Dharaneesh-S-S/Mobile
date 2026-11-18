@@ -100,6 +100,7 @@ export interface CalendarEvent {
   
   // Tasks
   isCompleted?: boolean;
+  createdFromCalendar?: boolean; // True if scheduled from calendar with timeline; false if added directly in tasks
   subtasks?: Subtask[];
   taskListId?: string;
   taskListName?: string;

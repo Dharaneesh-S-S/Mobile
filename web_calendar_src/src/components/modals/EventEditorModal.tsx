@@ -168,6 +168,7 @@ export const EventEditorModal: React.FC = () => {
           : 'cal_my_calendar',
       taskListId: itemType === 'task' ? selectedList.id : undefined,
       taskListName: itemType === 'task' ? selectedList.name : undefined,
+      createdFromCalendar: true, // Created from calendar with date timeline
       notifications,
     };
 

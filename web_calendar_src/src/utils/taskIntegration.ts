@@ -31,6 +31,7 @@ export interface ZenithTask {
   order: number;
   createdAt: string;
   updatedAt: string;
+  createdFromCalendar?: boolean;
 }
 
 export interface ZenithTaskList {
@@ -197,6 +198,7 @@ export function addOrUpdateZenithTask(taskData: {
   dueDate?: string;
   dueTime?: string;
   isCompleted?: boolean;
+  createdFromCalendar?: boolean;
 }): ZenithTask {
   const tasks = loadZenithTasks();
   const existingIdx = taskData.id ? tasks.findIndex(t => t.id === taskData.id) : -1;
@@ -210,6 +212,7 @@ export function addOrUpdateZenithTask(taskData: {
       dueDate: taskData.dueDate,
       dueTime: taskData.dueTime,
       isCompleted: taskData.isCompleted ?? tasks[existingIdx].isCompleted,
+      createdFromCalendar: taskData.createdFromCalendar ?? tasks[existingIdx].createdFromCalendar,
       updatedAt: new Date().toISOString(),
     };
     tasks[existingIdx] = updated;
@@ -225,6 +228,7 @@ export function addOrUpdateZenithTask(taskData: {
     dueDate: taskData.dueDate,
     dueTime: taskData.dueTime,
     isCompleted: taskData.isCompleted || false,
+    createdFromCalendar: taskData.createdFromCalendar,
     isStarred: false,
     subtasks: [],
     order: tasks.length,
@@ -273,6 +277,7 @@ export function convertZenithTaskToCalendarEvent(task: ZenithTask, listName?: st
     endTime: task.dueTime,
     isAllDay: !task.dueTime,
     isCompleted: task.isCompleted,
+    createdFromCalendar: task.createdFromCalendar === true,
     colorOverride: '#19E6C8',
     subtasks: task.subtasks?.map(st => ({
       id: st.id,

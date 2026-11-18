@@ -44,6 +44,7 @@ export const TasksPanel: React.FC = () => {
       endDate: formatDateToYYYYMMDD(new Date()),
       isAllDay: true,
       isCompleted: false,
+      createdFromCalendar: false, // Directly created in Tasks section; has no timeline and does not display on calendar
       subtasks: [],
     });
     setNewTaskTitle('');

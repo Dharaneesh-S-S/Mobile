@@ -81,6 +81,7 @@ export const QuickCreatePopover: React.FC = () => {
       startTime: activeTab === 'task' ? undefined : startTime,
       endTime: activeTab === 'task' ? undefined : endTime,
       isAllDay: activeTab === 'task',
+      createdFromCalendar: true, // Created from calendar with date timeline
       location: location.trim() || undefined,
       description: description.trim() || undefined,
       videoConference,

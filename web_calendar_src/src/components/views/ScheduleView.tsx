@@ -31,11 +31,12 @@ export const ScheduleView: React.FC = () => {
 
   const expanded = expandRecurringEvents(events, rangeStart, rangeEnd);
 
-  // Filter events: always exclude completed tasks from the calendar (Requirement #6)
+  // Filter events: always exclude completed tasks, and exclude tasks added directly in Tasks (no timeline)
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
     if (!visibleCalendarIds.includes(e.calendarId)) return false;
     if (e.type === 'task' && e.isCompleted) return false;
+    if (e.type === 'task' && !e.createdFromCalendar) return false;
 
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
