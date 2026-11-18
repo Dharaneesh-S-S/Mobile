@@ -195,13 +195,13 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                   const chipBg = isHoliday
                     ? 'rgba(239, 68, 68, 0.2)'
                     : isBday
-                    ? 'rgba(236, 72, 153, 0.2)'
-                    : 'rgba(56, 189, 248, 0.2)';
+                      ? 'rgba(236, 72, 153, 0.2)'
+                      : 'rgba(56, 189, 248, 0.2)';
                   const chipBorder = isHoliday
                     ? '#EF4444'
                     : isBday
-                    ? '#EC4899'
-                    : '#38BDF8';
+                      ? '#EC4899'
+                      : '#38BDF8';
 
                   return (
                     <button
@@ -314,18 +314,18 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                   const accentColor = isTask
                     ? '#19E6C8'
                     : isHoliday
-                    ? '#EF4444'
-                    : isBday
-                    ? '#EC4899'
-                    : '#38BDF8';
+                      ? '#EF4444'
+                      : isBday
+                        ? '#EC4899'
+                        : '#38BDF8';
 
                   const bg = isTask
                     ? 'rgba(25, 230, 200, 0.2)'
                     : isHoliday
-                    ? 'rgba(239, 68, 68, 0.2)'
-                    : isBday
-                    ? 'rgba(236, 72, 153, 0.2)'
-                    : 'rgba(56, 189, 248, 0.2)';
+                      ? 'rgba(239, 68, 68, 0.2)'
+                      : isBday
+                        ? 'rgba(236, 72, 153, 0.2)'
+                        : 'rgba(56, 189, 248, 0.2)';
 
                   return (
                     <div
@@ -334,11 +334,10 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                         ev.stopPropagation();
                         openEventDetails(e, { x: ev.clientX, y: ev.clientY });
                       }}
-                      className={`absolute px-2.5 py-1 cursor-pointer transition-all overflow-hidden select-none hover:brightness-110 flex flex-col justify-center items-center text-center ${
-                        isTask
-                          ? 'rounded-full border border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.25)]'
-                          : 'rounded-xl border border-l-4 shadow-sm'
-                      }`}
+                      className={`absolute px-2.5 py-1 cursor-pointer transition-all overflow-hidden select-none hover:brightness-110 flex flex-col justify-center items-center text-center ${isTask
+                        ? 'rounded-full border border-[#19E6C8] border-l-4 border-l-[#19E6C8] shadow-[0_0_12px_rgba(25,230,200,0.25)]'
+                        : 'rounded-xl border border-l-4 shadow-sm'
+                        }`}
                       style={{
                         top: `${p.topPercent}%`,
                         height: `${p.heightPercent}%`,
