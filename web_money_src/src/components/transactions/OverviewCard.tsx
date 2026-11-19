@@ -31,12 +31,12 @@ export const OverviewCard: React.FC = () => {
     <div className="mx-2 md:mx-0 my-3 select-none">
       {/* 4-Card Futuristic Bento Grid */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        {/* 1. Net Cash Flow / Savings Card (Spotlight Featured Card) */}
+        {/* 1. Net Cash Flow Card */}
         <div className="glass-card-featured rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden group">
           <div className="flex items-center justify-between text-xs text-[#94B5B0] mb-1.5">
             <span className="font-bold uppercase tracking-wider text-white flex items-center gap-1.5 font-mono text-[10px]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#19E6C8] shadow-[0_0_8px_#19E6C8] animate-pulse" />
-              Net Savings
+              Net Cash Flow
             </span>
             <div className="p-1.5 rounded-xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20">
               <Scale className="w-3.5 h-3.5" />
@@ -56,7 +56,7 @@ export const OverviewCard: React.FC = () => {
           <div className="flex items-center justify-between text-xs text-[#94B5B0] mb-1.5">
             <span className="font-bold uppercase tracking-wider text-[#94B5B0] flex items-center gap-1.5 font-mono text-[10px]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#19E6C8]" />
-              Inflow
+              Income
             </span>
             <div className="p-1.5 rounded-xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20">
               <TrendingUp className="w-3.5 h-3.5" />
@@ -71,12 +71,12 @@ export const OverviewCard: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Expense Card */}
+        {/* 3. Expense Card (Second row first) */}
         <div className="glass-card rounded-3xl p-4 sm:p-5 flex flex-col justify-between hover:border-[#FF6B6B]/40 transition-all">
           <div className="flex items-center justify-between text-xs text-[#94B5B0] mb-1.5">
             <span className="font-bold uppercase tracking-wider text-[#94B5B0] flex items-center gap-1.5 font-mono text-[10px]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF6B6B]" />
-              Outflow
+              Expense
             </span>
             <div className="p-1.5 rounded-xl bg-[#FF6B6B]/10 text-[#FF6B6B] border border-[#FF6B6B]/20">
               <TrendingDown className="w-3.5 h-3.5" />
@@ -91,12 +91,12 @@ export const OverviewCard: React.FC = () => {
           </div>
         </div>
 
-        {/* 4. Budget Pace Card */}
+        {/* 4. Budget Pace Card (Position unchanged) */}
         <div className="glass-card rounded-3xl p-4 sm:p-5 flex flex-col justify-between hover:border-teal-400/30 transition-all">
           <div className="flex items-center justify-between text-xs text-[#94B5B0] mb-1.5">
             <span className="font-bold uppercase tracking-wider text-[#94B5B0] flex items-center gap-1.5 font-mono text-[10px]">
               <Target className="w-3.5 h-3.5 text-[#19E6C8]" />
-              Budget Pace
+              Budget
             </span>
             <button
               onClick={() => setShowInfo((p) => !p)}
