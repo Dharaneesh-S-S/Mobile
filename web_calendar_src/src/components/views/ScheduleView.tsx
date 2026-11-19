@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useCalendar } from '../../context/CalendarContext';
 import {
   formatDateToYYYYMMDD,
@@ -20,12 +20,18 @@ export const ScheduleView: React.FC = () => {
     settings,
   } = useCalendar();
 
-  // Selected month range
+  const isSearching = Boolean(searchQuery && searchQuery.trim());
+
+  // Selected month range (or broader window when searching)
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
-  const rangeStart = new Date(year, month, 1);
+  const rangeStart = isSearching
+    ? new Date(year - 1, 0, 1)
+    : new Date(year, month, 1);
   const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
-  const rangeEnd = new Date(year, month, lastDayOfMonth);
+  const rangeEnd = isSearching
+    ? new Date(year + 1, 11, 31)
+    : new Date(year, month, lastDayOfMonth);
 
   const monthStartStr = `${year}-${String(month + 1).padStart(2, '0')}-01`;
   const monthEndStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDayOfMonth).padStart(2, '0')}`;
@@ -34,12 +40,12 @@ export const ScheduleView: React.FC = () => {
 
   const expanded = expandRecurringEvents(events, rangeStart, rangeEnd);
 
-  // Filter events: strictly for the selected month, excluding completed tasks and un-timelined tasks
+  // Filter events: strictly for the selected month when not searching, excluding completed tasks and un-timelined tasks
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
 
-    // Strict selected month constraint: event must occur within the selected month
-    if (e.endDate < monthStartStr || e.startDate > monthEndStr) return false;
+    // Strict selected month constraint when not searching (Requirement #9)
+    if (!isSearching && (e.endDate < monthStartStr || e.startDate > monthEndStr)) return false;
 
     const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'));
     const holidayCal = calendars.find(c => c.id === 'cal_holidays');
@@ -49,7 +55,7 @@ export const ScheduleView: React.FC = () => {
     if (e.type === 'task' && !e.createdFromCalendar) return false;
 
     if (searchQuery) {
-      const q = searchQuery.toLowerCase();
+      const q = searchQuery.toLowerCase().trim();
       const match =
         e.title.toLowerCase().includes(q) ||
         e.description?.toLowerCase().includes(q) ||
@@ -64,15 +70,17 @@ export const ScheduleView: React.FC = () => {
     year: 'numeric',
   });
 
-  // Group events by date, deduplicating tasks by clean ID (only within selected month)
+  // Group events by date, deduplicating tasks by clean ID
   const grouped = filteredEvents.reduce<Record<string, CalendarEvent[]>>((acc, item) => {
     let key = item.startDate;
-    // If a multi-day event started before the month, clamp its display key to the 1st of the month
-    if (key < monthStartStr) {
-      key = monthStartStr;
-    }
-    if (key > monthEndStr) {
-      return acc;
+    // When not searching, clamp multi-day events to month start/end
+    if (!isSearching) {
+      if (key < monthStartStr) {
+        key = monthStartStr;
+      }
+      if (key > monthEndStr) {
+        return acc;
+      }
     }
 
     if (!acc[key]) acc[key] = [];
@@ -87,8 +95,25 @@ export const ScheduleView: React.FC = () => {
   }, {});
 
   const sortedDates = Object.keys(grouped)
-    .filter(d => d >= monthStartStr && d <= monthEndStr)
+    .filter(d => isSearching || (d >= monthStartStr && d <= monthEndStr))
     .sort();
+
+  // Scroll to matching searched date or current date
+  useEffect(() => {
+    if (isSearching && sortedDates.length > 0) {
+      const curDateStr = formatDateToYYYYMMDD(currentDate);
+      const targetDate = sortedDates.includes(curDateStr) ? curDateStr : sortedDates[0];
+      if (targetDate) {
+        const timer = setTimeout(() => {
+          const el = document.getElementById(`schedule-date-${targetDate}`);
+          if (el) {
+            el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }, 120);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [searchQuery, currentDate, sortedDates.length]);
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#030707] text-[#e3e3e3] select-none pb-20">
@@ -121,15 +146,24 @@ export const ScheduleView: React.FC = () => {
         {/* Dynamic Month Banner Title */}
         <div className="absolute top-4 left-6 z-10">
           <h2 className="text-xl md:text-2xl font-normal text-white tracking-tight">
-            {currentMonthTitle}
+            {isSearching ? `Search results for "${searchQuery}"` : currentMonthTitle}
           </h2>
+          {isSearching && (
+            <p className="text-xs text-teal-300/80 mt-1">
+              Found {filteredEvents.length} {filteredEvents.length === 1 ? 'event' : 'events'}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Empty State */}
       {sortedDates.length === 0 && (
         <div className="text-center py-12 text-[#94B5B0]">
-          <p className="text-sm">No events scheduled for {currentMonthTitle}</p>
+          <p className="text-sm">
+            {isSearching
+              ? `No events found for "${searchQuery}"`
+              : `No events scheduled for ${currentMonthTitle}`}
+          </p>
         </div>
       )}
 
@@ -145,9 +179,16 @@ export const ScheduleView: React.FC = () => {
           const hasHoliday = dayItems.some(
             item => item.type === 'holiday' || item.calendarId === 'cal_holidays' || (item.title && item.title.toLowerCase().includes('holiday'))
           );
+          const isTargetDate = isSearching && dateStr === formatDateToYYYYMMDD(currentDate);
 
           return (
-            <div key={dateStr} className="flex items-start gap-4">
+            <div
+              key={dateStr}
+              id={`schedule-date-${dateStr}`}
+              className={`flex items-start gap-4 scroll-mt-6 rounded-xl transition-all duration-300 ${
+                isTargetDate ? 'bg-teal-500/10 p-2 -mx-2 ring-1 ring-teal-500/40' : ''
+              }`}
+            >
               {/* Left Date Column */}
               <div className="flex flex-col items-center flex-shrink-0 w-10 pt-1">
                 <span className={`text-xs font-medium ${hasHoliday ? 'text-[#EF4444]' : 'text-[#94B5B0]'}`}>
