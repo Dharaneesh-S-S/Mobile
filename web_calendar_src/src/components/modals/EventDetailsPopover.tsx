@@ -128,6 +128,17 @@ export const EventDetailsPopover: React.FC = () => {
               </button>
               <button
                 type="button"
+                onClick={() => {
+                  deleteEvent(selectedEvent.id);
+                  closeEventDetails();
+                }}
+                className="w-10 h-10 rounded-full bg-black/40 hover:bg-red-500/30 text-white hover:text-[#f28b82] flex items-center justify-center backdrop-blur-md transition-colors"
+                title="Delete"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+              <button
+                type="button"
                 onClick={() => setShowMenu(prev => !prev)}
                 className="w-10 h-10 rounded-full bg-black/40 hover:bg-black/60 text-white flex items-center justify-center backdrop-blur-md transition-colors"
                 title="More options"

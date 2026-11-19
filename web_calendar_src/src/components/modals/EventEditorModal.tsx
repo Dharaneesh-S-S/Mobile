@@ -17,6 +17,7 @@ import {
   Briefcase,
   Check,
   ChevronDown,
+  Trash2,
 } from 'lucide-react';
 import { useCalendar } from '../../context/CalendarContext';
 import {
@@ -221,17 +222,34 @@ export const EventEditorModal: React.FC = () => {
           {/* Pull Handle Pill */}
           <div className="w-10 h-1 bg-[#44474f] rounded-full mx-auto" />
 
-          {/* Save Button */}
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={isSubmitting}
-            className={`px-5 py-1.5 rounded-full bg-[#a8c7fa] text-[#041e49] font-bold text-sm hover:bg-[#b9d3fc] active:scale-95 transition-all shadow-md ${
-              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-          >
-            Save
-          </button>
+          {/* Action Buttons: Delete (if editing) & Save */}
+          <div className="flex items-center gap-2">
+            {isEditingExisting && (
+              <button
+                type="button"
+                onClick={() => {
+                  if (editingEvent?.id) {
+                    deleteEvent(editingEvent.id);
+                    closeEditor();
+                  }
+                }}
+                className="p-1.5 rounded-full text-[#f28b82] hover:bg-[#f28b82]/15 transition-colors"
+                title="Delete"
+              >
+                <Trash2 className="w-5 h-5" />
+              </button>
+            )}
+            <button
+              type="button"
+              onClick={handleSave}
+              disabled={isSubmitting}
+              className={`px-5 py-1.5 rounded-full bg-[#a8c7fa] text-[#041e49] font-bold text-sm hover:bg-[#b9d3fc] active:scale-95 transition-all shadow-md ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              Save
+            </button>
+          </div>
         </div>
 
         {/* Scrollable Content */}

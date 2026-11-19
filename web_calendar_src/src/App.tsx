@@ -11,6 +11,7 @@ import { YearView } from './components/views/YearView';
 import { ScheduleView } from './components/views/ScheduleView';
 import { EventEditorModal } from './components/modals/EventEditorModal';
 import { EventDetailsPopover } from './components/modals/EventDetailsPopover';
+import { RecurringConfirmDialog } from './components/modals/RecurringConfirmDialog';
 import { SpeedDialFAB } from './components/common/SpeedDialFAB';
 import { ToastContainer } from './components/common/ToastContainer';
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts';
@@ -95,6 +96,7 @@ const CalendarApp: React.FC = () => {
       {/* Modals & Popovers */}
       <EventEditorModal />
       <EventDetailsPopover />
+      <RecurringConfirmDialog />
       <ToastContainer />
     </div>
   );

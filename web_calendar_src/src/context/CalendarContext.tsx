@@ -623,7 +623,14 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   }, [updateEventInternal]);
 
   const deleteEventInternal = useCallback((targetId: string, scope: 'this' | 'following' | 'all' = 'all') => {
-    const targetEvent = events.find(e => e.id === targetId || (e.recurringEventId && targetId.startsWith(e.id)));
+    const cleanId = targetId.replace(/^task_/, '');
+    const targetEvent = events.find(
+      e => e.id === targetId ||
+           e.id === cleanId ||
+           e.id === `task_${cleanId}` ||
+           (e.recurringEventId && targetId.startsWith(e.id)) ||
+           (e.id && targetId.startsWith(e.id))
+    );
     if (!targetEvent) return;
 
     const previousEvents = [...events];
@@ -633,7 +640,7 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       const parentId = targetEvent.recurringEventId || targetEvent.id;
       if (scope === 'all') {
         // Move entire series to trash
-        setEvents(prev => prev.filter(e => e.id !== parentId));
+        setEvents(prev => prev.filter(e => e.id !== parentId && e.id !== targetId));
         setTrash(prev => [...prev, { ...targetEvent, id: parentId, deletedAt: nowISO }]);
       } else if (scope === 'following') {
         // End series before this instance date
@@ -653,32 +660,60 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       } else {
         // Delete only this instance: in a complete calendar, we could add an exdate.
         // For local storage, we can push a stub exclusion or simply notify.
+        setEvents(prev => prev.filter(e => e.id !== targetId));
         showToast('Event removed from this date', undefined, undefined, 'info');
       }
     } else {
-      // Non-instance or base recurring event
-      setEvents(prev => prev.filter(e => e.id !== targetId));
+      // Non-instance or base recurring event: remove all matching IDs
+      setEvents(prev =>
+        prev.filter(e => e.id !== targetId && e.id !== cleanId && e.id !== `task_${cleanId}`)
+      );
       setTrash(prev => [...prev, { ...targetEvent, deletedAt: nowISO }]);
       if (targetEvent.type === 'task') {
-        deleteZenithTask(targetId.replace(/^task_/, ''));
+        deleteZenithTask(cleanId);
       }
     }
 
+    const typeLabel = targetEvent.type === 'task' ? 'Task' : targetEvent.type === 'holiday' ? 'Holiday' : 'Event';
     showToast(
-      'Event moved to trash',
+      `${typeLabel} deleted`,
       'Undo',
       () => {
         setEvents(previousEvents);
-        setTrash(prev => prev.filter(e => e.id !== targetId));
+        setTrash(prev => prev.filter(e => e.id !== targetId && e.id !== cleanId && e.id !== `task_${cleanId}`));
+        if (targetEvent.type === 'task') {
+          addOrUpdateZenithTask({
+            id: cleanId,
+            listId: targetEvent.taskListId || 'list_valeo_work',
+            title: targetEvent.title,
+            details: targetEvent.description,
+            dueDate: targetEvent.createdFromCalendar ? targetEvent.startDate : undefined,
+            dueTime: targetEvent.isAllDay ? undefined : targetEvent.startTime,
+            isCompleted: targetEvent.isCompleted,
+            createdFromCalendar: targetEvent.createdFromCalendar,
+          });
+        }
       },
       'info'
     );
   }, [events, showToast]);
 
   const deleteEvent = useCallback((id: string, scope?: 'this' | 'following' | 'all') => {
-    const isRecurring = id.includes('_inst_') || events.find(e => e.id === id)?.recurrence?.frequency !== 'none';
+    const cleanId = id.replace(/^task_/, '');
+    const ev = events.find(
+      e => e.id === id ||
+           e.id === cleanId ||
+           e.id === `task_${cleanId}` ||
+           (e.recurringEventId && id.startsWith(e.id)) ||
+           (e.id && id.startsWith(e.id))
+    );
+
+    const isRecurring = Boolean(
+      id.includes('_inst_') ||
+      (ev?.recurrence && ev.recurrence.frequency && ev.recurrence.frequency !== 'none')
+    );
+
     if (isRecurring && !scope) {
-      const ev = events.find(e => e.id === id || id.startsWith(e.id));
       if (ev) {
         setRecurringActionDialog({
           isOpen: true,
