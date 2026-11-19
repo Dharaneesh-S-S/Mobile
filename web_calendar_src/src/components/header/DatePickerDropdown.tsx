@@ -387,10 +387,10 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
 
       <div className="relative z-50 bg-[#051211] border-b border-[#0e2624] shadow-2xl px-4 py-3 select-none animate-in slide-in-from-top-2 duration-150">
         <div className="max-w-md mx-auto">
-          {currentView === 'month' && renderMonthViewContent()}
+          {(currentView === 'month' || currentView === 'schedule') && renderMonthViewContent()}
           {(currentView === 'week' || currentView === 'four_day') && renderWeekViewContent()}
           {currentView === 'three_day' && renderThreeDayViewContent()}
-          {(currentView === 'day' || currentView === 'schedule' || currentView === 'year') && renderDayViewContent()}
+          {(currentView === 'day' || currentView === 'year') && renderDayViewContent()}
         </div>
       </div>
     </>

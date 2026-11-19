@@ -27,13 +27,20 @@ export const ScheduleView: React.FC = () => {
   const lastDayOfMonth = new Date(year, month + 1, 0).getDate();
   const rangeEnd = new Date(year, month, lastDayOfMonth);
 
+  const monthStartStr = `${year}-${String(month + 1).padStart(2, '0')}-01`;
+  const monthEndStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(lastDayOfMonth).padStart(2, '0')}`;
+
   const visibleCalendarIds = calendars.filter(c => c.isVisible).map(c => c.id);
 
   const expanded = expandRecurringEvents(events, rangeStart, rangeEnd);
 
-  // Filter events: always exclude completed tasks, and exclude tasks added directly in Tasks (no timeline)
+  // Filter events: strictly for the selected month, excluding completed tasks and un-timelined tasks
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
+
+    // Strict selected month constraint: event must occur within the selected month
+    if (e.endDate < monthStartStr || e.startDate > monthEndStr) return false;
+
     const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'));
     const holidayCal = calendars.find(c => c.id === 'cal_holidays');
     if (isHoliday && holidayCal && !holidayCal.isVisible) return false;
@@ -57,9 +64,17 @@ export const ScheduleView: React.FC = () => {
     year: 'numeric',
   });
 
-  // Group events by date, deduplicating tasks by clean ID
+  // Group events by date, deduplicating tasks by clean ID (only within selected month)
   const grouped = filteredEvents.reduce<Record<string, CalendarEvent[]>>((acc, item) => {
-    const key = item.startDate;
+    let key = item.startDate;
+    // If a multi-day event started before the month, clamp its display key to the 1st of the month
+    if (key < monthStartStr) {
+      key = monthStartStr;
+    }
+    if (key > monthEndStr) {
+      return acc;
+    }
+
     if (!acc[key]) acc[key] = [];
     const itemKey = item.type === 'task' ? `task_${item.id.replace(/^task_/, '')}` : item.id;
     const exists = acc[key].some(
@@ -71,7 +86,9 @@ export const ScheduleView: React.FC = () => {
     return acc;
   }, {});
 
-  const sortedDates = Object.keys(grouped).sort();
+  const sortedDates = Object.keys(grouped)
+    .filter(d => d >= monthStartStr && d <= monthEndStr)
+    .sort();
 
   return (
     <div className="flex-1 overflow-y-auto bg-[#030707] text-[#e3e3e3] select-none pb-20">
