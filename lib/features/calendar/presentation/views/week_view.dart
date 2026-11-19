@@ -19,11 +19,15 @@ class _WeekViewState extends ConsumerState<WeekView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final currentHour = DateTime.now().hour;
-      final offset = (currentHour * 60.0) - 100;
-      if (_scrollController.hasClients && offset > 0) {
-        _scrollController.jumpTo(offset);
-      }
+      if (!_scrollController.hasClients) return;
+      final now = DateTime.now();
+      final currentMins = now.hour * 60.0 + now.minute;
+      final timeY = currentMins; // 60.0 px per hour, so 1.0 px per minute
+      final viewportHeight = _scrollController.position.viewportDimension;
+      final maxScroll = _scrollController.position.maxScrollExtent;
+      final targetOffset = timeY - (viewportHeight / 2);
+      final clampedOffset = targetOffset.clamp(0.0, maxScroll);
+      _scrollController.jumpTo(clampedOffset);
     });
   }
 

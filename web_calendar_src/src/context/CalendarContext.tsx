@@ -351,6 +351,9 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Navigation handlers
   const goToToday = useCallback(() => {
     setCurrentDate(new Date());
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('calendar_go_to_today'));
+    }
   }, []);
 
   const navigateNext = useCallback(() => {

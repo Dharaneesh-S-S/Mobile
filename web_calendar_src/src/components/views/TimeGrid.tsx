@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useCalendar } from '../../context/CalendarContext';
 import {
   getDayHours,
@@ -88,14 +88,85 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
     return true;
   });
 
-  // Scroll to roughly 9 AM or current time on mount
-  useEffect(() => {
-    if (gridContainerRef.current) {
-      const targetMins = Math.max(0, (currentTimeMins || 540) - 120);
-      const scrollY = (targetMins / 60) * 56;
-      gridContainerRef.current.scrollTop = scrollY;
+  // Align the timeline scroll position so the current time is in the vertical center of the screen
+  const scrollToCurrentTime = useCallback((behavior: ScrollBehavior = 'auto') => {
+    const el = gridContainerRef.current;
+    if (!el) return false;
+
+    const clientHeight = el.clientHeight;
+    const scrollHeight = el.scrollHeight;
+
+    // Guard: Layout not computed yet by browser
+    if (clientHeight <= 0 || scrollHeight <= 0) {
+      return false;
     }
+
+    const now = new Date();
+    const currentMins = now.getHours() * 60 + now.getMinutes();
+
+    // Exact pixel offset of current time in the 24-hour timeline
+    const timeY = (currentMins / 1440) * scrollHeight;
+
+    // Target scroll position to place current time at the vertical center of the visible area
+    const targetScrollTop = timeY - (clientHeight / 2);
+
+    // Maximum possible scroll offset
+    const maxScrollTop = Math.max(0, scrollHeight - clientHeight);
+
+    // Clamp between 0 and maxScrollTop.
+    // When a time cannot be placed at the center (e.g. early morning like 3 AM or late night like 11 PM),
+    // clamping keeps it as close to the center as physically possible without negative or out-of-bounds scrolling.
+    const clampedScrollTop = Math.max(0, Math.min(targetScrollTop, maxScrollTop));
+
+    el.scrollTo({
+      top: clampedScrollTop,
+      behavior,
+    });
+
+    return true;
   }, []);
+
+  // When calendar (in weekly, 3-day, or daily mode) is opened / mounted, align to center
+  useEffect(() => {
+    let animId: number;
+    let timer1: ReturnType<typeof setTimeout>;
+    let timer2: ReturnType<typeof setTimeout>;
+
+    const attemptAlign = (retries = 0) => {
+      const ok = scrollToCurrentTime('auto');
+      if (!ok && retries < 15) {
+        animId = requestAnimationFrame(() => attemptAlign(retries + 1));
+      }
+    };
+
+    attemptAlign();
+    timer1 = setTimeout(() => scrollToCurrentTime('auto'), 60);
+    timer2 = setTimeout(() => scrollToCurrentTime('auto'), 200);
+
+    return () => {
+      cancelAnimationFrame(animId);
+      clearTimeout(timer1);
+      clearTimeout(timer2);
+    };
+  }, [numDays, scrollToCurrentTime]);
+
+  // Re-align when window is resized (e.g. orientation change on mobile)
+  useEffect(() => {
+    const handleResize = () => {
+      scrollToCurrentTime('auto');
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [scrollToCurrentTime]);
+
+  // Re-align smoothly when user taps "Today" button
+  useEffect(() => {
+    const handleGoToToday = () => {
+      scrollToCurrentTime('smooth');
+    };
+    window.addEventListener('calendar_go_to_today', handleGoToToday);
+    return () => window.removeEventListener('calendar_go_to_today', handleGoToToday);
+  }, [scrollToCurrentTime]);
 
   const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 
