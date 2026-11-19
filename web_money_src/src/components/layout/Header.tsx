@@ -59,8 +59,7 @@ export const Header: React.FC = () => {
   };
 
   const navTabs = [
-    { id: 'transactions' as const, label: 'Transactions', icon: ReceiptText, count: filteredRecords.length },
-    { id: 'statistics' as const, label: 'Analytics', icon: PieChart },
+    { id: 'transactions' as const, label: 'Transactions & Stats', icon: ReceiptText, count: filteredRecords.length },
     { id: 'wallet' as const, label: 'Wallets', icon: WalletIcon },
   ];
 
@@ -78,26 +77,20 @@ export const Header: React.FC = () => {
           <div>
             <div className="flex items-center gap-2">
               <h2 className="text-base font-extrabold text-white font-display tracking-tight">
-                {activeTab === 'transactions' && 'Transactions'}
-                {activeTab === 'calendar' && 'Calendar Breakdown'}
-                {activeTab === 'statistics' && 'Analytics & Reports'}
+                {(activeTab === 'transactions' || activeTab === 'statistics') && 'Transactions & Statistics'}
                 {activeTab === 'wallet' && 'Wallets & Accounts'}
                 {activeTab === 'welcome' && 'Product Overview'}
                 {activeTab === 'styleguide' && 'Design Styleguide'}
               </h2>
               <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-500/10 text-[#19E6C8] border border-teal-500/25 font-mono shadow-[0_0_10px_rgba(25,230,200,0.15)]">
-                {activeTab === 'transactions' && `${filteredRecords.length} Records`}
-                {activeTab === 'calendar' && dateRange.label}
-                {activeTab === 'statistics' && viewRange.toUpperCase()}
+                {(activeTab === 'transactions' || activeTab === 'statistics') && `${filteredRecords.length} Records`}
                 {activeTab === 'wallet' && 'Balances'}
                 {activeTab === 'welcome' && 'SHOWCASE'}
                 {activeTab === 'styleguide' && 'TOKENS'}
               </span>
             </div>
             <p className="text-[11px] text-[#94B5B0] font-medium -mt-0.5">
-              {activeTab === 'transactions' && 'Income, expense, and daily cash flow stream'}
-              {activeTab === 'calendar' && 'Daily financial overview and activity schedule'}
-              {activeTab === 'statistics' && 'Visual charts, spending trends, and category distribution'}
+              {(activeTab === 'transactions' || activeTab === 'statistics') && 'Income, expense, statistics graph, and daily transactions stream'}
               {activeTab === 'wallet' && 'Multi-account management, debts, and savings goals'}
               {activeTab === 'welcome' && 'Futuristic fintech experience & feature showcase'}
               {activeTab === 'styleguide' && 'Design tokens, glass surfaces, buttons, and metrics'}

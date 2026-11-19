@@ -52,14 +52,9 @@ export const Sidebar: React.FC = () => {
   const navItems = [
     {
       id: 'transactions' as const,
-      label: 'Transactions',
+      label: 'Transactions & Stats',
       icon: ReceiptText,
       badge: filteredRecords.length,
-    },
-    {
-      id: 'statistics' as const,
-      label: 'Analytics & Stats',
-      icon: PieChart,
     },
     {
       id: 'wallet' as const,

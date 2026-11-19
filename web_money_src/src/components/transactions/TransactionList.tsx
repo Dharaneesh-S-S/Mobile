@@ -16,7 +16,7 @@ import {
 import { useMoney } from '../../context/MoneyContext';
 import { Record } from '../../types/money';
 import { OverviewCard } from './OverviewCard';
-import { QuickAddBar } from './QuickAddBar';
+import { TransactionStatisticsGraph } from './TransactionStatisticsGraph';
 import { TransactionRow } from './TransactionRow';
 import { formatTransactionDateTime } from '../../utils/dateUtils';
 import { formatInr } from '../../utils/currency';
@@ -189,10 +189,8 @@ export const TransactionList: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-2">
         {/* Left Column: Transactions Timeline */}
         <div className="lg:col-span-8 flex flex-col min-w-0">
-          {/* Quick Add Bar */}
-          <div className="mb-3">
-            <QuickAddBar />
-          </div>
+          {/* Financial Statistics Graph placed above transactions (replaces Quick Add) */}
+          <TransactionStatisticsGraph />
 
           {/* Bulk Action Bar (when selecting items) */}
           {isSelectMode && (
