@@ -8,6 +8,7 @@ import {
 } from 'lucide-react';
 import { useMoney } from '../../context/MoneyContext';
 import { ViewRangeType } from '../../types/money';
+import { DateSelectionModal } from './DateSelectionModal';
 
 // Range selector options without 'All'
 const RANGE_OPTIONS: { id: ViewRangeType; label: string }[] = [
@@ -27,20 +28,16 @@ export const Header: React.FC = () => {
     setViewRange,
     anchorDate,
     setAnchorDate,
+    settings,
   } = useMoney();
 
-  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
-
-  const monthNames = [
-    'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
-  ];
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState<boolean>(false);
 
   return (
     <header className="w-full bg-[#030707]/90 border-b border-teal-500/15 backdrop-blur-2xl shadow-md select-none shrink-0 z-30">
       {/* Primary Navigation Bar (Promoted from secondary sub-bar with Search added) */}
       <div className="px-3 sm:px-6 py-2.5 flex items-center justify-between gap-2 sm:gap-4">
-        {/* Left: Period Navigator (Previous, Date Range with Month Picker, Next) */}
+        {/* Left: Period Navigator (Previous, Date Range with Adapted Picker, Next) */}
         {activeTab !== 'wallet' ? (
           <div className="flex items-center gap-1 bg-[#061817]/70 border border-teal-500/20 rounded-xl p-1 backdrop-blur-md">
             <button
@@ -52,9 +49,9 @@ export const Header: React.FC = () => {
             </button>
 
             <button
-              onClick={() => setIsMonthPickerOpen((p) => !p)}
+              onClick={() => setIsDatePickerOpen(true)}
               className="px-2.5 py-1 text-xs font-bold text-slate-100 hover:text-[#19E6C8] flex items-center gap-1.5 transition-colors cursor-pointer"
-              title="Select Month/Year"
+              title="Select Date / Period"
             >
               <CalendarIcon className="w-3.5 h-3.5 text-[#19E6C8]" />
               <span>{dateRange.label}</span>
@@ -110,70 +107,20 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Month Picker Modal / Dropdown */}
-      {isMonthPickerOpen && (
-        <div className="absolute top-14 left-4 z-50 bg-[#030807] border border-teal-500/30 rounded-3xl p-4 shadow-[0_20px_50px_rgba(0,0,0,0.9)] w-72 animate-in fade-in zoom-in-95 duration-150">
-          <div className="flex items-center justify-between mb-3 text-xs font-bold text-white">
-            <button
-              onClick={() => {
-                const updated = new Date(anchorDate);
-                updated.setFullYear(anchorDate.getFullYear() - 1);
-                setAnchorDate(updated);
-              }}
-              className="p-1 hover:bg-teal-950/50 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
-            <span className="font-mono text-sm">{anchorDate.getFullYear()}</span>
-            <button
-              onClick={() => {
-                const updated = new Date(anchorDate);
-                updated.setFullYear(anchorDate.getFullYear() + 1);
-                setAnchorDate(updated);
-              }}
-              className="p-1 hover:bg-teal-950/50 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-3 gap-1.5">
-            {monthNames.map((m, idx) => {
-              const isSelected = anchorDate.getMonth() === idx;
-              return (
-                <button
-                  key={m}
-                  onClick={() => {
-                    const updated = new Date(anchorDate);
-                    updated.setMonth(idx);
-                    setAnchorDate(updated);
-                    setIsMonthPickerOpen(false);
-                  }}
-                  className={`py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
-                    isSelected
-                      ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_12px_rgba(25,230,200,0.4)]'
-                      : 'hover:bg-teal-950/40 text-slate-300 hover:text-white'
-                  }`}
-                >
-                  {m}
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="mt-3 pt-2.5 border-t border-teal-500/15 flex justify-end">
-            <button
-              onClick={() => {
-                setAnchorDate(new Date());
-                setIsMonthPickerOpen(false);
-              }}
-              className="text-[11px] font-semibold text-[#19E6C8] hover:text-[#2DD4BF] transition-colors cursor-pointer"
-            >
-              Reset to Today
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Adapted Date Selection Modal based on viewRange:
+          - Year view: Only year selection appears
+          - Month view: Year + 12 Months appear as now
+          - Week view: Month selection first, then week selection of that month
+          - Day view: Month selection first, then day calendar grid of that month
+      */}
+      <DateSelectionModal
+        isOpen={isDatePickerOpen}
+        onClose={() => setIsDatePickerOpen(false)}
+        viewRange={viewRange}
+        anchorDate={anchorDate}
+        onSelectDate={(newDate) => setAnchorDate(newDate)}
+        weekStartsOn={settings.weekStartDay}
+      />
     </header>
   );
 };
