@@ -37,7 +37,7 @@ export const SpeedDialFAB: React.FC = () => {
     {
       type: 'event',
       label: 'Event',
-      icon: <CalIcon className="w-5 h-5 text-[#a8c7fa]" />,
+      icon: <CalIcon className="w-5 h-5 text-[#10B981]" />,
     },
   ];
 

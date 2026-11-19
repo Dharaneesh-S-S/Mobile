@@ -297,27 +297,27 @@ export const ScheduleView: React.FC = () => {
                     );
                   }
 
-                  // Events: Light Blue (#38BDF8)
+                  // Events: Emerald Green (#10B981)
                   return (
                     <div
                       key={item.id}
                       onClick={() => openEventDetails(item)}
                       style={{
-                        backgroundColor: 'rgba(56, 189, 248, 0.18)',
-                        borderColor: 'rgba(56, 189, 248, 0.4)',
-                        borderLeftColor: '#38BDF8',
+                        backgroundColor: 'rgba(16, 185, 129, 0.18)',
+                        borderColor: 'rgba(16, 185, 129, 0.4)',
+                        borderLeftColor: '#10B981',
                         borderLeftWidth: '4px',
                       }}
-                      className="px-4 py-3 rounded-full md:rounded-2xl border cursor-pointer hover:brightness-110 active:scale-98 transition-all flex items-center justify-between shadow-[0_0_14px_rgba(56,189,248,0.2)]"
+                      className="px-4 py-3 rounded-full md:rounded-2xl border cursor-pointer hover:brightness-110 active:scale-98 transition-all flex items-center justify-between shadow-[0_0_14px_rgba(16,185,129,0.2)]"
                     >
                       <div className="flex items-center gap-2.5 min-w-0">
-                        <div className="w-2 h-2 rounded-full bg-[#38BDF8] shadow-[0_0_8px_rgba(56,189,248,0.8)] flex-shrink-0" />
+                        <div className="w-2 h-2 rounded-full bg-[#10B981] shadow-[0_0_8px_rgba(16,185,129,0.8)] flex-shrink-0" />
                         <span className="text-sm font-semibold text-white truncate">
                           {item.title}
                         </span>
                       </div>
                       {item.startTime && (
-                        <span className="text-xs font-medium text-[#38BDF8] ml-2 flex-shrink-0">
+                        <span className="text-xs font-medium text-[#10B981] ml-2 flex-shrink-0">
                           {formatTimeDisplay(item.startTime, settings.timeFormat)}
                           {item.endTime ? ` – ${formatTimeDisplay(item.endTime, settings.timeFormat)}` : ''}
                         </span>

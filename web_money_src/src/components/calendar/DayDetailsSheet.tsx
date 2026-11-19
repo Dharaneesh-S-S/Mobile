@@ -51,7 +51,7 @@ export const DayDetailsSheet: React.FC<DayDetailsSheetProps> = ({ date, onClose 
         {/* Header */}
         <div className="px-5 py-3 border-b border-slate-800 flex items-center justify-between shrink-0">
           <div className="flex items-center gap-2">
-            <CalendarIcon className="w-4 h-4 text-blue-400" />
+            <CalendarIcon className="w-4 h-4 text-emerald-400" />
             <h3 className="text-sm font-bold text-white font-display">{dayHeaderStr}</h3>
           </div>
           <button
@@ -65,14 +65,14 @@ export const DayDetailsSheet: React.FC<DayDetailsSheetProps> = ({ date, onClose 
         {/* Day mini summary */}
         <div className="px-5 py-2.5 bg-slate-900/80 border-b border-slate-800 flex items-center justify-between text-xs">
           <div className="flex items-center gap-3">
-            <span className="text-blue-400 font-semibold">+{formatInr(inc, opts)}</span>
+            <span className="text-emerald-400 font-semibold">+{formatInr(inc, opts)}</span>
             <span className="text-red-400 font-semibold">
               {exp > 0 ? `-${formatInr(exp, opts)}` : '₹0'}
             </span>
           </div>
           <div className="flex items-center gap-1 font-display">
             <span className="text-slate-400">Net:</span>
-            <span className={`font-bold ${net >= 0 ? 'text-blue-400' : 'text-red-400'}`}>
+            <span className={`font-bold ${net >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
               {formatInr(net, opts)}
             </span>
           </div>

@@ -105,8 +105,8 @@ export const CalendarView: React.FC = () => {
       {/* 1. Header Balance Strip */}
       <div className="grid grid-cols-3 gap-2.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl bg-slate-900 border border-slate-800 shadow-md mb-4 text-center">
         <div>
-          <span className="text-[11px] text-blue-400 font-semibold block mb-0.5">Income</span>
-          <span className="text-xs sm:text-base font-bold text-blue-400 font-display truncate block">
+          <span className="text-[11px] text-emerald-400 font-semibold block mb-0.5">Income</span>
+          <span className="text-xs sm:text-base font-bold text-emerald-400 font-display truncate block">
             {formatInr(periodIncome, opts)}
           </span>
         </div>
@@ -141,7 +141,7 @@ export const CalendarView: React.FC = () => {
           {/* Calendar Toolbar */}
           <div className="px-4 py-2.5 flex items-center justify-between border-b border-slate-800 bg-slate-900">
             <span className="text-xs font-bold text-slate-300 uppercase tracking-wider flex items-center gap-2">
-              <CalendarIcon className="w-3.5 h-3.5 text-blue-400" />
+              <CalendarIcon className="w-3.5 h-3.5 text-emerald-400" />
               Monthly Calendar
             </span>
 
@@ -182,11 +182,11 @@ export const CalendarView: React.FC = () => {
                 <div
                   key={dayKey}
                   onClick={() => handleDayClick(item.date)}
-                  className={`min-h-[75px] sm:min-h-[88px] p-1.5 flex flex-col justify-between cursor-pointer hover:bg-blue-600/10 transition-all relative ${
+                  className={`min-h-[75px] sm:min-h-[88px] p-1.5 flex flex-col justify-between cursor-pointer hover:bg-emerald-600/10 transition-all relative ${
                     !item.isCurrentMonth ? 'opacity-30 bg-slate-950/40' : ''
                   } ${
                     isSelected
-                      ? 'bg-blue-950/30 ring-2 ring-blue-500 ring-inset'
+                      ? 'bg-emerald-950/30 ring-2 ring-emerald-500 ring-inset'
                       : item.isToday
                       ? 'bg-slate-800/30'
                       : ''
@@ -197,7 +197,7 @@ export const CalendarView: React.FC = () => {
                     <span
                       className={`text-xs font-bold leading-none ${
                         item.isToday
-                          ? 'w-5 h-5 rounded-full bg-blue-600 text-white flex items-center justify-center font-display'
+                          ? 'w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-display shadow-[0_0_10px_rgba(16,185,129,0.5)]'
                           : isSun
                           ? 'text-red-400'
                           : item.isCurrentMonth
@@ -209,7 +209,7 @@ export const CalendarView: React.FC = () => {
                     </span>
 
                     {item.isToday && (
-                      <span className="text-[9px] font-bold text-blue-400 uppercase tracking-tighter hidden sm:inline">
+                      <span className="text-[9px] font-bold text-emerald-400 uppercase tracking-tighter hidden sm:inline">
                         Today
                       </span>
                     )}
@@ -223,7 +223,7 @@ export const CalendarView: React.FC = () => {
                       }`}
                     >
                       {stats.income > 0 ? (
-                        <span className="text-blue-400 font-semibold font-display truncate">
+                        <span className="text-emerald-400 font-semibold font-display truncate">
                           +{formatCompactInr(stats.income, settings.compactCalendarFormat)}
                         </span>
                       ) : null}
@@ -257,7 +257,7 @@ export const CalendarView: React.FC = () => {
             {/* Day Header */}
             <div className="flex items-center justify-between mb-3 pb-3 border-b border-slate-800">
               <div>
-                <span className="text-[11px] font-bold uppercase tracking-wider text-blue-400">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-400">
                   Selected Day
                 </span>
                 <h3 className="text-base font-black text-white font-display">
@@ -272,7 +272,7 @@ export const CalendarView: React.FC = () => {
 
               <button
                 onClick={() => openAddRecord({ date: selectedDay.toISOString().split('T')[0] })}
-                className="p-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white shadow-glow-blue transition-all"
+                className="p-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white shadow-glow-emerald transition-all"
                 title="Add transaction on this day"
               >
                 <Plus className="w-4 h-4" />
@@ -282,8 +282,8 @@ export const CalendarView: React.FC = () => {
             {/* Daily Stats Summary Strip */}
             <div className="grid grid-cols-3 gap-2 text-center p-2.5 rounded-2xl bg-slate-950/60 border border-slate-800/60 mb-4">
               <div>
-                <span className="text-[10px] text-blue-400 font-medium block">Income</span>
-                <span className="text-xs font-bold text-blue-400 font-display">
+                <span className="text-[10px] text-emerald-400 font-medium block">Income</span>
+                <span className="text-xs font-bold text-emerald-400 font-display">
                   {formatInr(selectedDayStats.income, { showDecimals: false })}
                 </span>
               </div>
@@ -331,7 +331,7 @@ export const CalendarView: React.FC = () => {
                       <div className="flex items-center gap-3 min-w-0">
                         <div
                           className="w-8 h-8 rounded-xl flex items-center justify-center shrink-0"
-                          style={{ backgroundColor: `${cat?.color || '#3b82f6'}20`, color: cat?.color || '#3b82f6' }}
+                          style={{ backgroundColor: `${cat?.color || '#10b981'}20`, color: cat?.color || '#10b981' }}
                         >
                           <DynamicIcon name={cat?.icon || 'Receipt'} className="w-4 h-4" />
                         </div>
@@ -353,7 +353,7 @@ export const CalendarView: React.FC = () => {
 
                       <span
                         className={`text-xs font-bold font-display ml-2 shrink-0 ${
-                          isInc ? 'text-blue-400' : isExp ? 'text-red-400' : 'text-slate-300'
+                          isInc ? 'text-emerald-400' : isExp ? 'text-red-400' : 'text-slate-300'
                         }`}
                       >
                         {isInc ? `+${formatInr(r.amountPaise, opts)}` : isExp ? `-${formatInr(r.amountPaise, opts)}` : formatInr(r.amountPaise, opts)}

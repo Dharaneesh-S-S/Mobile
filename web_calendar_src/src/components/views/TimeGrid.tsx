@@ -314,12 +314,12 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                     ? 'rgba(239, 68, 68, 0.2)'
                     : isBday
                       ? 'rgba(236, 72, 153, 0.2)'
-                      : 'rgba(56, 189, 248, 0.2)';
+                      : 'rgba(16, 185, 129, 0.2)';
                   const chipBorder = isHoliday
                     ? '#EF4444'
                     : isBday
                       ? '#EC4899'
-                      : '#38BDF8';
+                      : '#10B981';
 
                   return (
                     <button
@@ -339,7 +339,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       {isBday && <Cake className="w-3 h-3 text-[#EC4899] flex-shrink-0" />}
                       {isHoliday && <Sparkles className="w-3 h-3 text-[#EF4444] flex-shrink-0" />}
                       {!isBday && !isHoliday && (
-                        <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] flex-shrink-0" />
+                        <div className="w-1.5 h-1.5 rounded-full bg-[#10B981] flex-shrink-0" />
                       )}
                       <span className="truncate">{item.title}</span>
                     </button>
@@ -435,7 +435,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       ? '#EF4444'
                       : isBday
                         ? '#EC4899'
-                        : '#38BDF8';
+                        : '#10B981';
 
                   const bg = isTask
                     ? 'rgba(25, 230, 200, 0.2)'
@@ -443,7 +443,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                       ? 'rgba(239, 68, 68, 0.2)'
                       : isBday
                         ? 'rgba(236, 72, 153, 0.2)'
-                        : 'rgba(56, 189, 248, 0.2)';
+                        : 'rgba(16, 185, 129, 0.2)';
 
                   return (
                     <div

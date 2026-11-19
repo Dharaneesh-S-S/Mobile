@@ -243,7 +243,7 @@ export const EventEditorModal: React.FC = () => {
               type="button"
               onClick={handleSave}
               disabled={isSubmitting}
-              className={`px-5 py-1.5 rounded-full bg-[#a8c7fa] text-[#041e49] font-bold text-sm hover:bg-[#b9d3fc] active:scale-95 transition-all shadow-md ${
+              className={`px-5 py-1.5 rounded-full bg-[#10B981] text-[#030707] font-bold text-sm hover:bg-[#34D399] active:scale-95 transition-all shadow-[0_0_16px_rgba(16,185,129,0.35)] ${
                 isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
@@ -342,7 +342,7 @@ export const EventEditorModal: React.FC = () => {
                   onChange={e => setIsAllDay(e.target.checked)}
                   className="sr-only peer"
                 />
-                <div className="w-11 h-6 bg-[#35383e] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#a8c7fa] peer-checked:after:bg-[#041e49]"></div>
+                <div className="w-11 h-6 bg-[#35383e] peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#10B981] peer-checked:after:bg-[#030707]"></div>
               </label>
             </div>
 
@@ -356,14 +356,14 @@ export const EventEditorModal: React.FC = () => {
                     setStartDate(e.target.value);
                     if (endDate < e.target.value) setEndDate(e.target.value);
                   }}
-                  className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-3 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#a8c7fa]"
+                  className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-3 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#10B981]"
                 />
                 {!isAllDay && (
                   <input
                     type="time"
                     value={startTime}
                     onChange={e => setStartTime(e.target.value)}
-                    className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-2.5 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#a8c7fa]"
+                    className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-2.5 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#10B981]"
                   />
                 )}
               </div>
@@ -374,14 +374,14 @@ export const EventEditorModal: React.FC = () => {
                     type="date"
                     value={endDate}
                     onChange={e => setEndDate(e.target.value)}
-                    className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-3 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#a8c7fa]"
+                    className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-3 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#10B981]"
                   />
                   {!isAllDay && (
                     <input
                       type="time"
                       value={endTime}
                       onChange={e => setEndTime(e.target.value)}
-                      className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-2.5 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#a8c7fa]"
+                      className="bg-[#282a2d] border border-[#3c4043] rounded-lg px-2.5 py-1.5 text-xs text-[#e3e3e3] focus:outline-none focus:border-[#10B981]"
                     />
                   )}
                 </div>
@@ -419,7 +419,7 @@ export const EventEditorModal: React.FC = () => {
                     }}
                     className={`w-full text-left px-3 py-2 rounded-xl text-xs transition-colors ${
                       recurrenceRule === r
-                        ? 'bg-[#3c4043] text-[#a8c7fa] font-bold'
+                        ? 'bg-[#3c4043] text-[#10B981] font-bold'
                         : 'text-[#c4c7c5] hover:bg-[#323539]'
                     }`}
                   >
@@ -507,12 +507,12 @@ export const EventEditorModal: React.FC = () => {
                             <div
                               className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                                 isChosen
-                                  ? 'border-[#a8c7fa]'
+                                  ? 'border-[#10B981]'
                                   : 'border-[#74777f]'
                               }`}
                             >
                               {isChosen && (
-                                <div className="w-2 h-2 rounded-full bg-[#a8c7fa]" />
+                                <div className="w-2 h-2 rounded-full bg-[#10B981]" />
                               )}
                             </div>
                             <span className="truncate">{list.name}</span>
@@ -551,7 +551,7 @@ export const EventEditorModal: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className="px-3 py-1 rounded-full border border-[#44474f] text-xs text-[#a8c7fa] hover:bg-[#282a2d]"
+                  className="px-3 py-1 rounded-full border border-[#44474f] text-xs text-[#10B981] hover:bg-[#282a2d]"
                 >
                   View schedules
                 </button>
@@ -594,7 +594,7 @@ export const EventEditorModal: React.FC = () => {
                       { type: 'notification', minutesBefore: 30 },
                     ])
                   }
-                  className="pl-8 text-xs text-[#a8c7fa] hover:underline"
+                  className="pl-8 text-xs text-[#10B981] hover:underline"
                 >
                   Add notification
                 </button>
@@ -667,7 +667,7 @@ export const EventEditorModal: React.FC = () => {
                 </div>
                 <button
                   type="button"
-                  className="pl-8 text-xs text-[#a8c7fa] hover:underline"
+                  className="pl-8 text-xs text-[#10B981] hover:underline"
                 >
                   Add notification
                 </button>

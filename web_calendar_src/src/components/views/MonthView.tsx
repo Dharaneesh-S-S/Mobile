@@ -138,7 +138,7 @@ export const MonthView: React.FC = () => {
 
                   {/* Event Chips List */}
                   <div className="flex-1 space-y-1 overflow-hidden">
-                    {/* Non-task events (Holidays = Red, Birthdays = Pink, Events = Light Blue) */}
+                    {/* Non-task events (Holidays = Red, Birthdays = Pink, Events = Emerald Green) */}
                     {nonTaskEvents.slice(0, 3).map(item => {
                       const isBday = item.type === 'birthday' || item.calendarId === 'cal_birthdays';
                       const isHoliday = item.type === 'holiday' || item.calendarId === 'cal_holidays';
@@ -147,17 +147,17 @@ export const MonthView: React.FC = () => {
                         ? 'rgba(239, 68, 68, 0.18)'
                         : isBday
                           ? 'rgba(236, 72, 153, 0.18)'
-                          : 'rgba(56, 189, 248, 0.18)';
+                          : 'rgba(16, 185, 129, 0.18)';
                       const chipBorder = isHoliday
                         ? 'rgba(239, 68, 68, 0.4)'
                         : isBday
                           ? 'rgba(236, 72, 153, 0.4)'
-                          : 'rgba(56, 189, 248, 0.4)';
+                          : 'rgba(16, 185, 129, 0.4)';
                       const accentColor = isHoliday
                         ? '#EF4444'
                         : isBday
                           ? '#EC4899'
-                          : '#38BDF8';
+                          : '#10B981';
 
                       return (
                         <div
@@ -178,7 +178,7 @@ export const MonthView: React.FC = () => {
                           {isBday && <Cake className="w-3 h-3 text-[#EC4899] flex-shrink-0" />}
                           {isHoliday && <Sparkles className="w-3 h-3 text-[#EF4444] flex-shrink-0" />}
                           {!isBday && !isHoliday && (
-                            <div className="w-1.5 h-1.5 rounded-full bg-[#38BDF8] flex-shrink-0" />
+                            <div className="w-1.5 h-1.5 rounded-full bg-[#10B981] flex-shrink-0" />
                           )}
                           <span className="truncate">{item.title}</span>
                         </div>

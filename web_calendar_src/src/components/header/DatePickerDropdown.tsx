@@ -73,7 +73,7 @@ export const DatePickerDropdown: React.FC<DatePickerDropdownProps> = ({
         {hasHoliday && <span className="w-1 h-1 rounded-full bg-[#EF4444]" />}
         {hasBirthday && <span className="w-1 h-1 rounded-full bg-[#EC4899]" />}
         {hasTask && <span className="w-1 h-1 rounded-full bg-[#19E6C8]" />}
-        {hasEvent && <span className="w-1 h-1 rounded-full bg-[#38BDF8]" />}
+        {hasEvent && <span className="w-1 h-1 rounded-full bg-[#10B981]" />}
       </div>
     );
   };

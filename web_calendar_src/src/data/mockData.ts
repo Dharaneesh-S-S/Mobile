@@ -24,7 +24,7 @@ export const DEFAULT_CALENDARS: CalendarCategory[] = [
   {
     id: 'cal_my_calendar',
     name: 'My calendar',
-    color: '#38BDF8', // Light Blue (Events)
+    color: '#10B981', // Emerald Green (Events)
     isPrimary: true,
     isVisible: true,
     description: 'Personal events and schedule',
