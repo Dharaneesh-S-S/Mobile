@@ -6,6 +6,7 @@ import {
   formatDateToYYYYMMDD,
   expandRecurringEvents,
 } from '../../utils/dateUtils';
+import { formatMoneyCompact, formatMoneyFull } from '../../utils/moneyIntegration';
 import { Cake, Sparkles } from 'lucide-react';
 
 export const MonthView: React.FC = () => {
@@ -20,6 +21,8 @@ export const MonthView: React.FC = () => {
     openEditor,
     quickToggleTaskCompletion,
     searchQuery,
+    moneyStats,
+    openMoneyDetails,
   } = useCalendar();
 
   const startDay = settings.startWeekOn || 0;
@@ -93,6 +96,16 @@ export const MonthView: React.FC = () => {
                 e => e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'))
               );
 
+              // Take up to 3 events/tasks for display on the month cell
+              const maxEventsToShow = 3;
+              const displayedNonTasks = nonTaskEvents.slice(0, maxEventsToShow);
+              const remainingSlots = maxEventsToShow - displayedNonTasks.length;
+              const displayedTasks = tasksOnDay.slice(0, Math.max(0, remainingSlots));
+              const displayedCount = displayedNonTasks.length + displayedTasks.length;
+
+              const moneyForDay = moneyStats[dateStr];
+              const hasMoney = !!moneyForDay && moneyForDay.count > 0;
+
               return (
                 <div
                   key={dIdx}
@@ -112,7 +125,7 @@ export const MonthView: React.FC = () => {
                   }`}
                 >
                   {/* Date Number Header */}
-                  <div className="flex items-center justify-center md:justify-start mb-1">
+                  <div className="flex items-center justify-between mb-1">
                     <button
                       type="button"
                       onClick={e => {
@@ -134,12 +147,31 @@ export const MonthView: React.FC = () => {
                     >
                       {date.getDate()}
                     </button>
+
+                    {/* When 3 events are displayed: do not disturb the 3 events, just display the total amount (total income - total expense) */}
+                    {hasMoney && displayedCount === 3 && (
+                      <button
+                        type="button"
+                        onClick={e => {
+                          e.stopPropagation();
+                          openMoneyDetails(dateStr);
+                        }}
+                        className={`text-[10px] font-bold font-display px-1.5 py-0.5 rounded cursor-pointer transition-all hover:scale-105 ${
+                          moneyForDay.netPaise >= 0
+                            ? 'text-emerald-400 bg-emerald-950/60 border border-emerald-500/30 shadow-[0_0_8px_rgba(16,185,129,0.25)]'
+                            : 'text-red-400 bg-red-950/60 border border-red-500/30 shadow-[0_0_8px_rgba(239,68,68,0.25)]'
+                        }`}
+                        title={`Total: ${formatMoneyFull(moneyForDay.netPaise, true)} (Click to view)`}
+                      >
+                        {formatMoneyCompact(moneyForDay.netPaise, true)}
+                      </button>
+                    )}
                   </div>
 
                   {/* Event Chips List */}
                   <div className="flex-1 space-y-1 overflow-hidden">
                     {/* Non-task events (Holidays = Red, Birthdays = Pink, Events = Emerald Green) */}
-                    {nonTaskEvents.slice(0, 3).map(item => {
+                    {displayedNonTasks.map(item => {
                       const isBday = item.type === 'birthday' || item.calendarId === 'cal_birthdays';
                       const isHoliday = item.type === 'holiday' || item.calendarId === 'cal_holidays';
 
@@ -185,8 +217,8 @@ export const MonthView: React.FC = () => {
                       );
                     })}
 
-                    {/* Tasks: Maintained Teal Design with Hollow Circle Completion Indicator (Requirements #15 & #21) */}
-                    {tasksOnDay.slice(0, 3).map(task => (
+                    {/* Tasks: Maintained Teal Design with Hollow Circle Completion Indicator */}
+                    {displayedTasks.map(task => (
                       <div
                         key={task.id}
                         onClick={e => {
@@ -212,6 +244,37 @@ export const MonthView: React.FC = () => {
                         <span className="truncate">{task.title}</span>
                       </div>
                     ))}
+
+                    {/* When 2, 1, or 0 events/tasks are displayed: display Total Income, Total Expense, and Total Amount */}
+                    {hasMoney && displayedCount < 3 && (
+                      <div
+                        onClick={e => {
+                          e.stopPropagation();
+                          openMoneyDetails(dateStr);
+                        }}
+                        className="mt-1 px-1.5 py-1 rounded-md bg-[#051413]/70 border border-emerald-500/20 hover:border-emerald-400/50 text-[10px] font-display flex flex-col gap-0.5 cursor-pointer transition-all hover:bg-[#071c1a]"
+                        title="Click to view financial details"
+                      >
+                        <div className="flex items-center justify-between leading-tight">
+                          <span className="text-[9px] text-[#94B5B0] font-medium">Income</span>
+                          <span className="text-emerald-400 font-semibold truncate">
+                            +{formatMoneyCompact(moneyForDay.incomePaise)}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between leading-tight">
+                          <span className="text-[9px] text-[#94B5B0] font-medium">Expense</span>
+                          <span className="text-red-400 font-semibold truncate">
+                            {moneyForDay.expensePaise > 0 ? `-${formatMoneyCompact(moneyForDay.expensePaise)}` : '₹0'}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between border-t border-teal-500/15 pt-0.5 leading-tight font-bold">
+                          <span className="text-[9px] text-slate-300">Total</span>
+                          <span className={`truncate ${moneyForDay.netPaise >= 0 ? 'text-emerald-400' : 'text-red-400'}`}>
+                            {formatMoneyCompact(moneyForDay.netPaise, true)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 </div>
               );

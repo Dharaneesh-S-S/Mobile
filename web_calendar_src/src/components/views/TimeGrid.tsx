@@ -8,6 +8,7 @@ import {
   calculateEventPositions,
   expandRecurringEvents,
 } from '../../utils/dateUtils';
+import { formatMoneyCompact } from '../../utils/moneyIntegration';
 import {
   Cake,
   Sparkles,
@@ -27,6 +28,8 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
     openEventDetails,
     quickToggleTaskCompletion,
     searchQuery,
+    moneyStats,
+    openMoneyDetails,
   } = useCalendar();
 
   const hours = getDayHours();
@@ -225,6 +228,87 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                     {day.getDate()}
                   </div>
                 </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Financial Summary Shelf (above All-Day part - 3 lines: Income, Expense, Total) */}
+      <div
+        className="flex border-b border-[#0e2624] bg-[#020505] flex-shrink-0"
+        style={{ paddingRight: `${scrollbarWidth}px` }}
+      >
+        {/* Left Gutter: Matches width of timeline gutter (w-14 md:w-16) */}
+        <div
+          className="w-14 md:w-16 p-1 flex flex-col justify-center items-end pr-2 text-[9px] font-semibold border-r border-[#0e2624] flex-shrink-0 leading-tight select-none bg-[#030908]"
+          title="Daily financial summary"
+        >
+          <span className="text-emerald-400">Income</span>
+          <span className="text-red-400">Expense</span>
+          <span className="text-slate-300">Total</span>
+        </div>
+
+        {/* Day Columns */}
+        <div
+          className="flex-1 grid min-w-0"
+          style={{ gridTemplateColumns: `repeat(${numDays}, minmax(0, 1fr))` }}
+        >
+          {days.map((day, idx) => {
+            const dateStr = formatDateToYYYYMMDD(day);
+            const stats = moneyStats[dateStr];
+            const hasActivity = !!stats && stats.count > 0;
+
+            return (
+              <div
+                key={idx}
+                onClick={() => {
+                  if (hasActivity) {
+                    openMoneyDetails(dateStr);
+                  }
+                }}
+                className={`p-1 border-r border-[#0e2624] last:border-r-0 min-w-0 flex flex-col justify-center text-[10px] font-display leading-tight transition-colors ${
+                  hasActivity
+                    ? 'cursor-pointer hover:bg-emerald-950/30'
+                    : 'bg-transparent'
+                }`}
+                title={hasActivity ? `Click to view transactions for ${dateStr}` : undefined}
+              >
+                {hasActivity ? (
+                  <div className="flex flex-col gap-0.5">
+                    {/* Line 1: Income */}
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-[9px] text-[#94B5B0] font-medium hidden sm:inline">Inc</span>
+                      <span className="text-emerald-400 font-semibold truncate ml-auto">
+                        +{formatMoneyCompact(stats.incomePaise)}
+                      </span>
+                    </div>
+                    {/* Line 2: Expense */}
+                    <div className="flex items-center justify-between text-[10px]">
+                      <span className="text-[9px] text-[#94B5B0] font-medium hidden sm:inline">Exp</span>
+                      <span className="text-red-400 font-semibold truncate ml-auto">
+                        {stats.expensePaise > 0 ? `-${formatMoneyCompact(stats.expensePaise)}` : '₹0'}
+                      </span>
+                    </div>
+                    {/* Line 3: Total */}
+                    <div className="flex items-center justify-between text-[10px] border-t border-[#0e2624] pt-0.5">
+                      <span className="text-[9px] text-slate-300 font-bold hidden sm:inline">Tot</span>
+                      <span
+                        className={`font-bold truncate ml-auto ${
+                          stats.netPaise >= 0 ? 'text-emerald-400' : 'text-red-400'
+                        }`}
+                      >
+                        {formatMoneyCompact(stats.netPaise, true)}
+                      </span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="flex flex-col gap-0.5 text-center text-[#2a3836] text-[9px] select-none py-0.5">
+                    <div>-</div>
+                    <div>-</div>
+                    <div>-</div>
+                  </div>
+                )}
               </div>
             );
           })}

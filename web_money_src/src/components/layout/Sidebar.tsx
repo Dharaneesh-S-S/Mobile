@@ -57,11 +57,6 @@ export const Sidebar: React.FC = () => {
       badge: filteredRecords.length,
     },
     {
-      id: 'calendar' as const,
-      label: 'Calendar',
-      icon: CalendarDays,
-    },
-    {
       id: 'statistics' as const,
       label: 'Analytics & Stats',
       icon: PieChart,

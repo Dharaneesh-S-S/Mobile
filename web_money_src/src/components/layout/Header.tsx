@@ -60,7 +60,6 @@ export const Header: React.FC = () => {
 
   const navTabs = [
     { id: 'transactions' as const, label: 'Transactions', icon: ReceiptText, count: filteredRecords.length },
-    { id: 'calendar' as const, label: 'Calendar', icon: CalendarDays },
     { id: 'statistics' as const, label: 'Analytics', icon: PieChart },
     { id: 'wallet' as const, label: 'Wallets', icon: WalletIcon },
   ];
@@ -255,7 +254,7 @@ export const Header: React.FC = () => {
               onClick={() => setIsMonthPickerOpen((p) => !p)}
               className="text-xs font-bold text-slate-200 px-2 py-0.5 rounded hover:bg-slate-800 flex items-center gap-1.5"
             >
-              <CalendarIcon className="w-3 h-3 text-blue-400" />
+              <CalendarIcon className="w-3 h-3 text-[#19E6C8]" />
               <span>{dateRange.label}</span>
             </button>
             <button

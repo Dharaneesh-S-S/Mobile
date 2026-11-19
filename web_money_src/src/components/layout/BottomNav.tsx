@@ -1,7 +1,6 @@
 import React from 'react';
 import {
   ReceiptText,
-  CalendarDays,
   Plus,
   PieChart,
   Wallet as WalletIcon,
@@ -35,28 +34,7 @@ export const BottomNav: React.FC = () => {
           )}
         </button>
 
-        {/* 2. Calendar Tab */}
-        <button
-          onClick={() => setActiveTab('calendar')}
-          className={`flex-1 flex flex-col items-center justify-center py-1 transition-all ${
-            activeTab === 'calendar'
-              ? 'text-[#19E6C8] font-bold'
-              : 'text-[#94B5B0] hover:text-white'
-          }`}
-          aria-label="Calendar tab"
-        >
-          <CalendarDays
-            className={`w-5 h-5 transition-transform ${
-              activeTab === 'calendar' ? 'scale-110 drop-shadow-[0_0_8px_rgba(25,230,200,0.6)]' : ''
-            }`}
-          />
-          <span className="text-[10px] mt-0.5 tracking-tight">Calendar</span>
-          {activeTab === 'calendar' && (
-            <span className="w-1 h-1 rounded-full bg-[#19E6C8] mt-0.5 shadow-[0_0_6px_#19E6C8]" />
-          )}
-        </button>
-
-        {/* 3. Center Glowing Action Button (+) */}
+        {/* 2. Center Glowing Action Button (+) */}
         <div className="flex-shrink-0 px-2 -translate-y-3">
           <button
             onClick={() => openAddRecord()}

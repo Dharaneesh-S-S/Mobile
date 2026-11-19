@@ -4,7 +4,6 @@ import { Header } from './components/layout/Header';
 import { Sidebar } from './components/layout/Sidebar';
 import { BottomNav } from './components/layout/BottomNav';
 import { TransactionList } from './components/transactions/TransactionList';
-import { CalendarView } from './components/calendar/CalendarView';
 import { StatisticView } from './components/statistics/StatisticView';
 import { WalletView } from './components/wallet/WalletView';
 import { AddRecordModal } from './components/recordForm/AddRecordModal';
@@ -60,11 +59,10 @@ const MainAppContent: React.FC = () => {
         openSearch();
       }
 
-      // Numeric shortcuts: 1-4 for Tabs
+      // Numeric shortcuts: 1-3 for Tabs
       if (e.key === '1') setActiveTab('transactions');
-      if (e.key === '2') setActiveTab('calendar');
-      if (e.key === '3') setActiveTab('statistics');
-      if (e.key === '4') setActiveTab('wallet');
+      if (e.key === '2') setActiveTab('statistics');
+      if (e.key === '3') setActiveTab('wallet');
     };
 
     window.addEventListener('keydown', handleKeyDown);
@@ -100,7 +98,6 @@ const MainAppContent: React.FC = () => {
           {/* Scrollable Main Workspace */}
           <main className="flex-1 overflow-y-auto px-3 sm:px-6 md:px-8 py-4 sm:py-6 relative w-full">
             {activeTab === 'transactions' && <TransactionList />}
-            {activeTab === 'calendar' && <CalendarView />}
             {activeTab === 'statistics' && <StatisticView />}
             {activeTab === 'wallet' && <WalletView />}
             {activeTab === 'styleguide' && <StyleguideView />}

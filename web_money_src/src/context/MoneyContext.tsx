@@ -317,6 +317,74 @@ export const MoneyProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return map;
   }, [wallets, allRecords]);
 
+  // Sync daily financial summary to localStorage and notify other apps (e.g. main Calendar)
+  useEffect(() => {
+    if (!allRecords) return;
+    try {
+      const summaryMap: { [key: string]: any } = {};
+      const catMap = new Map((categories || []).map((c) => [c.id, c]));
+      const walMap = new Map((wallets || []).map((w) => [w.id, w]));
+
+      for (const r of allRecords) {
+        if (!r.dateTime) continue;
+        const d = new Date(r.dateTime);
+        if (isNaN(d.getTime())) continue;
+        const year = d.getFullYear();
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const day = String(d.getDate()).padStart(2, '0');
+        const dateKey = `${year}-${month}-${day}`;
+
+        if (!summaryMap[dateKey]) {
+          summaryMap[dateKey] = {
+            date: dateKey,
+            incomePaise: 0,
+            expensePaise: 0,
+            netPaise: 0,
+            count: 0,
+            transactions: [],
+          };
+        }
+
+        const item = summaryMap[dateKey];
+        item.count++;
+
+        if (r.type === 'income') {
+          item.incomePaise += r.amountPaise;
+          item.netPaise += r.amountPaise;
+        } else if (r.type === 'expense') {
+          item.expensePaise += r.amountPaise;
+          item.netPaise -= r.amountPaise;
+        } else if (r.type === 'transfer' && r.feePaise) {
+          item.expensePaise += r.feePaise;
+          item.netPaise -= r.feePaise;
+        }
+
+        const cat = catMap.get(r.categoryId);
+        const wal = walMap.get(r.walletId);
+
+        item.transactions.push({
+          id: r.id,
+          type: r.type,
+          amountPaise: r.amountPaise,
+          feePaise: r.feePaise,
+          dateTime: r.dateTime,
+          description: r.description,
+          categoryId: r.categoryId,
+          categoryName: cat?.name,
+          categoryColor: cat?.color,
+          walletId: r.walletId,
+          walletName: wal?.name,
+          memo: r.memo,
+        });
+      }
+
+      localStorage.setItem('rupeeflow_daily_summary_v1', JSON.stringify(summaryMap));
+      window.dispatchEvent(new CustomEvent('rupeeflow_money_updated'));
+    } catch (err) {
+      console.warn('Error syncing rupeeflow summary:', err);
+    }
+  }, [allRecords, categories, wallets]);
+
   const totalAccountBalance = useMemo(() => {
     let sum = 0;
     for (const w of wallets) {

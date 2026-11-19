@@ -39,6 +39,11 @@ import {
   deleteZenithTask,
   convertZenithTaskToCalendarEvent,
 } from '../utils/taskIntegration';
+import {
+  MoneyDailySummary,
+  loadDailyMoneyStats,
+  RUPEEFLOW_UPDATE_EVENT,
+} from '../utils/moneyIntegration';
 
 export interface ToastItem {
   id: string;
@@ -158,6 +163,13 @@ interface CalendarContextType {
   storageStats: OverallStorageStats;
   refreshStorageStats: () => void;
   optimizeStorage: () => void;
+
+  // RupeeFlow / Money Manager Integration
+  moneyStats: Record<string, MoneyDailySummary>;
+  selectedMoneyDate: string | null;
+  openMoneyDetails: (dateStr: string) => void;
+  closeMoneyDetails: () => void;
+  refreshMoneyStats: () => Promise<void>;
 }
 
 const CalendarContext = createContext<CalendarContextType | undefined>(undefined);
@@ -227,6 +239,43 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       window.removeEventListener('zenith_tasks_sync', handleTaskSync);
     };
   }, []);
+
+  // RupeeFlow / Money Manager Integration State
+  const [moneyStats, setMoneyStats] = useState<Record<string, MoneyDailySummary>>({});
+  const [selectedMoneyDate, setSelectedMoneyDate] = useState<string | null>(null);
+
+  const refreshMoneyStats = useCallback(async () => {
+    try {
+      const stats = await loadDailyMoneyStats();
+      setMoneyStats(stats);
+    } catch (e) {
+      console.warn('Error refreshing money stats:', e);
+    }
+  }, []);
+
+  const openMoneyDetails = useCallback((dateStr: string) => {
+    setSelectedMoneyDate(dateStr);
+  }, []);
+
+  const closeMoneyDetails = useCallback(() => {
+    setSelectedMoneyDate(null);
+  }, []);
+
+  useEffect(() => {
+    refreshMoneyStats();
+
+    const handleMoneySync = () => {
+      refreshMoneyStats();
+    };
+
+    window.addEventListener('storage', handleMoneySync);
+    window.addEventListener(RUPEEFLOW_UPDATE_EVENT, handleMoneySync);
+
+    return () => {
+      window.removeEventListener('storage', handleMoneySync);
+      window.removeEventListener(RUPEEFLOW_UPDATE_EVENT, handleMoneySync);
+    };
+  }, [refreshMoneyStats]);
 
   // Load initial trash (compressed)
   const [trash, setTrash] = useState<CalendarEvent[]>(() => {
@@ -1140,6 +1189,11 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       storageStats,
       refreshStorageStats,
       optimizeStorage,
+      moneyStats,
+      selectedMoneyDate,
+      openMoneyDetails,
+      closeMoneyDetails,
+      refreshMoneyStats,
     }),
     [
       events,
@@ -1154,6 +1208,8 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       tasksSidebarOpen,
       activeOverlaidPeople,
       storageStats,
+      moneyStats,
+      selectedMoneyDate,
       searchQuery,
       advancedFilters,
       isSearchOpen,
@@ -1221,6 +1277,9 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       importCSV,
       refreshStorageStats,
       optimizeStorage,
+      openMoneyDetails,
+      closeMoneyDetails,
+      refreshMoneyStats,
     ]
   );
 
