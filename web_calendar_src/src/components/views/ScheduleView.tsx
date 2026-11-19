@@ -34,7 +34,10 @@ export const ScheduleView: React.FC = () => {
   // Filter events: always exclude completed tasks, and exclude tasks added directly in Tasks (no timeline)
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
-    if (!visibleCalendarIds.includes(e.calendarId)) return false;
+    const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'));
+    const holidayCal = calendars.find(c => c.id === 'cal_holidays');
+    if (isHoliday && holidayCal && !holidayCal.isVisible) return false;
+    if (!isHoliday && !visibleCalendarIds.includes(e.calendarId)) return false;
     if (e.type === 'task' && e.isCompleted) return false;
     if (e.type === 'task' && !e.createdFromCalendar) return false;
 
@@ -123,7 +126,7 @@ export const ScheduleView: React.FC = () => {
           const dayNum = dt.getDate();
           const isCurToday = isToday(dt);
           const hasHoliday = dayItems.some(
-            item => item.type === 'holiday' || item.calendarId === 'cal_holidays'
+            item => item.type === 'holiday' || item.calendarId === 'cal_holidays' || (item.title && item.title.toLowerCase().includes('holiday'))
           );
 
           return (

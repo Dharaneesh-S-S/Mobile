@@ -38,7 +38,10 @@ export const MonthView: React.FC = () => {
   // Filter events: always exclude completed tasks, and exclude tasks added directly in Tasks (no timeline)
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
-    if (!visibleCalendarIds.includes(e.calendarId)) return false;
+    const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'));
+    const holidayCal = calendars.find(c => c.id === 'cal_holidays');
+    if (isHoliday && holidayCal && !holidayCal.isVisible) return false;
+    if (!isHoliday && !visibleCalendarIds.includes(e.calendarId)) return false;
     if (e.type === 'task' && e.isCompleted) return false;
     if (e.type === 'task' && !e.createdFromCalendar) return false;
 
@@ -86,7 +89,9 @@ export const MonthView: React.FC = () => {
                 new Map(tasksOnDayRaw.map(t => [t.id.replace(/^task_/, ''), t])).values()
               );
               const nonTaskEvents = dayEvents.filter(e => e.type !== 'task' && e.calendarId !== 'cal_tasks');
-              const hasHoliday = dayEvents.some(e => e.type === 'holiday' || e.calendarId === 'cal_holidays');
+              const hasHoliday = dayEvents.some(
+                e => e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'))
+              );
 
               return (
                 <div
@@ -100,7 +105,7 @@ export const MonthView: React.FC = () => {
                   }}
                   className={`border-r border-[#0e2624] last:border-r-0 p-1 flex flex-col justify-start transition-colors relative cursor-pointer overflow-hidden ${
                     hasHoliday
-                      ? 'bg-red-950/30 hover:bg-red-950/45 border-t-2 border-t-[#EF4444]'
+                      ? 'bg-red-950/40 border-t-2 border-t-[#EF4444] hover:bg-red-950/60 shadow-[inset_0_0_15px_rgba(239,68,68,0.2)]'
                       : !isCurrentMonth
                       ? 'bg-[#051211]/40 hover:bg-teal-500/5'
                       : 'bg-[#030707] hover:bg-teal-500/5'
@@ -115,11 +120,11 @@ export const MonthView: React.FC = () => {
                         setCurrentDate(date);
                         setCurrentView('day');
                       }}
-                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs transition-all ${
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
                         hasHoliday
                           ? isCurToday
-                            ? 'bg-[#EF4444] text-white font-bold shadow-[0_0_12px_rgba(239,68,68,0.7)]'
-                            : 'text-[#EF4444] font-bold bg-[#EF4444]/20 border border-[#EF4444]/40 hover:bg-[#EF4444]/30'
+                            ? 'bg-[#EF4444] text-white font-extrabold shadow-[0_0_14px_rgba(239,68,68,0.8)] ring-2 ring-[#19E6C8]'
+                            : 'bg-[#EF4444] text-white font-extrabold shadow-[0_0_10px_rgba(239,68,68,0.6)]'
                           : isCurToday
                           ? 'bg-[#19E6C8] text-[#030707] font-bold shadow-[0_0_12px_rgba(25,230,200,0.5)]'
                           : isCurrentMonth

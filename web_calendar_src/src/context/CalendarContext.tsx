@@ -186,7 +186,17 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Load initial calendars
   const [calendars, setCalendars] = useState<CalendarCategory[]>(() => {
     const raw = getCompressedItem<CalendarCategory[]>(STORAGE_KEYS.CALENDARS, DEFAULT_CALENDARS);
-    return raw && raw.length > 0 ? raw : DEFAULT_CALENDARS;
+    if (!raw || raw.length === 0) return DEFAULT_CALENDARS;
+    const merged = [...raw];
+    for (const def of DEFAULT_CALENDARS) {
+      const idx = merged.findIndex(c => c.id === def.id);
+      if (idx === -1) {
+        merged.push(def);
+      } else if (def.id === 'cal_holidays') {
+        merged[idx] = { ...def, ...merged[idx], isVisible: true, color: '#EF4444' };
+      }
+    }
+    return merged;
   });
 
   // Load initial events & tasks (merged with zenith tasks from task feature)
@@ -465,19 +475,36 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const nowISO = new Date().toISOString();
     const primaryCal = calendars.find(c => c.isPrimary) || calendars[0];
 
+    const itemType = eventData.type || 'event';
     const newEvent: CalendarEvent = {
       id: `evt_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
-      calendarId: eventData.calendarId || primaryCal?.id || 'cal_my_calendar',
-      type: eventData.type || 'event',
-      title: eventData.title?.trim() || (eventData.type === 'task' ? 'Untitled task' : 'Untitled event'),
+      calendarId:
+        eventData.calendarId ||
+        (itemType === 'task'
+          ? 'cal_tasks'
+          : itemType === 'birthday'
+          ? 'cal_birthdays'
+          : itemType === 'holiday'
+          ? 'cal_holidays'
+          : primaryCal?.id || 'cal_my_calendar'),
+      type: itemType,
+      title: eventData.title?.trim() || (itemType === 'task' ? 'Untitled task' : itemType === 'holiday' ? 'Holiday' : 'Untitled event'),
       description: eventData.description || '',
       location: eventData.location || '',
       startDate: eventData.startDate || formatDateToYYYYMMDD(currentDate),
       startTime: eventData.startTime || '10:00',
       endDate: eventData.endDate || eventData.startDate || formatDateToYYYYMMDD(currentDate),
       endTime: eventData.endTime || '11:00',
-      isAllDay: eventData.isAllDay ?? false,
-      colorOverride: eventData.colorOverride,
+      isAllDay: eventData.isAllDay ?? (itemType === 'task' || itemType === 'holiday' || itemType === 'birthday'),
+      colorOverride:
+        eventData.colorOverride ||
+        (itemType === 'task'
+          ? '#19E6C8'
+          : itemType === 'birthday'
+          ? '#EC4899'
+          : itemType === 'holiday'
+          ? '#EF4444'
+          : undefined),
       recurrence: eventData.recurrence,
       guests: eventData.guests || [],
       videoConference: eventData.videoConference,

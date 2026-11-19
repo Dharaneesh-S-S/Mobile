@@ -70,7 +70,10 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
   // Filter events: always exclude completed tasks, and exclude tasks added directly in Tasks (no timeline)
   const filteredEvents = expanded.filter(e => {
     if (e.deletedAt) return false;
-    if (!visibleCalendarIds.includes(e.calendarId)) return false;
+    const isHoliday = e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'));
+    const holidayCal = calendars.find(c => c.id === 'cal_holidays');
+    if (isHoliday && holidayCal && !holidayCal.isVisible) return false;
+    if (!isHoliday && !visibleCalendarIds.includes(e.calendarId)) return false;
     if (e.type === 'task' && e.isCompleted) return false;
     if (e.type === 'task' && !e.createdFromCalendar) return false;
 
@@ -114,7 +117,7 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             const isCurDayToday = isToday(day);
             const dateStr = formatDateToYYYYMMDD(day);
             const hasHoliday = filteredEvents.some(
-              e => (e.type === 'holiday' || e.calendarId === 'cal_holidays') &&
+              e => (e.type === 'holiday' || e.calendarId === 'cal_holidays' || (e.title && e.title.toLowerCase().includes('holiday'))) &&
                    e.startDate <= dateStr && e.endDate >= dateStr
             );
 
@@ -122,13 +125,13 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
               <div
                 key={idx}
                 className={`py-2.5 px-1 text-center border-r border-[#0e2624] last:border-r-0 min-w-0 transition-colors ${
-                  hasHoliday ? 'bg-red-950/35 border-b-2 border-b-[#EF4444]' : ''
+                  hasHoliday ? 'bg-red-900/30 border-b-2 border-b-[#EF4444] shadow-[inset_0_-2px_12px_rgba(239,68,68,0.25)]' : ''
                 }`}
               >
                 <div
-                  className={`text-xs font-bold tracking-wider uppercase ${
+                  className={`text-xs font-extrabold tracking-wider uppercase ${
                     hasHoliday
-                      ? 'text-[#EF4444]'
+                      ? 'text-[#EF4444] drop-shadow-[0_0_6px_rgba(239,68,68,0.6)]'
                       : isCurDayToday
                       ? 'text-[#19E6C8]'
                       : 'text-[#94B5B0]'
@@ -138,11 +141,11 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
                 </div>
                 <div className="mt-1 flex items-center justify-center">
                   <div
-                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-all ${
+                    className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-extrabold transition-all ${
                       hasHoliday
                         ? isCurDayToday
-                          ? 'bg-[#EF4444] text-white shadow-[0_0_12px_rgba(239,68,68,0.7)]'
-                          : 'bg-[#EF4444]/20 border border-[#EF4444] text-[#EF4444] shadow-[0_0_8px_rgba(239,68,68,0.3)]'
+                          ? 'bg-[#EF4444] text-white font-extrabold shadow-[0_0_14px_rgba(239,68,68,0.8)] ring-2 ring-[#19E6C8]'
+                          : 'bg-[#EF4444] text-white font-extrabold shadow-[0_0_10px_rgba(239,68,68,0.6)]'
                         : isCurDayToday
                         ? 'bg-[#19E6C8] text-[#030707] shadow-[0_0_12px_rgba(25,230,200,0.5)]'
                         : 'text-[#F4FFFD]'
