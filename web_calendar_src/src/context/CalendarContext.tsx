@@ -193,13 +193,10 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   const [events, setEvents] = useState<CalendarEvent[]>(() => {
     const raw = getCompressedItem<CalendarEvent[]>(STORAGE_KEYS.EVENTS, []);
     let baseEvents = raw && raw.length > 0 ? raw : DEMO_EVENTS;
+    const nonZenith = baseEvents.filter(e => !e.id.startsWith('task_') && e.type !== 'task');
     const zTasks = loadZenithTasks();
-    if (zTasks.length > 0) {
-      const zEvents = zTasks.map(t => convertZenithTaskToCalendarEvent(t));
-      const filteredBase = baseEvents.filter(e => !zEvents.some(ze => ze.id === e.id || ze.id === `task_${e.id}`));
-      baseEvents = [...filteredBase, ...zEvents];
-    }
-    return baseEvents;
+    const zEvents = zTasks.map(t => convertZenithTaskToCalendarEvent(t));
+    return [...nonZenith, ...zEvents];
   });
 
   // Listen for background task changes from Zenith Tasks
@@ -514,7 +511,21 @@ export const CalendarProvider: React.FC<{ children: React.ReactNode }> = ({ chil
       newEvent.id = zTask.id.startsWith('task_') ? zTask.id : `task_${zTask.id}`;
     }
 
-    setEvents(prev => [...prev, newEvent]);
+    setEvents(prev => {
+      const cleanId = newEvent.id.replace(/^task_/, '');
+      const existingIdx = prev.findIndex(
+        e => e.id === newEvent.id ||
+             (newEvent.type === 'task' && (
+               e.id === cleanId ||
+               e.id === `task_${cleanId}` ||
+               (e.type === 'task' && e.title === newEvent.title && e.startDate === newEvent.startDate)
+             ))
+      );
+      if (existingIdx >= 0) {
+        return prev.map((e, idx) => (idx === existingIdx ? newEvent : e));
+      }
+      return [...prev, newEvent];
+    });
     showToast(
       `${newEvent.type === 'task' ? 'Task' : 'Event'} created`,
       'Undo',

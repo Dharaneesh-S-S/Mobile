@@ -39,6 +39,7 @@ export const QuickCreatePopover: React.FC = () => {
   const [guests, setGuests] = useState<string[]>([]);
   const [showGuestInput, setShowGuestInput] = useState(false);
   const [attachments, setAttachments] = useState<{ id: string; name: string }[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = React.useRef<HTMLInputElement>(null);
 
   if (!isQuickCreateOpen || !quickCreateData) return null;
@@ -60,6 +61,8 @@ export const QuickCreatePopover: React.FC = () => {
   };
 
   const handleSave = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const videoConference = hasVideoCall
       ? {
           id: `meet_${Date.now()}`,
@@ -406,7 +409,10 @@ export const QuickCreatePopover: React.FC = () => {
             <button
               type="button"
               onClick={handleSave}
-              className="px-5 py-2 text-xs font-extrabold text-[#030707] bg-[#19E6C8] hover:bg-[#15caa0] rounded-xl shadow-[0_0_15px_rgba(25,230,200,0.3)] transition-all active:scale-95"
+              disabled={isSubmitting}
+              className={`px-5 py-2 text-xs font-extrabold text-[#030707] bg-[#19E6C8] hover:bg-[#15caa0] rounded-xl shadow-[0_0_15px_rgba(25,230,200,0.3)] transition-all active:scale-95 ${
+                isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
             >
               Save
             </button>

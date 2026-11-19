@@ -80,7 +80,11 @@ export const MonthView: React.FC = () => {
                 e => e.startDate <= dateStr && e.endDate >= dateStr
               );
 
-              const tasksOnDay = dayEvents.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
+              // Deduplicate tasks on day by clean ID
+              const tasksOnDayRaw = dayEvents.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
+              const tasksOnDay = Array.from(
+                new Map(tasksOnDayRaw.map(t => [t.id.replace(/^task_/, ''), t])).values()
+              );
               const nonTaskEvents = dayEvents.filter(e => e.type !== 'task' && e.calendarId !== 'cal_tasks');
               const hasHoliday = dayEvents.some(e => e.type === 'holiday' || e.calendarId === 'cal_holidays');
 

@@ -183,7 +183,6 @@ export function saveZenithTasks(tasks: ZenithTask[]): void {
     const compressed = LZString.compressToUTF16(json);
     localStorage.setItem(ZENITH_STORAGE_KEYS.TASKS, compressed);
     // Notify other components/windows
-    window.dispatchEvent(new Event('storage'));
     window.dispatchEvent(new CustomEvent('zenith_tasks_sync', { detail: tasks }));
   } catch (err) {
     console.error('Failed to save zenith tasks:', err);

@@ -328,7 +328,18 @@ export function expandRecurringEvents(
     }
   }
 
-  return result;
+  // Deduplicate by clean id to prevent duplicates
+  const seenIds = new Set<string>();
+  const uniqueResult: CalendarEvent[] = [];
+  for (const item of result) {
+    const key = item.type === 'task' ? `task_${item.id.replace(/^task_/, '')}` : item.id;
+    if (!seenIds.has(key)) {
+      seenIds.add(key);
+      uniqueResult.push(item);
+    }
+  }
+
+  return uniqueResult;
 }
 
 /**

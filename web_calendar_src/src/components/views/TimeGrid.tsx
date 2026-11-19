@@ -183,7 +183,10 @@ export const TimeGrid: React.FC<TimeGridProps> = ({ days, numDays }) => {
             const allDayItems = filteredEvents.filter(
               e => (e.isAllDay || !e.startTime) && e.startDate <= dateStr && e.endDate >= dateStr
             );
-            const tasksOnDay = allDayItems.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
+            const tasksOnDayRaw = allDayItems.filter(e => e.type === 'task' || e.calendarId === 'cal_tasks');
+            const tasksOnDay = Array.from(
+              new Map(tasksOnDayRaw.map(t => [t.id.replace(/^task_/, ''), t])).values()
+            );
             const nonTasks = allDayItems.filter(e => e.type !== 'task' && e.calendarId !== 'cal_tasks');
 
             return (

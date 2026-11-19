@@ -103,6 +103,8 @@ export const EventEditorModal: React.FC = () => {
     name: 'Valeo Work',
   };
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const chips: { type: CalendarItemType; label: string }[] = [
     { type: 'event', label: 'Event' },
     { type: 'task', label: 'Task' },
@@ -123,6 +125,8 @@ export const EventEditorModal: React.FC = () => {
   ];
 
   const handleSave = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     const finalTitle = title.trim() || (itemType === 'task' ? 'Untitled task' : itemType === 'birthday' ? 'Birthday' : itemType === 'holiday' ? 'Holiday' : 'Untitled event');
 
     let recurrence: RecurrenceRule | undefined = undefined;
@@ -221,7 +225,10 @@ export const EventEditorModal: React.FC = () => {
           <button
             type="button"
             onClick={handleSave}
-            className="px-5 py-1.5 rounded-full bg-[#a8c7fa] text-[#041e49] font-bold text-sm hover:bg-[#b9d3fc] active:scale-95 transition-all shadow-md"
+            disabled={isSubmitting}
+            className={`px-5 py-1.5 rounded-full bg-[#a8c7fa] text-[#041e49] font-bold text-sm hover:bg-[#b9d3fc] active:scale-95 transition-all shadow-md ${
+              isSubmitting ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
             Save
           </button>

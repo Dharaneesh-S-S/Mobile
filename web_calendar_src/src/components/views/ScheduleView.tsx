@@ -54,11 +54,17 @@ export const ScheduleView: React.FC = () => {
     year: 'numeric',
   });
 
-  // Group events by date
+  // Group events by date, deduplicating tasks by clean ID
   const grouped = filteredEvents.reduce<Record<string, CalendarEvent[]>>((acc, item) => {
     const key = item.startDate;
     if (!acc[key]) acc[key] = [];
-    acc[key].push(item);
+    const itemKey = item.type === 'task' ? `task_${item.id.replace(/^task_/, '')}` : item.id;
+    const exists = acc[key].some(
+      existing => (existing.type === 'task' ? `task_${existing.id.replace(/^task_/, '')}` : existing.id) === itemKey
+    );
+    if (!exists) {
+      acc[key].push(item);
+    }
     return acc;
   }, {});
 
