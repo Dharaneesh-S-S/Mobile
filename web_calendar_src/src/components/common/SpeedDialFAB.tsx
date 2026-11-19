@@ -1,12 +1,8 @@
 import React, { useState } from 'react';
 import {
   Plus,
-  X,
   Calendar as CalIcon,
   CheckCircle2,
-  CalendarX,
-  Headphones,
-  MapPin,
   Cake,
   Sparkles,
 } from 'lucide-react';
@@ -34,21 +30,6 @@ export const SpeedDialFAB: React.FC = () => {
       icon: <Cake className="w-5 h-5 text-[#81c995]" />,
     },
     {
-      type: 'working_location',
-      label: 'Working location',
-      icon: <MapPin className="w-5 h-5 text-[#a8c7fa]" />,
-    },
-    {
-      type: 'focus_time',
-      label: 'Focus time',
-      icon: <Headphones className="w-5 h-5 text-[#a8c7fa]" />,
-    },
-    {
-      type: 'out_of_office',
-      label: 'Out of office',
-      icon: <CalendarX className="w-5 h-5 text-[#a8c7fa]" />,
-    },
-    {
       type: 'task',
       label: 'Task',
       icon: <CheckCircle2 className="w-5 h-5 text-[#19E6C8]" />,
@@ -67,7 +48,7 @@ export const SpeedDialFAB: React.FC = () => {
       type,
       startDate: dateStr,
       endDate: dateStr,
-      isAllDay: type === 'birthday' || type === 'task' || type === 'holiday' || type === 'working_location',
+      isAllDay: type === 'birthday' || type === 'task' || type === 'holiday',
     });
   };
 
