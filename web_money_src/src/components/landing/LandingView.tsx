@@ -376,7 +376,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                       <div className="text-xs font-mono font-bold text-[#19E6C8] uppercase tracking-wider">
                         {t.highlight}
                       </div>
-                      <p className="text-xs text-slate-200 italic leading-relaxed">
+                      <p className="text-xs text-[#94B5B0] italic leading-relaxed">
                         "{t.text}"
                       </p>
                     </div>
@@ -457,7 +457,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                   Complete money tracking with zero ads and unlimited transactions.
                 </p>
 
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-300">
+                <ul className="mt-6 space-y-2.5 text-xs text-[#94B5B0]">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#19E6C8]" />
                     <span>Unlimited Transactions</span>
@@ -498,7 +498,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                   Advanced financial intelligence, budget limits, and proactive spending alerts.
                 </p>
 
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-200">
+                <ul className="mt-6 space-y-2.5 text-xs text-[#94B5B0]">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#19E6C8]" />
                     <span>Unlimited Accounts & Wallets</span>
@@ -537,7 +537,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                   Up to 5 accounts with shared household budgets and statements.
                 </p>
 
-                <ul className="mt-6 space-y-2.5 text-xs text-slate-300">
+                <ul className="mt-6 space-y-2.5 text-xs text-[#94B5B0]">
                   <li className="flex items-center gap-2">
                     <CheckCircle2 className="w-3.5 h-3.5 text-[#19E6C8]" />
                     <span>Up to 5 Household Profiles</span>

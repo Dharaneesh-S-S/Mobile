@@ -174,58 +174,64 @@ export const SearchModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#090d16] flex flex-col text-slate-100 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-[#030707] flex flex-col text-[#F4FFFD] animate-in fade-in duration-150 ambient-bg-grid select-none">
       {/* Top Search Header */}
-      <div className="px-4 pt-3 pb-3 border-b border-slate-800 flex items-center gap-3 shrink-0 bg-slate-950/70">
+      <div className="px-4 pt-3.5 pb-3.5 border-b border-teal-500/20 flex items-center gap-3 shrink-0 bg-[#061817]/90 backdrop-blur-xl">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#19E6C8] absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search description, memo, category, tags..."
             autoFocus
-            className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-900 border border-slate-700 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full pl-10 pr-9 py-2.5 rounded-xl bg-[#030707] border border-teal-500/25 text-sm text-white placeholder-[#5B7B76] focus:outline-none focus:border-[#19E6C8] focus:shadow-[0_0_15px_rgba(25,230,200,0.25)] transition-all font-sans"
           />
           {query && (
             <button
               onClick={() => setQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5B7B76] hover:text-white cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-4 h-4" />
             </button>
           )}
         </div>
         <button
           onClick={closeSearch}
-          className="text-xs font-semibold px-3 py-2 rounded-xl bg-slate-800 text-slate-300 hover:text-white"
+          className="text-xs font-semibold px-3.5 py-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 text-[#19E6C8] hover:bg-teal-500/20 hover:text-white transition-all cursor-pointer"
         >
           Cancel
         </button>
       </div>
 
       {/* Filter Chips Bar */}
-      <div className="px-4 py-2.5 border-b border-slate-800/80 bg-[#090d16] overflow-x-auto no-scrollbar flex items-center gap-2 shrink-0">
+      <div className="px-4 py-2.5 border-b border-teal-500/15 bg-[#030707] overflow-x-auto no-scrollbar flex items-center gap-2 shrink-0">
         {/* Type Filter Chips */}
-        {(['all', 'income', 'expense', 'transfer'] as const).map((type) => (
-          <button
-            key={type}
-            onClick={() => setSelectedType(type)}
-            className={`text-xs px-3 py-1 rounded-full font-medium capitalize shrink-0 transition-all ${
-              selectedType === type
-                ? type === 'income'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
-                  : type === 'expense'
-                  ? 'bg-red-600 text-white shadow-glow-red'
-                  : 'bg-slate-700 text-white'
-                : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200'
-            }`}
-          >
-            {type}
-          </button>
-        ))}
+        {(['all', 'income', 'expense', 'transfer'] as const).map((type) => {
+          const isSelected = selectedType === type;
+          let chipStyle = 'bg-[#061817] border border-teal-500/15 text-[#94B5B0] hover:text-white hover:border-teal-500/30';
+          if (isSelected) {
+            if (type === 'income') {
+              chipStyle = 'bg-teal-500/20 text-[#19E6C8] border border-teal-500/50 shadow-[0_0_12px_rgba(25,230,200,0.3)] font-bold';
+            } else if (type === 'expense') {
+              chipStyle = 'bg-[#FF6B6B]/20 text-[#FF6B6B] border border-[#FF6B6B]/50 shadow-[0_0_12px_rgba(255,107,107,0.3)] font-bold';
+            } else {
+              chipStyle = 'bg-teal-500/20 text-white border border-teal-500/40 font-bold';
+            }
+          }
 
-        <div className="h-4 w-px bg-slate-800 shrink-0" />
+          return (
+            <button
+              key={type}
+              onClick={() => setSelectedType(type)}
+              className={`text-xs px-3 py-1 rounded-full font-medium capitalize shrink-0 transition-all cursor-pointer ${chipStyle}`}
+            >
+              {type}
+            </button>
+          );
+        })}
+
+        <div className="h-4 w-px bg-teal-500/20 shrink-0" />
 
         {/* Categories Chips */}
         {categories.slice(0, 8).map((c) => {
@@ -234,15 +240,15 @@ export const SearchModal: React.FC = () => {
             <button
               key={c.id}
               onClick={() => toggleCategoryChip(c.id)}
-              className={`text-xs px-2.5 py-1 rounded-full shrink-0 flex items-center gap-1.5 transition-all ${
+              className={`text-xs px-2.5 py-1 rounded-full shrink-0 flex items-center gap-1.5 transition-all cursor-pointer ${
                 isSelected
-                  ? 'bg-slate-700 text-white border border-slate-500'
-                  : 'bg-slate-900 border border-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-teal-500/20 text-white border border-[#19E6C8] shadow-[0_0_8px_rgba(25,230,200,0.2)]'
+                  : 'bg-[#061817] border border-teal-500/15 text-[#94B5B0] hover:text-white hover:border-teal-500/30'
               }`}
             >
               <div
-                className="w-2 h-2 rounded-full"
-                style={{ backgroundColor: c.color }}
+                className="w-2 h-2 rounded-full shadow-[0_0_6px]"
+                style={{ backgroundColor: c.color, boxShadow: `0 0 6px ${c.color}80` }}
               />
               <span>{c.name}</span>
             </button>
@@ -251,16 +257,16 @@ export const SearchModal: React.FC = () => {
       </div>
 
       {/* Live Matching Summary Strip */}
-      <div className="px-4 py-2 bg-slate-900/60 border-b border-slate-800 flex items-center justify-between text-xs text-slate-300 shrink-0">
+      <div className="px-4 py-2 bg-[#061817]/80 border-b border-teal-500/15 flex items-center justify-between text-xs text-[#94B5B0] shrink-0 backdrop-blur-md">
         <div className="flex items-center gap-2">
           <button
             onClick={toggleSelectAll}
-            className="flex items-center gap-1.5 text-blue-400 font-medium hover:underline"
+            className="flex items-center gap-1.5 text-[#19E6C8] font-medium hover:underline cursor-pointer"
           >
             {selectedResultIds.size > 0 && selectedResultIds.size === matchingRecords.length ? (
-              <CheckSquare className="w-4 h-4" />
+              <CheckSquare className="w-4 h-4 text-[#19E6C8]" />
             ) : (
-              <Square className="w-4 h-4 text-slate-500" />
+              <Square className="w-4 h-4 text-[#5B7B76]" />
             )}
             <span>
               {matchingRecords.length} {matchingRecords.length === 1 ? 'record' : 'records'}
@@ -268,24 +274,24 @@ export const SearchModal: React.FC = () => {
           </button>
 
           {selectedResultIds.size > 0 && (
-            <span className="text-slate-400 font-mono">
+            <span className="text-[#94B5B0] font-mono">
               ({selectedResultIds.size} selected)
             </span>
           )}
         </div>
 
         {/* Live Sum Display */}
-        <div className="flex items-center gap-2 font-display">
-          <span className="text-slate-400">Sum:</span>
+        <div className="flex items-center gap-2 font-mono">
+          <span className="text-[#5B7B76]">Sum:</span>
           <span
             className={`font-bold ${
               selectedResultIds.size > 0
                 ? selectedSum >= 0
-                  ? 'text-blue-400'
-                  : 'text-red-400'
+                  ? 'text-[#19E6C8] text-glow-teal'
+                  : 'text-[#FF6B6B] text-glow-coral'
                 : matchSum >= 0
-                ? 'text-blue-400'
-                : 'text-red-400'
+                ? 'text-[#19E6C8] text-glow-teal'
+                : 'text-[#FF6B6B] text-glow-coral'
             }`}
           >
             {selectedResultIds.size > 0
@@ -296,9 +302,9 @@ export const SearchModal: React.FC = () => {
       </div>
 
       {/* Results List */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto divide-y divide-teal-500/10">
         {matchingRecords.length === 0 ? (
-          <div className="py-20 text-center text-slate-500 text-xs">
+          <div className="py-20 text-center text-[#5B7B76] text-xs">
             No matching transactions found. Try adjusting filters or search terms.
           </div>
         ) : (

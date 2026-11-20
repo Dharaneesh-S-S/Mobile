@@ -125,14 +125,14 @@ const MainAppContent: React.FC = () => {
       {/* First Launch Modal */}
       {showFirstLaunchPrompt && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-200">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-700/80 rounded-3xl p-6 shadow-2xl text-center space-y-4">
-            <div className="w-14 h-14 rounded-2xl bg-blue-600/20 text-blue-400 border border-blue-500/30 flex items-center justify-center mx-auto shadow-glow-blue">
+          <div className="w-full max-w-sm bg-[#061817]/95 border border-teal-500/25 rounded-3xl p-6 shadow-2xl text-center space-y-4 backdrop-blur-xl">
+            <div className="w-14 h-14 rounded-2xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/30 flex items-center justify-center mx-auto shadow-glow-teal">
               <Sparkles className="w-7 h-7" />
             </div>
 
             <div>
               <h3 className="text-lg font-bold text-white font-display">Welcome to RupeeFlow</h3>
-              <p className="text-xs text-slate-300 mt-1 leading-relaxed">
+              <p className="text-xs text-[#94B5B0] mt-1 leading-relaxed">
                 Personal Money Studio for Indian Rupee (₹). Would you like to start fresh or explore with 2 months of sample rupee records?
               </p>
             </div>
@@ -143,7 +143,7 @@ const MainAppContent: React.FC = () => {
                   await loadDemoData();
                   setDismissFirstLaunch(true);
                 }}
-                className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-glow-blue flex items-center justify-center gap-2 transition-all active:scale-98"
+                className="w-full py-3 rounded-2xl bg-[#19E6C8] hover:bg-[#19E6C8]/90 text-[#030707] font-bold text-xs shadow-glow-teal flex items-center justify-center gap-2 transition-all active:scale-98"
               >
                 <span>Load Sample Data (2 Months)</span>
                 <ArrowRight className="w-4 h-4" />
@@ -154,7 +154,7 @@ const MainAppContent: React.FC = () => {
                   setDismissFirstLaunch(true);
                   updateSettings({ hasSeededData: true });
                 }}
-                className="w-full py-2.5 rounded-2xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-xs transition-all"
+                className="w-full py-2.5 rounded-2xl bg-[#030707] hover:bg-[#061817] border border-teal-500/20 text-[#94B5B0] hover:text-white font-semibold text-xs transition-all"
               >
                 Start Fresh
               </button>

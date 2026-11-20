@@ -50,7 +50,7 @@ export const Header: React.FC = () => {
 
             <button
               onClick={() => setIsDatePickerOpen(true)}
-              className="px-2.5 py-1 text-xs font-bold text-slate-100 hover:text-[#19E6C8] flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-2.5 py-1 text-xs font-bold text-white hover:text-[#19E6C8] flex items-center gap-1.5 transition-colors cursor-pointer"
               title="Select Date / Period"
             >
               <CalendarIcon className="w-3.5 h-3.5 text-[#19E6C8]" />

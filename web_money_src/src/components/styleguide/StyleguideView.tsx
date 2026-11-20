@@ -203,7 +203,7 @@ export const StyleguideView: React.FC = () => {
               <div className="space-y-3 mt-4">
                 <div>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-300 font-medium">Monthly Budget</span>
+                    <span className="text-[#94B5B0] font-medium">Monthly Budget</span>
                     <span className="text-[#19E6C8] font-bold font-mono">68%</span>
                   </div>
                   <ProgressBar value={68} variant="teal" />

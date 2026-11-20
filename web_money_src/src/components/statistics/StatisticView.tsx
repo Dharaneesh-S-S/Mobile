@@ -176,24 +176,24 @@ export const StatisticView: React.FC = () => {
   }, [filteredRecords]);
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-[#090d16] p-4 md:p-6 max-w-7xl w-full mx-auto space-y-5 overflow-y-auto select-none pb-20">
+    <div className="flex-1 flex flex-col min-h-0 bg-transparent p-4 md:p-6 max-w-7xl w-full mx-auto space-y-5 overflow-y-auto select-none pb-20">
       {/* 1 & 2. Top Summary Row: Balance & Cash Flow side-by-side on desktop */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Balance Card (Opening vs Ending) */}
-        <div className="p-4 rounded-3xl bg-gradient-to-br from-slate-900 to-[#111827] border border-slate-800 shadow-md">
-          <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
+        <div className="p-4 rounded-3xl glass-card border border-teal-500/15 shadow-md">
+          <h4 className="text-xs font-mono font-bold text-[#94B5B0] uppercase tracking-wider mb-3">
             Period Balance
           </h4>
-          <div className="grid grid-cols-2 gap-4 divide-x divide-slate-800">
+          <div className="grid grid-cols-2 gap-4 divide-x divide-teal-500/15">
             <div>
-              <span className="text-[11px] text-slate-400">Opening Balance</span>
-              <div className="text-base sm:text-xl font-bold text-slate-100 font-display mt-0.5">
+              <span className="text-[11px] font-mono text-[#5B7B76]">Opening Balance</span>
+              <div className="text-base sm:text-xl font-bold text-white font-mono mt-0.5">
                 {formatInr(openingBalance, opts)}
               </div>
             </div>
             <div className="pl-4">
-              <span className="text-[11px] text-slate-400">Ending Balance</span>
-              <div className="text-base sm:text-xl font-bold text-blue-400 font-display mt-0.5">
+              <span className="text-[11px] font-mono text-[#5B7B76]">Ending Balance</span>
+              <div className="text-base sm:text-xl font-bold text-[#19E6C8] font-mono mt-0.5 text-glow-teal">
                 {formatInr(endingBalance, opts)}
               </div>
             </div>
@@ -201,14 +201,14 @@ export const StatisticView: React.FC = () => {
         </div>
 
         {/* Cash Flow Overview Card + "Show More" */}
-        <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 shadow-md">
+        <div className="p-4 rounded-3xl glass-card border border-teal-500/15 shadow-md">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <h4 className="text-xs font-mono font-bold text-[#94B5B0] uppercase tracking-wider">
               Cash Flow Overview
             </h4>
             <button
               onClick={() => setShowDetailedModal(true)}
-              className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium"
+              className="flex items-center gap-1 text-xs text-[#19E6C8] hover:text-[#2DD4BF] font-semibold transition-colors cursor-pointer"
             >
               <span>Show more</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -216,29 +216,27 @@ export const StatisticView: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-3 gap-2 text-center">
-            <div className="p-2 sm:p-3 rounded-2xl bg-slate-800/40 border border-slate-800">
-              <span className="text-[11px] text-blue-400 font-medium block mb-1">Income</span>
-              <span className="text-xs sm:text-base font-bold text-blue-400 font-display truncate block">
+            <div className="p-2 sm:p-3 rounded-2xl bg-[#061817]/70 border border-teal-500/15">
+              <span className="text-[11px] font-mono text-[#19E6C8] font-bold block mb-1">Income</span>
+              <span className="text-xs sm:text-base font-bold text-[#19E6C8] font-mono truncate block text-glow-teal">
                 {formatInr(periodIncome, opts)}
               </span>
             </div>
 
-            <div className="p-2 sm:p-3 rounded-2xl bg-slate-800/40 border border-slate-800">
-              <span className="text-[11px] text-red-400 font-medium block mb-1">Expense</span>
-              <span className="text-xs sm:text-base font-bold text-red-400 font-display truncate block">
+            <div className="p-2 sm:p-3 rounded-2xl bg-[#061817]/70 border border-teal-500/15">
+              <span className="text-[11px] font-mono text-[#FF6B6B] font-bold block mb-1">Expense</span>
+              <span className="text-xs sm:text-base font-bold text-[#FF6B6B] font-mono truncate block text-glow-coral">
                 {periodExpense > 0 ? `-${formatInr(periodExpense, opts)}` : '₹0'}
               </span>
             </div>
 
-            <div className="p-2 sm:p-3 rounded-2xl bg-slate-800/40 border border-slate-800">
-              <span className="text-[11px] text-slate-300 font-medium block mb-1">Net Flow</span>
+            <div className="p-2 sm:p-3 rounded-2xl bg-[#061817]/70 border border-teal-500/15">
+              <span className="text-[11px] font-mono text-[#94B5B0] font-bold block mb-1">Net Flow</span>
               <span
-                className={`text-xs sm:text-base font-bold font-display truncate block ${
+                className={`text-xs sm:text-base font-bold font-mono truncate block ${
                   periodNet >= 0
-                    ? settings.showGreenNet
-                      ? 'text-emerald-400'
-                      : 'text-white'
-                    : 'text-red-400'
+                    ? 'text-[#19E6C8] text-glow-teal'
+                    : 'text-[#FF6B6B] text-glow-coral'
                 }`}
               >
                 {formatInr(periodNet, opts)}
@@ -249,46 +247,46 @@ export const StatisticView: React.FC = () => {
       </div>
 
       {/* 3 & 4. STRUCTURE CARD: Chart (Left) + Detailed Category Breakdown (Right) on desktop */}
-      <div className="p-5 rounded-3xl bg-slate-900 border border-slate-800 shadow-md">
-        <div className="flex items-center justify-between mb-4">
+      <div className="p-5 rounded-3xl glass-card border border-teal-500/15 shadow-md">
+        <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
           {/* Switch tabs: Expense / Income */}
-          <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800">
+          <div className="flex items-center gap-1 bg-[#030707] p-1 rounded-xl border border-teal-500/20 font-mono">
             <button
               onClick={() => setStructureTab('expense')}
-              className={`text-xs font-semibold px-3 py-1 rounded-lg transition-all ${
+              className={`text-xs font-bold px-3 py-1 rounded-lg transition-all cursor-pointer ${
                 structureTab === 'expense'
-                  ? 'bg-red-600 text-white shadow-glow-red'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-[#FF6B6B]/20 text-[#FF6B6B] border border-[#FF6B6B]/40 shadow-[0_0_10px_rgba(255,107,107,0.3)]'
+                  : 'text-[#94B5B0] hover:text-white'
               }`}
             >
               Expense Breakdown
             </button>
             <button
               onClick={() => setStructureTab('income')}
-              className={`text-xs font-semibold px-3 py-1 rounded-lg transition-all ${
+              className={`text-xs font-bold px-3 py-1 rounded-lg transition-all cursor-pointer ${
                 structureTab === 'income'
-                  ? 'bg-blue-600 text-white shadow-glow-blue'
-                  : 'text-slate-400 hover:text-slate-200'
+                  ? 'bg-teal-500/20 text-[#19E6C8] border border-teal-500/40 shadow-[0_0_10px_rgba(25,230,200,0.3)]'
+                  : 'text-[#94B5B0] hover:text-white'
               }`}
             >
               Income Breakdown
             </button>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
             {/* Chart type toggle */}
             <button
               onClick={toggleChartStyle}
-              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs flex items-center gap-1.5 transition-colors"
+              className="p-1.5 px-2.5 rounded-xl bg-teal-500/10 border border-teal-500/20 hover:bg-teal-500/20 text-[#19E6C8] text-xs flex items-center gap-1.5 transition-colors cursor-pointer"
               title="Toggle Chart Type"
             >
               {chartStyle === 'donut' ? <BarChart3 className="w-3.5 h-3.5" /> : <PieChart className="w-3.5 h-3.5" />}
-              <span className="hidden sm:inline">{chartStyle === 'donut' ? 'Bar Chart' : 'Donut Chart'}</span>
+              <span className="hidden sm:inline font-mono">{chartStyle === 'donut' ? 'Bar Chart' : 'Donut Chart'}</span>
             </button>
 
             <button
               onClick={() => setRankingModalType(structureTab)}
-              className="flex items-center gap-1 text-xs text-blue-400 hover:text-blue-300 font-medium"
+              className="flex items-center gap-1 text-xs text-[#19E6C8] hover:text-[#2DD4BF] font-semibold transition-colors cursor-pointer"
             >
               <span>Ranking</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -297,7 +295,7 @@ export const StatisticView: React.FC = () => {
         </div>
 
         {activeStructure.length === 0 ? (
-          <div className="py-12 text-center text-xs text-slate-500">
+          <div className="py-12 text-center text-xs text-[#5B7B76]">
             No {structureTab} recorded for this period.
           </div>
         ) : (
@@ -325,11 +323,11 @@ export const StatisticView: React.FC = () => {
                       <Tooltip
                         formatter={(val: any) => [`₹${Number(val).toLocaleString('en-IN')}`, 'Amount']}
                         contentStyle={{
-                          backgroundColor: '#0f172a',
-                          border: '1px solid #334155',
+                          backgroundColor: '#061817',
+                          border: '1px solid rgba(45,212,191,0.25)',
                           borderRadius: '12px',
                           fontSize: '12px',
-                          color: '#f8fafc',
+                          color: '#F4FFFD',
                         }}
                       />
                     </RechartsPieChart>
@@ -337,12 +335,12 @@ export const StatisticView: React.FC = () => {
 
                   {/* Center Label in Donut */}
                   <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center">
-                    <span className="text-[10px] text-slate-400 uppercase font-semibold">
+                    <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold tracking-wider">
                       {structureTab === 'expense' ? 'Total Spent' : 'Total Inflows'}
                     </span>
                     <span
-                      className={`text-base sm:text-lg font-black font-display ${
-                        structureTab === 'expense' ? 'text-red-400' : 'text-blue-400'
+                      className={`text-base sm:text-lg font-black font-mono ${
+                        structureTab === 'expense' ? 'text-[#FF6B6B] text-glow-coral' : 'text-[#19E6C8] text-glow-teal'
                       }`}
                     >
                       {structureTab === 'expense'
@@ -360,14 +358,15 @@ export const StatisticView: React.FC = () => {
                       margin={{ top: 5, right: 20, left: 20, bottom: 5 }}
                     >
                       <XAxis type="number" hide />
-                      <YAxis dataKey="name" type="category" width={80} stroke="#94a3b8" fontSize={11} />
+                      <YAxis dataKey="name" type="category" width={80} stroke="#94B5B0" fontSize={11} tickLine={false} axisLine={false} />
                       <Tooltip
                         formatter={(val: any) => [`₹${Number(val).toLocaleString('en-IN')}`, 'Amount']}
                         contentStyle={{
-                          backgroundColor: '#0f172a',
-                          border: '1px solid #334155',
+                          backgroundColor: '#061817',
+                          border: '1px solid rgba(45,212,191,0.25)',
                           borderRadius: '12px',
                           fontSize: '12px',
+                          color: '#F4FFFD',
                         }}
                       />
                       <Bar dataKey="value" radius={[0, 6, 6, 0]}>
@@ -386,38 +385,39 @@ export const StatisticView: React.FC = () => {
               {activeStructure.map((item, idx) => (
                 <div
                   key={item.category.id}
-                  className="p-2.5 rounded-2xl bg-slate-950/60 border border-slate-800/60 hover:border-slate-700 transition-colors"
+                  className="p-2.5 rounded-2xl bg-[#061817]/60 border border-teal-500/15 hover:border-teal-500/35 transition-colors"
                 >
                   <div className="flex items-center justify-between text-xs mb-1">
                     <div className="flex items-center gap-2">
-                      <span className="font-mono text-slate-500 font-bold text-[11px] w-4">
+                      <span className="font-mono text-[#5B7B76] font-bold text-[11px] w-4">
                         #{idx + 1}
                       </span>
                       <div
-                        className="w-2.5 h-2.5 rounded-full shrink-0"
-                        style={{ backgroundColor: item.category.color }}
+                        className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px]"
+                        style={{ backgroundColor: item.category.color, boxShadow: `0 0 6px ${item.category.color}80` }}
                       />
-                      <span className="text-slate-200 font-semibold">{item.category.name}</span>
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[#F4FFFD] font-semibold">{item.category.name}</span>
+                      <span className="text-[10px] text-[#5B7B76] font-mono">
                         ({item.records.length} transactions)
                       </span>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-slate-400 font-mono text-[11px]">
+                      <span className="text-[#94B5B0] font-mono text-[11px]">
                         {item.percentage.toFixed(1)}%
                       </span>
-                      <span className="font-bold text-slate-100 font-display">
+                      <span className="font-bold text-[#F4FFFD] font-mono">
                         {formatInr(item.amountPaise, opts)}
                       </span>
                     </div>
                   </div>
                   {/* Progress bar */}
-                  <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
+                  <div className="w-full h-1.5 bg-[#030707] border border-teal-500/20 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full transition-all duration-300"
+                      className="h-full rounded-full transition-all duration-300 shadow-[0_0_6px]"
                       style={{
                         width: `${item.percentage}%`,
                         backgroundColor: item.category.color,
+                        boxShadow: `0 0 6px ${item.category.color}`,
                       }}
                     />
                   </div>
@@ -431,24 +431,24 @@ export const StatisticView: React.FC = () => {
       {/* 5 & 6. Lower Row: Cash Flow Trend & Wallet Usage side-by-side on desktop */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
         {/* Trend Chart */}
-        <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 shadow-md">
+        <div className="p-4 rounded-3xl glass-card border border-teal-500/15 shadow-md">
           <div className="flex items-center justify-between mb-3">
-            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider">
+            <h4 className="text-xs font-mono font-bold text-[#94B5B0] uppercase tracking-wider">
               Cash Flow Trend
             </h4>
-            <div className="flex items-center gap-1 bg-slate-950 p-1 rounded-xl border border-slate-800 text-[11px]">
+            <div className="flex items-center gap-1 bg-[#030707] p-1 rounded-xl border border-teal-500/20 text-[11px] font-mono">
               <button
                 onClick={() => setTrendMode('bars')}
-                className={`px-2.5 py-0.5 rounded-lg font-medium transition-all ${
-                  trendMode === 'bars' ? 'bg-blue-600 text-white' : 'text-slate-400'
+                className={`px-2.5 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  trendMode === 'bars' ? 'bg-[#19E6C8] text-[#030807] shadow-[0_0_8px_rgba(25,230,200,0.4)]' : 'text-[#94B5B0] hover:text-white'
                 }`}
               >
                 In vs Out
               </button>
               <button
                 onClick={() => setTrendMode('net')}
-                className={`px-2.5 py-0.5 rounded-lg font-medium transition-all ${
-                  trendMode === 'net' ? 'bg-emerald-600 text-white' : 'text-slate-400'
+                className={`px-2.5 py-0.5 rounded-lg font-bold transition-all cursor-pointer ${
+                  trendMode === 'net' ? 'bg-[#19E6C8] text-[#030807] shadow-[0_0_8px_rgba(25,230,200,0.4)]' : 'text-[#94B5B0] hover:text-white'
                 }`}
               >
                 Net
@@ -457,45 +457,47 @@ export const StatisticView: React.FC = () => {
           </div>
 
           {trendData.length === 0 ? (
-            <div className="py-12 text-center text-xs text-slate-500">No activity to plot.</div>
+            <div className="py-12 text-center text-xs text-[#5B7B76]">No activity to plot.</div>
           ) : (
             <div className="w-full h-52">
               <ResponsiveContainer width="100%" height="100%">
                 {trendMode === 'bars' ? (
                   <BarChart data={trendData} margin={{ top: 10, right: 5, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="dayLabel" stroke="#64748b" fontSize={10} />
-                    <YAxis stroke="#64748b" fontSize={10} />
+                    <XAxis dataKey="dayLabel" stroke="#5B7B76" fontSize={10} tickLine={false} axisLine={{ stroke: '#0e2624' }} />
+                    <YAxis stroke="#5B7B76" fontSize={10} tickLine={false} axisLine={false} />
                     <Tooltip
                       formatter={(val: any) => [`₹${Number(val).toLocaleString('en-IN')}`]}
                       contentStyle={{
-                        backgroundColor: '#0f172a',
-                        border: '1px solid #334155',
-                        borderRadius: '10px',
+                        backgroundColor: '#061817',
+                        border: '1px solid rgba(45,212,191,0.25)',
+                        borderRadius: '12px',
                         fontSize: '11px',
+                        color: '#F4FFFD',
                       }}
                     />
-                    <Bar dataKey="income" name="Income" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-                    <Bar dataKey="expense" name="Expense" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="income" name="Income" fill="#10B981" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="expense" name="Expense" fill="#FF6B6B" radius={[4, 4, 0, 0]} />
                   </BarChart>
                 ) : (
                   <LineChart data={trendData} margin={{ top: 10, right: 5, left: -20, bottom: 0 }}>
-                    <XAxis dataKey="dayLabel" stroke="#64748b" fontSize={10} />
-                    <YAxis stroke="#64748b" fontSize={10} />
+                    <XAxis dataKey="dayLabel" stroke="#5B7B76" fontSize={10} tickLine={false} axisLine={{ stroke: '#0e2624' }} />
+                    <YAxis stroke="#5B7B76" fontSize={10} tickLine={false} axisLine={false} />
                     <Tooltip
                       formatter={(val: any) => [`₹${Number(val).toLocaleString('en-IN')}`, 'Net']}
                       contentStyle={{
-                        backgroundColor: '#0f172a',
-                        border: '1px solid #334155',
-                        borderRadius: '10px',
+                        backgroundColor: '#061817',
+                        border: '1px solid rgba(45,212,191,0.25)',
+                        borderRadius: '12px',
                         fontSize: '11px',
+                        color: '#F4FFFD',
                       }}
                     />
                     <Line
                       type="monotone"
                       dataKey="net"
-                      stroke="#10b981"
+                      stroke="#19E6C8"
                       strokeWidth={2.5}
-                      dot={{ r: 3, fill: '#10b981' }}
+                      dot={{ r: 3, fill: '#19E6C8', stroke: '#030707', strokeWidth: 1.5 }}
                     />
                   </LineChart>
                 )}
@@ -505,13 +507,13 @@ export const StatisticView: React.FC = () => {
         </div>
 
         {/* Wallet Usage & Top Expenses */}
-        <div className="p-4 rounded-3xl bg-slate-900 border border-slate-800 shadow-md flex flex-col gap-4">
+        <div className="p-4 rounded-3xl glass-card border border-teal-500/15 shadow-md flex flex-col gap-4">
           <div>
-            <h4 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2.5">
+            <h4 className="text-xs font-mono font-bold text-[#94B5B0] uppercase tracking-wider mb-2.5">
               Spending Per Wallet
             </h4>
             {walletUsageData.length === 0 ? (
-              <div className="py-4 text-center text-xs text-slate-500">No wallet spending recorded.</div>
+              <div className="py-4 text-center text-xs text-[#5B7B76]">No wallet spending recorded.</div>
             ) : (
               <div className="space-y-2.5">
                 {walletUsageData.slice(0, 3).map((wal) => {
@@ -520,15 +522,15 @@ export const StatisticView: React.FC = () => {
                   return (
                     <div key={wal.name}>
                       <div className="flex justify-between items-center text-xs mb-1">
-                        <span className="font-semibold text-slate-200">{wal.name}</span>
-                        <span className="font-bold text-slate-100 font-display">
+                        <span className="font-semibold text-[#F4FFFD]">{wal.name}</span>
+                        <span className="font-bold text-white font-mono">
                           ₹{Math.round(wal.spent).toLocaleString('en-IN')} ({pct.toFixed(0)}%)
                         </span>
                       </div>
-                      <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div className="w-full h-1.5 rounded-full bg-[#030707] border border-teal-500/20 overflow-hidden">
                         <div
-                          className="h-full rounded-full transition-all duration-300"
-                          style={{ width: `${pct}%`, backgroundColor: wal.color }}
+                          className="h-full rounded-full transition-all duration-300 shadow-[0_0_6px]"
+                          style={{ width: `${pct}%`, backgroundColor: wal.color, boxShadow: `0 0 6px ${wal.color}` }}
                         />
                       </div>
                     </div>
@@ -538,13 +540,14 @@ export const StatisticView: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-2 border-t border-slate-800">
-            <div className="flex items-center gap-1.5 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">
-              <Flame className="w-3.5 h-3.5 text-orange-400" />
+          {/* Highest Single Expenses at Bottom */}
+          <div className="pt-2 border-t border-teal-500/15">
+            <div className="flex items-center gap-1.5 text-xs font-mono font-bold text-[#FF6B6B] uppercase tracking-wider mb-2">
+              <Flame className="w-3.5 h-3.5 text-[#FF6B6B]" />
               <span>Highest Single Expenses</span>
             </div>
             {topExpenses.length === 0 ? (
-              <div className="py-2 text-center text-xs text-slate-500">No expenses in this period.</div>
+              <div className="py-2 text-center text-xs text-[#5B7B76]">No expenses in this period.</div>
             ) : (
               <div className="space-y-1.5">
                 {topExpenses.slice(0, 3).map((r, i) => {
@@ -552,17 +555,17 @@ export const StatisticView: React.FC = () => {
                   return (
                     <div
                       key={r.id}
-                      className="flex items-center justify-between p-2 rounded-xl bg-slate-800/40 border border-slate-700/30 text-xs"
+                      className="flex items-center justify-between p-2.5 rounded-xl bg-[#061817]/60 border border-teal-500/15 hover:border-teal-500/35 text-xs transition-colors"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <span className="font-mono font-bold text-slate-400 text-[11px]">#{i + 1}</span>
+                        <span className="font-mono font-bold text-[#5B7B76] text-[11px]">#{i + 1}</span>
                         <div
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: cat?.color || '#ef4444' }}
+                          className="w-2.5 h-2.5 rounded-full shrink-0 shadow-[0_0_6px]"
+                          style={{ backgroundColor: cat?.color || '#FF6B6B', boxShadow: `0 0 6px ${cat?.color || '#FF6B6B'}80` }}
                         />
-                        <span className="font-semibold text-slate-200 truncate">{r.description}</span>
+                        <span className="font-semibold text-white truncate">{r.description}</span>
                       </div>
-                      <span className="font-bold text-red-400 font-display shrink-0 ml-2">
+                      <span className="font-bold text-[#FF6B6B] font-mono shrink-0 ml-2 text-glow-coral">
                         -{formatInr(r.amountPaise, opts)}
                       </span>
                     </div>

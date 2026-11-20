@@ -68,9 +68,9 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
   );
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#090d16] flex flex-col text-slate-100 animate-in slide-in-from-right duration-200 select-none">
+    <div className="fixed inset-0 z-50 bg-[#030707] flex flex-col text-[#F4FFFD] animate-in slide-in-from-right duration-200 select-none ambient-bg-grid">
       {/* Top Header */}
-      <div className="px-4 py-3.5 border-b border-teal-500/15 flex items-center justify-between shrink-0 bg-[#061817]/80 backdrop-blur-xl">
+      <div className="px-4 py-3.5 border-b border-teal-500/20 flex items-center justify-between shrink-0 bg-[#061817]/90 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <button
             onClick={onClose}
@@ -92,14 +92,14 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
 
         <button
           onClick={onClose}
-          className="px-3 py-1.5 rounded-xl bg-[#19E6C8] hover:bg-[#2DD4BF] text-black font-bold text-xs shadow-[0_0_15px_rgba(25,230,200,0.3)] transition-all cursor-pointer"
+          className="px-3.5 py-1.5 rounded-xl bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030807] font-bold text-xs shadow-[0_0_15px_rgba(25,230,200,0.35)] transition-all cursor-pointer"
         >
           Done ({selectedBudgetIds.length})
         </button>
       </div>
 
       {/* Toolbar: Search, Select All, Clear All, Add Budget */}
-      <div className="p-4 border-b border-teal-500/10 space-y-3 bg-[#030807]/60">
+      <div className="p-4 border-b border-teal-500/15 space-y-3 bg-[#061817]/60 backdrop-blur-md">
         <div className="relative">
           <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#5B7B76]" />
           <input
@@ -107,12 +107,12 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search budgets..."
-            className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#19E6C8]"
+            className="w-full pl-9 pr-8 py-2 rounded-xl bg-[#030707] border border-teal-500/25 text-xs text-white placeholder-[#5B7B76] focus:outline-none focus:border-[#19E6C8] focus:shadow-[0_0_12px_rgba(25,230,200,0.2)]"
           />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-500 hover:text-white"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5B7B76] hover:text-white cursor-pointer"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -131,7 +131,7 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
             <button
               type="button"
               onClick={onClearAll}
-              className="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold text-[11px] transition-colors cursor-pointer"
+              className="px-2.5 py-1 rounded-lg bg-[#061817] hover:bg-teal-950/40 border border-teal-500/15 text-[#94B5B0] hover:text-white font-semibold text-[11px] transition-colors cursor-pointer"
             >
               Clear All
             </button>
@@ -184,8 +184,8 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
                 onClick={() => onToggleBudget(budget.id)}
                 className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col gap-2.5 ${
                   isSelected
-                    ? 'bg-teal-500/10 border-teal-500/50 shadow-[0_0_20px_rgba(25,230,200,0.15)]'
-                    : 'bg-slate-900/80 border-slate-800 hover:border-slate-700'
+                    ? 'glass-card bg-teal-500/10 border-teal-400/50 shadow-[0_0_20px_rgba(25,230,200,0.15)]'
+                    : 'glass-card bg-[#061817]/60 border-teal-500/15 hover:border-teal-500/35'
                 }`}
               >
                 <div className="flex items-center justify-between">
@@ -195,7 +195,7 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
                       className={`w-5 h-5 rounded-lg flex items-center justify-center transition-all shrink-0 ${
                         isSelected
                           ? 'bg-[#19E6C8] text-black shadow-[0_0_10px_rgba(25,230,200,0.5)]'
-                          : 'border border-slate-700 bg-slate-800/60'
+                          : 'border border-teal-500/30 bg-[#030707]'
                       }`}
                     >
                       {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -228,7 +228,7 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
                 </div>
 
                 {/* Progress bar */}
-                <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
+                <div className="w-full h-1.5 rounded-full bg-[#030707] border border-teal-500/10 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-300 ${barColor}`}
                     style={{ width: `${pct}%` }}

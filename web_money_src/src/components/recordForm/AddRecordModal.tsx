@@ -223,13 +223,13 @@ export const AddRecordModal: React.FC = () => {
   const formattedDateTimeStr = `${d.getDate().toString().padStart(2, '0')}/${(d.getMonth() + 1).toString().padStart(2, '0')}/${d.getFullYear()} ${d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#090d16] flex flex-col text-slate-100 animate-in slide-in-from-bottom-8 duration-200">
+    <div className="fixed inset-0 z-50 bg-[#030707] flex flex-col text-[#F4FFFD] animate-in slide-in-from-bottom-8 duration-200 ambient-bg-grid select-none">
       {/* 1. Header: Back, Title, Save */}
-      <div className="px-4 py-3 border-b border-slate-800 flex items-center justify-between shrink-0 bg-slate-950/80">
+      <div className="px-4 py-3 border-b border-teal-500/20 flex items-center justify-between shrink-0 bg-[#061817]/90 backdrop-blur-xl">
         <div className="flex items-center gap-3">
           <button
             onClick={closeAddRecord}
-            className="p-1 -ml-1 rounded-lg text-slate-400 hover:text-white"
+            className="p-1 -ml-1 rounded-lg text-[#94B5B0] hover:text-white transition-colors cursor-pointer"
             aria-label="Back"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -246,7 +246,7 @@ export const AddRecordModal: React.FC = () => {
               type="button"
               onClick={() => handleSave(true)}
               disabled={!isValid}
-              className="text-xs font-semibold px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-30 text-slate-300"
+              className="text-xs font-semibold px-2.5 py-1.5 rounded-xl bg-teal-500/10 border border-teal-500/20 hover:bg-teal-500/20 disabled:opacity-30 text-[#19E6C8] transition-all cursor-pointer"
               title="Save & Add Another"
             >
               + Another
@@ -255,14 +255,14 @@ export const AddRecordModal: React.FC = () => {
           <button
             onClick={() => handleSave(false)}
             disabled={!isValid}
-            className={`text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-md ${
+            className={`text-xs font-extrabold px-4 py-2 rounded-xl transition-all shadow-md cursor-pointer ${
               isValid
                 ? activeType === 'income'
-                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-glow-blue'
+                  ? 'bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030807] shadow-[0_0_20px_rgba(25,230,200,0.45)]'
                   : activeType === 'expense'
-                  ? 'bg-red-600 hover:bg-red-500 text-white shadow-glow-red'
-                  : 'bg-slate-700 hover:bg-slate-600 text-white'
-                : 'bg-slate-800 text-slate-500 cursor-not-allowed opacity-50'
+                  ? 'bg-[#FF6B6B] hover:bg-[#ff8585] text-[#030807] shadow-[0_0_20px_rgba(255,107,107,0.45)]'
+                  : 'bg-[#19E6C8] hover:bg-[#2DD4BF] text-[#030807] shadow-[0_0_20px_rgba(25,230,200,0.45)]'
+                : 'bg-teal-950/40 border border-teal-500/10 text-[#5B7B76] cursor-not-allowed opacity-50'
             }`}
           >
             SAVE
@@ -271,33 +271,33 @@ export const AddRecordModal: React.FC = () => {
       </div>
 
       {/* 2. Type Tabs: Income, Expense, Transfer */}
-      <div className="flex border-b border-slate-800 text-xs font-semibold shrink-0 bg-[#090d16]">
+      <div className="flex border-b border-teal-500/15 text-xs font-semibold shrink-0 bg-[#061817]/70 backdrop-blur-md">
         <button
           onClick={() => setActiveType('income')}
-          className={`flex-1 py-3 text-center border-b-2 transition-all ${
+          className={`flex-1 py-3 text-center border-b-2 transition-all cursor-pointer ${
             activeType === 'income'
-              ? 'border-blue-500 text-blue-400 font-bold bg-blue-950/20'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-[#19E6C8] text-[#19E6C8] font-bold bg-teal-500/10 shadow-[inset_0_-2px_10px_rgba(25,230,200,0.15)]'
+              : 'border-transparent text-[#94B5B0] hover:text-white'
           }`}
         >
           Income
         </button>
         <button
           onClick={() => setActiveType('expense')}
-          className={`flex-1 py-3 text-center border-b-2 transition-all ${
+          className={`flex-1 py-3 text-center border-b-2 transition-all cursor-pointer ${
             activeType === 'expense'
-              ? 'border-red-500 text-red-400 font-bold bg-red-950/20'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-[#FF6B6B] text-[#FF6B6B] font-bold bg-[#FF6B6B]/10 shadow-[inset_0_-2px_10px_rgba(255,107,107,0.15)]'
+              : 'border-transparent text-[#94B5B0] hover:text-white'
           }`}
         >
           Expense
         </button>
         <button
           onClick={() => setActiveType('transfer')}
-          className={`flex-1 py-3 text-center border-b-2 transition-all ${
+          className={`flex-1 py-3 text-center border-b-2 transition-all cursor-pointer ${
             activeType === 'transfer'
-              ? 'border-slate-400 text-slate-200 font-bold bg-slate-800/30'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              ? 'border-[#38BDF8] text-[#38BDF8] font-bold bg-[#38BDF8]/10 shadow-[inset_0_-2px_10px_rgba(56,189,248,0.15)]'
+              : 'border-transparent text-[#94B5B0] hover:text-white'
           }`}
         >
           Transfer
@@ -309,21 +309,21 @@ export const AddRecordModal: React.FC = () => {
         {/* Amount Field & Dropdown Keypad Trigger */}
         <div
           onClick={() => setShowCalculator((prev) => !prev)}
-          className="p-4 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-between transition-colors group"
+          className="p-4 rounded-2xl glass-card bg-[#061817] border border-teal-500/25 hover:border-teal-400/50 cursor-pointer flex items-center justify-between transition-all group"
         >
           <div className="flex flex-col">
-            <span className="text-[11px] font-medium text-slate-400 uppercase tracking-wider">
+            <span className="text-[11px] font-mono text-[#94B5B0] uppercase tracking-wider font-bold">
               Amount
             </span>
-            <div className="flex items-baseline gap-1 mt-1 font-display">
-              <span className="text-xl font-bold text-slate-400">₹</span>
+            <div className="flex items-baseline gap-1 mt-1 font-mono">
+              <span className="text-xl font-bold text-[#5B7B76]">₹</span>
               <span
                 className={`text-3xl sm:text-4xl font-extrabold tracking-tight ${
                   activeType === 'income'
-                    ? 'text-blue-400'
+                    ? 'text-[#19E6C8] text-glow-teal'
                     : activeType === 'expense'
-                    ? 'text-red-400'
-                    : 'text-white'
+                    ? 'text-[#FF6B6B] text-glow-coral'
+                    : 'text-[#38BDF8]'
                 }`}
               >
                 {amountInput || '0'}
@@ -331,8 +331,8 @@ export const AddRecordModal: React.FC = () => {
             </div>
           </div>
           <ChevronDown
-            className={`w-5 h-5 text-slate-400 transition-transform ${
-              showCalculator ? 'rotate-180 text-blue-400' : ''
+            className={`w-5 h-5 text-[#94B5B0] transition-transform ${
+              showCalculator ? 'rotate-180 text-[#19E6C8]' : 'group-hover:text-white'
             }`}
           />
         </div>
@@ -341,13 +341,13 @@ export const AddRecordModal: React.FC = () => {
         <div>
           <div
             onClick={() => setShowDatePicker(true)}
-            className="w-full p-3 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between cursor-pointer hover:border-slate-700"
+            className="w-full p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 flex items-center justify-between cursor-pointer hover:border-teal-400/40 transition-colors"
           >
             <div className="flex items-center gap-2.5 min-w-0">
               <Calendar className="w-4 h-4 text-[#19E6C8] shrink-0" />
               <div className="flex flex-col min-w-0">
-                <span className="text-[10px] text-slate-400 uppercase">Date & Time</span>
-                <span className="text-xs font-semibold text-slate-100 truncate">
+                <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">Date & Time</span>
+                <span className="text-xs font-semibold text-white truncate">
                   {formattedDateTimeStr}
                 </span>
               </div>
@@ -357,7 +357,7 @@ export const AddRecordModal: React.FC = () => {
 
         {/* Description Field with Autocomplete */}
         <div className="relative">
-          <label className="text-[11px] font-medium text-slate-400 block mb-1">
+          <label className="text-[11px] font-mono text-[#94B5B0] block mb-1 uppercase font-bold tracking-wider">
             Short Description
           </label>
           <input
@@ -375,12 +375,12 @@ export const AddRecordModal: React.FC = () => {
                 ? 'e.g. Grocery, Lunch, Metro recharge'
                 : 'e.g. ATM cash withdrawal'
             }
-            className="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full px-3.5 py-2.5 rounded-xl bg-[#030707] border border-teal-500/25 text-xs text-white placeholder-[#5B7B76] focus:outline-none focus:border-[#19E6C8] focus:shadow-[0_0_15px_rgba(25,230,200,0.2)] font-sans"
           />
 
           {/* Autocomplete Dropdown */}
           {showSuggestions && suggestions.length > 0 && (
-            <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-slate-900 border border-slate-700 rounded-xl shadow-2xl overflow-hidden divide-y divide-slate-800">
+            <div className="absolute top-full left-0 right-0 z-30 mt-1 bg-[#061817] border border-teal-500/30 rounded-xl shadow-[0_15px_40px_rgba(0,0,0,0.9)] overflow-hidden divide-y divide-teal-500/15 backdrop-blur-xl">
               {suggestions.map((sug, i) => (
                 <div
                   key={i}
@@ -391,10 +391,10 @@ export const AddRecordModal: React.FC = () => {
                     setAmountInput((sug.amountPaise / 100).toString());
                     setShowSuggestions(false);
                   }}
-                  className="px-3.5 py-2 hover:bg-slate-800 cursor-pointer flex items-center justify-between text-xs"
+                  className="px-3.5 py-2 hover:bg-teal-950/40 cursor-pointer flex items-center justify-between text-xs transition-colors"
                 >
-                  <span className="text-slate-200 font-semibold">{sug.description}</span>
-                  <span className="text-slate-400 font-display">
+                  <span className="text-[#F4FFFD] font-semibold">{sug.description}</span>
+                  <span className="text-[#19E6C8] font-mono">
                     ₹{(sug.amountPaise / 100).toLocaleString('en-IN')}
                   </span>
                 </div>
@@ -410,67 +410,69 @@ export const AddRecordModal: React.FC = () => {
             {/* Category Selector */}
             <div
               onClick={() => setCategoryModalOpen(true)}
-              className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-between"
+              className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 hover:border-teal-400/40 cursor-pointer flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-[0_0_8px]"
                   style={{
-                    backgroundColor: `${selectedCategory?.color || '#3b82f6'}22`,
-                    border: `1.5px solid ${selectedCategory?.color || '#3b82f6'}`,
+                    backgroundColor: `${selectedCategory?.color || '#19E6C8'}22`,
+                    border: `1.5px solid ${selectedCategory?.color || '#19E6C8'}`,
+                    boxShadow: `0 0 8px ${selectedCategory?.color || '#19E6C8'}60`,
                   }}
                 >
                   <DynamicIcon
                     name={selectedCategory?.icon || 'Tag'}
                     className="w-3.5 h-3.5"
-                    color={selectedCategory?.color || '#3b82f6'}
+                    color={selectedCategory?.color || '#19E6C8'}
                   />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[10px] text-slate-400">Category</span>
-                  <span className="text-xs font-semibold text-slate-100 truncate">
+                  <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">Category</span>
+                  <span className="text-xs font-semibold text-white truncate">
                     {selectedCategory?.name || 'Select'}
                   </span>
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+              <ChevronDown className="w-4 h-4 text-[#94B5B0]" />
             </div>
 
             {/* Wallet Selector */}
             <div
               onClick={() => setWalletModalMode('from')}
-              className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-between"
+              className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 hover:border-teal-400/40 cursor-pointer flex items-center justify-between transition-colors"
             >
               <div className="flex items-center gap-2.5 min-w-0">
                 <div
-                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0"
+                  className="w-7 h-7 rounded-full flex items-center justify-center shrink-0 shadow-[0_0_8px]"
                   style={{
-                    backgroundColor: `${selectedWallet?.color || '#3b82f6'}22`,
-                    border: `1.5px solid ${selectedWallet?.color || '#3b82f6'}`,
+                    backgroundColor: `${selectedWallet?.color || '#19E6C8'}22`,
+                    border: `1.5px solid ${selectedWallet?.color || '#19E6C8'}`,
+                    boxShadow: `0 0 8px ${selectedWallet?.color || '#19E6C8'}60`,
                   }}
                 >
                   <DynamicIcon
                     name={selectedWallet?.icon || 'Smartphone'}
                     className="w-3.5 h-3.5"
-                    color={selectedWallet?.color || '#3b82f6'}
+                    color={selectedWallet?.color || '#19E6C8'}
                   />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[10px] text-slate-400">Wallet</span>
-                  <span className="text-xs font-semibold text-slate-100 truncate">
+                  <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">Wallet</span>
+                  <span className="text-xs font-semibold text-white truncate">
                     {selectedWallet?.name || 'Select'}
                   </span>
                 </div>
               </div>
-              <ChevronDown className="w-4 h-4 text-slate-400" />
+              <ChevronDown className="w-4 h-4 text-[#94B5B0]" />
             </div>
           </div>
 
           {/* Budget Selector (Multiple Selection Allowed, Wallet is Single) */}
           <div className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
-                <PiggyBank className="w-3.5 h-3.5 text-emerald-400" />
+              <label className="text-[11px] font-mono text-[#94B5B0] flex items-center gap-1.5 uppercase font-bold tracking-wider">
+                <PiggyBank className="w-3.5 h-3.5 text-[#19E6C8]" />
                 <span>Budgets (Multi-select)</span>
               </label>
               <div className="flex items-center gap-2">
@@ -478,7 +480,7 @@ export const AddRecordModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedBudgetIds([])}
-                    className="text-[10px] text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+                    className="text-[10px] font-mono text-[#5B7B76] hover:text-[#94B5B0] transition-colors cursor-pointer"
                   >
                     Clear all
                   </button>
@@ -487,7 +489,7 @@ export const AddRecordModal: React.FC = () => {
                   <button
                     type="button"
                     onClick={() => setSelectedBudgetIds(budgets.map((b) => b.id))}
-                    className="text-[10px] text-emerald-400 hover:underline transition-colors cursor-pointer"
+                    className="text-[10px] font-mono text-[#19E6C8] hover:underline transition-colors cursor-pointer font-bold"
                   >
                     Select all
                   </button>
@@ -498,16 +500,16 @@ export const AddRecordModal: React.FC = () => {
             {/* Clickable Budget Summary Card */}
             <div
               onClick={() => setBudgetModalOpen(true)}
-              className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 cursor-pointer flex items-center justify-between transition-all"
+              className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 hover:border-teal-400/50 cursor-pointer flex items-center justify-between transition-all"
             >
               <div className="flex items-center gap-2.5 min-w-0 flex-1">
-                <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
-                  <PiggyBank className="w-3.5 h-3.5 text-emerald-400" />
+                <div className="w-7 h-7 rounded-full bg-teal-500/15 border border-teal-500/30 flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(25,230,200,0.2)]">
+                  <PiggyBank className="w-3.5 h-3.5 text-[#19E6C8]" />
                 </div>
                 <div className="flex flex-col min-w-0 flex-1">
-                  <span className="text-[10px] text-slate-400">Assigned Budgets</span>
+                  <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">Assigned Budgets</span>
                   {selectedBudgetIds.length === 0 ? (
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-[#5B7B76]">
                       None selected (Tap to select budgets)
                     </span>
                   ) : (
@@ -518,9 +520,9 @@ export const AddRecordModal: React.FC = () => {
                         return (
                           <span
                             key={b.id}
-                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold"
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-teal-500/20 text-[#19E6C8] border border-teal-500/30 text-[11px] font-semibold font-mono"
                           >
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#19E6C8] shadow-[0_0_4px_#19E6C8]" />
                             {b.name}
                           </span>
                         );
@@ -529,9 +531,9 @@ export const AddRecordModal: React.FC = () => {
                   )}
                 </div>
               </div>
-              <div className="flex items-center gap-1 text-slate-400 shrink-0 ml-2">
+              <div className="flex items-center gap-1 text-[#94B5B0] shrink-0 ml-2">
                 {selectedBudgetIds.length > 0 && (
-                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-500/30">
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-teal-500/20 text-[#19E6C8] border border-teal-500/30 font-bold">
                     {selectedBudgetIds.length}
                   </span>
                 )}
@@ -553,15 +555,15 @@ export const AddRecordModal: React.FC = () => {
                           isSelected ? prev.filter((id) => id !== b.id) : [...prev, b.id]
                         );
                       }}
-                      className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                      className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer font-mono ${
                         isSelected
-                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
-                          : 'bg-slate-900/90 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200'
+                          ? 'bg-teal-500/20 text-[#19E6C8] border border-teal-500/50 shadow-[0_0_10px_rgba(25,230,200,0.25)]'
+                          : 'bg-[#061817] text-[#94B5B0] border border-teal-500/15 hover:border-teal-500/35 hover:text-white'
                       }`}
                     >
                       <div
                         className={`w-3.5 h-3.5 rounded flex items-center justify-center transition-all ${
-                          isSelected ? 'bg-emerald-500 text-black' : 'border border-slate-700 bg-slate-800'
+                          isSelected ? 'bg-[#19E6C8] text-black shadow-[0_0_6px_#19E6C8]' : 'border border-teal-500/30 bg-[#030707]'
                         }`}
                       >
                         {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
@@ -572,12 +574,12 @@ export const AddRecordModal: React.FC = () => {
                 })}
               </div>
             ) : (
-              <div className="text-[11px] text-slate-500 flex items-center justify-between px-1">
+              <div className="text-[11px] text-[#5B7B76] flex items-center justify-between px-1">
                 <span>No active budgets found.</span>
                 <button
                   type="button"
                   onClick={() => openBudgetModal('new')}
-                  className="text-emerald-400 hover:underline font-semibold cursor-pointer"
+                  className="text-[#19E6C8] hover:underline font-semibold cursor-pointer"
                 >
                   + Create budget
                 </button>
@@ -592,61 +594,61 @@ export const AddRecordModal: React.FC = () => {
               {/* From Wallet */}
               <div
                 onClick={() => setWalletModalMode('from')}
-                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-between"
+                className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 hover:border-teal-400/40 cursor-pointer flex items-center justify-between transition-colors"
               >
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[10px] text-slate-400">From Wallet</span>
-                  <span className="text-xs font-semibold text-slate-100 truncate mt-0.5">
+                  <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">From Wallet</span>
+                  <span className="text-xs font-semibold text-white truncate mt-0.5">
                     {selectedWallet?.name || 'Select'}
                   </span>
-                  <span className="text-[10px] text-slate-500 font-display">
+                  <span className="text-[10px] text-[#5B7B76] font-mono">
                     {formatInr(walletBalances.get(walletId) || 0, opts)}
                   </span>
                 </div>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
+                <ChevronDown className="w-4 h-4 text-[#94B5B0]" />
               </div>
 
               {/* To Wallet */}
               <div
                 onClick={() => setWalletModalMode('to')}
-                className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer flex items-center justify-between"
+                className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 hover:border-teal-400/40 cursor-pointer flex items-center justify-between transition-colors"
               >
                 <div className="flex flex-col min-w-0">
-                  <span className="text-[10px] text-slate-400">To Wallet</span>
-                  <span className="text-xs font-semibold text-slate-100 truncate mt-0.5">
+                  <span className="text-[10px] font-mono text-[#94B5B0] uppercase font-bold">To Wallet</span>
+                  <span className="text-xs font-semibold text-white truncate mt-0.5">
                     {selectedToWallet?.name || 'Select'}
                   </span>
-                  <span className="text-[10px] text-slate-500 font-display">
+                  <span className="text-[10px] text-[#5B7B76] font-mono">
                     {formatInr(walletBalances.get(toWalletId) || 0, opts)}
                   </span>
                 </div>
-                <ChevronDown className="w-4 h-4 text-slate-400" />
+                <ChevronDown className="w-4 h-4 text-[#94B5B0]" />
               </div>
             </div>
 
             {/* Transfer Fee Toggle */}
-            <div className="p-3 rounded-2xl bg-slate-900 border border-slate-800 flex items-center justify-between">
+            <div className="p-3 rounded-2xl glass-card bg-[#061817] border border-teal-500/20 flex items-center justify-between">
               <div>
-                <span className="text-xs font-semibold text-slate-200">Transfer Fee</span>
-                <p className="text-[10px] text-slate-500">Record ATM or transaction fee</p>
+                <span className="text-xs font-semibold text-white">Transfer Fee</span>
+                <p className="text-[10px] text-[#5B7B76]">Record ATM or transaction fee</p>
               </div>
               <div className="flex items-center gap-3">
                 {hasFee && (
-                  <div className="flex items-center gap-1 bg-slate-950 px-2 py-1 rounded-lg border border-slate-800">
-                    <span className="text-xs text-slate-400">₹</span>
+                  <div className="flex items-center gap-1 bg-[#030707] px-2.5 py-1 rounded-lg border border-teal-500/20">
+                    <span className="text-xs text-[#94B5B0]">₹</span>
                     <input
                       type="number"
                       value={feeInput}
                       onChange={(e) => setFeeInput(e.target.value)}
-                      className="w-16 bg-transparent text-xs text-white focus:outline-none"
+                      className="w-16 bg-transparent text-xs text-white focus:outline-none font-mono"
                     />
                   </div>
                 )}
                 <button
                   type="button"
                   onClick={() => setHasFee((prev) => !prev)}
-                  className={`w-10 h-6 rounded-full transition-colors relative ${
-                    hasFee ? 'bg-blue-600' : 'bg-slate-700'
+                  className={`w-10 h-6 rounded-full transition-colors relative cursor-pointer ${
+                    hasFee ? 'bg-[#19E6C8]' : 'bg-[#061817] border border-teal-500/25'
                   }`}
                 >
                   <div
@@ -663,8 +665,10 @@ export const AddRecordModal: React.FC = () => {
         {/* Memo & Attach Photo */}
         <div>
           <div className="flex items-center justify-between mb-1">
-            <label className="text-[11px] font-medium text-slate-400">Memo & Receipt</label>
-            <label className="cursor-pointer text-blue-400 hover:text-blue-300 flex items-center gap-1 text-xs font-semibold">
+            <label className="text-[11px] font-mono text-[#94B5B0] uppercase font-bold tracking-wider">
+              Memo & Receipt
+            </label>
+            <label className="cursor-pointer text-[#19E6C8] hover:text-[#2DD4BF] flex items-center gap-1 text-xs font-semibold transition-colors">
               <Camera className="w-4 h-4" />
               <span>Attach Photo</span>
               <input
@@ -681,14 +685,14 @@ export const AddRecordModal: React.FC = () => {
             onChange={(e) => setMemo(e.target.value)}
             rows={2}
             placeholder="Add a note or receipt memo..."
-            className="w-full px-3.5 py-2 rounded-xl bg-slate-900 border border-slate-800 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500"
+            className="w-full px-3.5 py-2 rounded-xl bg-[#030707] border border-teal-500/25 text-xs text-white placeholder-[#5B7B76] focus:outline-none focus:border-[#19E6C8] font-sans"
           />
 
           {/* Image Thumbnails */}
           {imageBlobs.length > 0 && (
             <div className="flex items-center gap-2 mt-2 overflow-x-auto pb-1">
               {imageBlobs.map((blob, idx) => (
-                <div key={idx} className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-slate-700 group">
+                <div key={idx} className="relative w-14 h-14 rounded-xl overflow-hidden shrink-0 border border-teal-500/25 group">
                   <img
                     src={blob}
                     alt="Receipt"
@@ -697,7 +701,7 @@ export const AddRecordModal: React.FC = () => {
                   />
                   <button
                     onClick={() => setImageBlobs((prev) => prev.filter((_, i) => i !== idx))}
-                    className="absolute top-1 right-1 p-0.5 rounded-full bg-black/70 text-white hover:text-red-400"
+                    className="absolute top-1 right-1 p-0.5 rounded-full bg-black/70 text-white hover:text-[#FF6B6B]"
                   >
                     <X className="w-3 h-3" />
                   </button>
@@ -712,7 +716,7 @@ export const AddRecordModal: React.FC = () => {
       <div className="fixed bottom-4 right-4 z-40">
         <button
           onClick={() => setTemplateModalOpen(true)}
-          className="w-12 h-12 rounded-full bg-slate-800 hover:bg-slate-700 border border-slate-600 text-blue-400 flex items-center justify-center shadow-xl active:scale-95 transition-all"
+          className="w-12 h-12 rounded-full bg-[#061817] hover:bg-teal-950/60 border border-teal-500/30 text-[#19E6C8] flex items-center justify-center shadow-[0_0_20px_rgba(25,230,200,0.3)] active:scale-95 transition-all cursor-pointer"
           title="Templates"
           aria-label="Open templates"
         >
@@ -786,20 +790,20 @@ export const AddRecordModal: React.FC = () => {
 
       {/* Date Picker Simple Modal */}
       {showDatePicker && (
-        <div className="fixed inset-0 z-60 bg-black/70 flex items-center justify-center p-4">
-          <div className="w-full max-w-xs bg-slate-900 border border-slate-700 rounded-3xl p-5 shadow-2xl space-y-3">
-            <h4 className="text-sm font-bold text-white">Select Date & Time</h4>
+        <div className="fixed inset-0 z-60 bg-black/75 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="w-full max-w-xs bg-[#061817]/95 border border-teal-500/25 rounded-3xl p-5 shadow-[0_20px_60px_rgba(0,0,0,0.9)] space-y-3 backdrop-blur-2xl">
+            <h4 className="text-sm font-bold text-white font-display">Select Date & Time</h4>
             <input
               type="datetime-local"
               value={dateTime.slice(0, 16)}
               onChange={(e) => {
                 if (e.target.value) setDateTime(new Date(e.target.value).toISOString());
               }}
-              className="w-full px-3 py-2 rounded-xl bg-slate-800 border border-slate-700 text-xs text-white"
+              className="w-full px-3 py-2 rounded-xl bg-[#030707] border border-teal-500/20 text-xs text-white focus:outline-none focus:border-[#19E6C8]"
             />
             <button
               onClick={() => setShowDatePicker(false)}
-              className="w-full py-2 rounded-xl bg-blue-600 text-xs font-semibold text-white shadow-glow-blue"
+              className="w-full py-2.5 rounded-xl bg-[#19E6C8] hover:bg-[#2DD4BF] text-xs font-bold text-[#030807] shadow-[0_0_15px_rgba(25,230,200,0.4)] cursor-pointer transition-all"
             >
               Done
             </button>
@@ -809,17 +813,17 @@ export const AddRecordModal: React.FC = () => {
 
       {/* Image Preview Modal */}
       {previewImage && (
-        <div className="fixed inset-0 z-60 bg-black/90 flex flex-col items-center justify-center p-4">
+        <div className="fixed inset-0 z-60 bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-4">
           <button
             onClick={() => setPreviewImage(null)}
-            className="absolute top-4 right-4 p-2 text-white bg-slate-800 rounded-full"
+            className="absolute top-4 right-4 p-2.5 text-[#94B5B0] hover:text-white bg-[#061817] border border-teal-500/30 rounded-full cursor-pointer transition-colors shadow-lg"
           >
             <X className="w-6 h-6" />
           </button>
           <img
             src={previewImage}
             alt="Receipt Full Preview"
-            className="max-w-full max-h-[85vh] rounded-2xl object-contain shadow-2xl"
+            className="max-w-full max-h-[85vh] rounded-2xl object-contain shadow-2xl border border-teal-500/20"
           />
         </div>
       )}

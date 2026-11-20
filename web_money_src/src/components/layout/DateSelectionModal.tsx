@@ -210,7 +210,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="font-mono text-xs font-bold text-slate-200">
+                <span className="font-mono text-xs font-bold text-[#94B5B0]">
                   {decadeStartYear} – {decadeStartYear + 11}
                 </span>
                 <button
@@ -247,7 +247,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.45)]'
                         : isThisYear
                         ? 'bg-[#061817] text-[#19E6C8] border border-teal-500/40 hover:bg-teal-950/60'
-                        : 'bg-[#061817]/60 text-slate-300 hover:text-white hover:bg-teal-950/40 border border-teal-500/10'
+                        : 'bg-[#061817]/60 text-[#94B5B0] hover:text-white hover:bg-teal-950/40 border border-teal-500/10'
                     }`}
                   >
                     {y}
@@ -329,7 +329,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.45)]'
                         : isCurrentMonth
                         ? 'bg-[#061817] text-[#19E6C8] border border-teal-500/40 hover:bg-teal-950/60'
-                        : 'bg-[#061817]/60 text-slate-300 hover:text-white hover:bg-teal-950/40 border border-teal-500/10'
+                        : 'bg-[#061817]/60 text-[#94B5B0] hover:text-white hover:bg-teal-950/40 border border-teal-500/10'
                     }`}
                   >
                     {m}
@@ -388,7 +388,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                   className={`w-full p-3 rounded-2xl flex items-center justify-between text-xs transition-all cursor-pointer ${
                     wk.isCurrentAnchorWeek
                       ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.4)]'
-                      : 'bg-[#061817]/70 text-slate-200 hover:text-white hover:bg-teal-950/50 border border-teal-500/15'
+                      : 'bg-[#061817]/70 text-[#94B5B0] hover:text-white hover:bg-teal-950/50 border border-teal-500/15'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
@@ -483,7 +483,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_12px_rgba(25,230,200,0.5)]'
                         : isToday
                         ? 'bg-[#061817] text-[#19E6C8] border border-teal-500/50 hover:bg-teal-950/60'
-                        : 'text-slate-300 hover:text-white hover:bg-teal-950/50'
+                        : 'text-[#94B5B0] hover:text-white hover:bg-teal-950/50'
                     }`}
                   >
                     {dayNum}

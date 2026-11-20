@@ -67,16 +67,16 @@ export const DetailedBreakdownModal: React.FC<DetailedBreakdownModalProps> = ({
       : 0;
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/75 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150 select-none">
       <div className="fixed inset-0" onClick={onClose} />
-      <div className="w-full sm:max-w-md bg-slate-900 border border-slate-700/80 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 z-10 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom-6 duration-200">
+      <div className="w-full sm:max-w-md bg-[#061817]/95 border border-teal-500/25 rounded-t-3xl sm:rounded-3xl shadow-[0_20px_60px_rgba(0,0,0,0.9)] p-5 z-10 max-h-[85vh] overflow-y-auto animate-in slide-in-from-bottom-6 duration-200 backdrop-blur-2xl">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+        <div className="flex items-center justify-between pb-3 border-b border-teal-500/15">
           <div>
             <h3 className="text-base font-bold text-white font-display">Period Financial Breakdown</h3>
-            <p className="text-xs text-slate-400 mt-0.5">{dateRange.label}</p>
+            <p className="text-xs text-[#94B5B0] mt-0.5">{dateRange.label}</p>
           </div>
-          <button onClick={onClose} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={onClose} className="p-1 rounded-lg text-[#94B5B0] hover:text-white cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -84,70 +84,70 @@ export const DetailedBreakdownModal: React.FC<DetailedBreakdownModalProps> = ({
         {/* Metrics Grid */}
         <div className="grid grid-cols-2 gap-3 my-4">
           {/* Daily Average */}
-          <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex flex-col">
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-              <Calendar className="w-4 h-4 text-amber-400" />
+          <div className="p-3.5 rounded-2xl bg-[#030707] border border-teal-500/15 flex flex-col">
+            <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mb-1 font-mono uppercase font-bold text-[10px]">
+              <Calendar className="w-3.5 h-3.5 text-amber-400" />
               <span>Daily Avg Expense</span>
             </div>
-            <span className="text-base font-bold text-slate-100 font-display">
+            <span className="text-base font-bold text-white font-mono">
               {formatInr(dailyAverageExpense, opts)}
             </span>
-            <span className="text-[10px] text-slate-500 mt-0.5">Across {diffDays} days</span>
+            <span className="text-[10px] text-[#5B7B76] mt-0.5 font-mono">Across {diffDays} days</span>
           </div>
 
           {/* Savings Rate */}
-          <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex flex-col">
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-              <Percent className="w-4 h-4 text-emerald-400" />
+          <div className="p-3.5 rounded-2xl bg-[#030707] border border-teal-500/15 flex flex-col">
+            <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mb-1 font-mono uppercase font-bold text-[10px]">
+              <Percent className="w-3.5 h-3.5 text-[#19E6C8]" />
               <span>Savings Rate</span>
             </div>
-            <span className="text-base font-bold text-emerald-400 font-display">
+            <span className="text-base font-bold text-[#19E6C8] font-mono text-glow-teal">
               {savingsRate}%
             </span>
-            <span className="text-[10px] text-slate-500 mt-0.5">Of total earnings saved</span>
+            <span className="text-[10px] text-[#5B7B76] mt-0.5 font-mono">Of total earnings saved</span>
           </div>
 
           {/* Highest Spending Day */}
-          <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex flex-col">
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-              <TrendingDown className="w-4 h-4 text-red-400" />
+          <div className="p-3.5 rounded-2xl bg-[#030707] border border-teal-500/15 flex flex-col">
+            <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mb-1 font-mono uppercase font-bold text-[10px]">
+              <TrendingDown className="w-3.5 h-3.5 text-[#FF6B6B]" />
               <span>Highest Day</span>
             </div>
-            <span className="text-base font-bold text-red-400 font-display">
+            <span className="text-base font-bold text-[#FF6B6B] font-mono text-glow-coral">
               {highestDayAmount > 0 ? formatInr(highestDayAmount, opts) : '₹0'}
             </span>
-            <span className="text-[10px] text-slate-400 truncate mt-0.5">
+            <span className="text-[10px] text-[#5B7B76] truncate mt-0.5 font-mono">
               {highestDayStr}
             </span>
           </div>
 
           {/* Total Transactions */}
-          <div className="p-3.5 rounded-2xl bg-slate-800/60 border border-slate-700/50 flex flex-col">
-            <div className="flex items-center gap-1.5 text-xs text-slate-400 mb-1">
-              <Hash className="w-4 h-4 text-blue-400" />
+          <div className="p-3.5 rounded-2xl bg-[#030707] border border-teal-500/15 flex flex-col">
+            <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mb-1 font-mono uppercase font-bold text-[10px]">
+              <Hash className="w-3.5 h-3.5 text-[#19E6C8]" />
               <span>Total Records</span>
             </div>
-            <span className="text-base font-bold text-slate-100 font-display">
+            <span className="text-base font-bold text-white font-mono">
               {transactionCount}
             </span>
-            <span className="text-[10px] text-slate-500 mt-0.5">Logged entries</span>
+            <span className="text-[10px] text-[#5B7B76] mt-0.5 font-mono">Logged entries</span>
           </div>
         </div>
 
         {/* Cash Flow Summary Card */}
-        <div className="p-4 rounded-2xl bg-slate-950/70 border border-slate-800 space-y-2.5 text-xs">
-          <div className="flex justify-between items-center text-slate-400">
+        <div className="p-4 rounded-2xl bg-[#030707] border border-teal-500/20 space-y-2.5 text-xs font-mono">
+          <div className="flex justify-between items-center text-[#94B5B0]">
             <span>Total Earned</span>
-            <span className="text-blue-400 font-bold font-display">{formatInr(periodIncome, opts)}</span>
+            <span className="text-[#19E6C8] font-bold text-glow-teal">{formatInr(periodIncome, opts)}</span>
           </div>
-          <div className="flex justify-between items-center text-slate-400">
+          <div className="flex justify-between items-center text-[#94B5B0]">
             <span>Total Spent</span>
-            <span className="text-red-400 font-bold font-display">-{formatInr(periodExpense, opts)}</span>
+            <span className="text-[#FF6B6B] font-bold text-glow-coral">-{formatInr(periodExpense, opts)}</span>
           </div>
-          <div className="h-px bg-slate-800 my-1" />
-          <div className="flex justify-between items-center text-slate-200 font-bold">
+          <div className="h-px bg-teal-500/15 my-1" />
+          <div className="flex justify-between items-center text-white font-bold">
             <span>Net Saved / Surplus</span>
-            <span className={periodNet >= 0 ? 'text-emerald-400' : 'text-red-400'}>
+            <span className={periodNet >= 0 ? 'text-[#19E6C8] text-glow-teal' : 'text-[#FF6B6B] text-glow-coral'}>
               {formatInr(periodNet, opts)}
             </span>
           </div>

@@ -62,25 +62,25 @@ export const PasscodeLock: React.FC<PasscodeLockProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-[#090d16] flex flex-col items-center justify-between py-12 px-6 text-white select-none">
+    <div className="fixed inset-0 z-50 bg-[#030707] flex flex-col items-center justify-between py-12 px-6 text-white select-none ambient-bg-grid">
       <div className="flex flex-col items-center mt-8">
-        <div className="w-16 h-16 rounded-3xl bg-blue-600/20 border border-blue-500/30 flex items-center justify-center mb-6 shadow-glow-blue">
-          <Lock className="w-8 h-8 text-blue-400" />
+        <div className="w-16 h-16 rounded-3xl bg-teal-500/15 border border-teal-500/30 flex items-center justify-center mb-6 shadow-glow-teal">
+          <Lock className="w-8 h-8 text-[#19E6C8]" />
         </div>
         <h1 className="text-2xl font-bold tracking-tight text-white mb-2">{title}</h1>
-        <p className="text-sm text-slate-400 text-center max-w-xs">{subtitle}</p>
+        <p className="text-sm text-[#94B5B0] text-center max-w-xs">{subtitle}</p>
 
         {/* PIN Dots */}
-        <div className={`flex items-center gap-4 mt-8 ${isError ? 'animate-bounce text-red-400' : ''}`}>
+        <div className={`flex items-center gap-4 mt-8 ${isError ? 'animate-bounce text-[#FF6B6B]' : ''}`}>
           {Array.from({ length: storedPasscode.length }).map((_, i) => (
             <div
               key={i}
               className={`w-4 h-4 rounded-full transition-all duration-200 ${
                 i < pin.length
                   ? isError
-                    ? 'bg-red-500 scale-110 shadow-glow-red'
-                    : 'bg-blue-500 scale-110 shadow-glow-blue'
-                  : 'border-2 border-slate-700 bg-slate-800/50'
+                    ? 'bg-[#FF6B6B] scale-110 shadow-[0_0_12px_rgba(255,107,107,0.5)]'
+                    : 'bg-[#19E6C8] scale-110 shadow-glow-teal'
+                  : 'border-2 border-teal-500/30 bg-[#061817]'
               }`}
             />
           ))}
@@ -93,7 +93,7 @@ export const PasscodeLock: React.FC<PasscodeLockProps> = ({
           <button
             key={digit}
             onClick={() => handleDigit(digit)}
-            className="w-18 h-18 rounded-full bg-slate-800/80 hover:bg-slate-700/80 active:scale-95 border border-slate-700/50 text-2xl font-semibold flex items-center justify-center transition-all duration-150"
+            className="w-18 h-18 rounded-full glass-card hover:bg-teal-950/40 active:scale-95 border border-teal-500/20 hover:border-teal-500/40 text-2xl font-semibold flex items-center justify-center transition-all duration-150 cursor-pointer"
           >
             {digit}
           </button>
@@ -102,10 +102,10 @@ export const PasscodeLock: React.FC<PasscodeLockProps> = ({
         {hasBiometrics ? (
           <button
             onClick={handleBiometricAuth}
-            className="w-18 h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:scale-95 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+            className="w-18 h-18 rounded-full glass-card hover:bg-teal-950/40 active:scale-95 border border-teal-500/20 text-[#94B5B0] hover:text-[#19E6C8] flex items-center justify-center transition-all cursor-pointer"
             aria-label="Unlock with biometric"
           >
-            <Fingerprint className="w-7 h-7 text-blue-400" />
+            <Fingerprint className="w-7 h-7 text-[#19E6C8]" />
           </button>
         ) : (
           <div />
@@ -113,14 +113,14 @@ export const PasscodeLock: React.FC<PasscodeLockProps> = ({
 
         <button
           onClick={() => handleDigit('0')}
-          className="w-18 h-18 rounded-full bg-slate-800/80 hover:bg-slate-700/80 active:scale-95 border border-slate-700/50 text-2xl font-semibold flex items-center justify-center transition-all duration-150"
+          className="w-18 h-18 rounded-full glass-card hover:bg-teal-950/40 active:scale-95 border border-teal-500/20 hover:border-teal-500/40 text-2xl font-semibold flex items-center justify-center transition-all duration-150 cursor-pointer"
         >
           0
         </button>
 
         <button
           onClick={handleDelete}
-          className="w-18 h-18 rounded-full bg-slate-800/40 hover:bg-slate-700/60 active:scale-95 text-slate-400 hover:text-white flex items-center justify-center transition-all"
+          className="w-18 h-18 rounded-full glass-card hover:bg-teal-950/40 active:scale-95 border border-teal-500/20 text-[#94B5B0] hover:text-white flex items-center justify-center transition-all cursor-pointer"
           aria-label="Backspace"
         >
           <Delete className="w-6 h-6" />

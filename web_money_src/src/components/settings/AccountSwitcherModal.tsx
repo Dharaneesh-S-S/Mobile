@@ -64,16 +64,16 @@ export const AccountSwitcherModal: React.FC = () => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
+    <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-end sm:items-center justify-center p-0 sm:p-4 animate-in fade-in duration-150">
       <div className="fixed inset-0" onClick={closeAccountSwitcher} />
-      <div className="w-full sm:max-w-md bg-slate-900 border border-slate-700/80 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 z-10 max-h-[85vh] flex flex-col animate-in slide-in-from-bottom-6 duration-200">
+      <div className="w-full sm:max-w-md bg-[#061817]/95 border border-teal-500/25 rounded-t-3xl sm:rounded-3xl shadow-2xl p-5 z-10 max-h-[85vh] flex flex-col backdrop-blur-xl animate-in slide-in-from-bottom-6 duration-200">
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-slate-800 shrink-0">
+        <div className="flex items-center justify-between pb-3 border-b border-teal-500/15 shrink-0">
           <div>
             <h3 className="text-base font-bold text-white font-display">Switch Account</h3>
-            <p className="text-xs text-slate-400">Manage multiple ledgers (Personal, Work, Family)</p>
+            <p className="text-xs text-[#94B5B0]">Manage multiple ledgers (Personal, Work, Family)</p>
           </div>
-          <button onClick={closeAccountSwitcher} className="p-1 rounded-lg text-slate-400 hover:text-white">
+          <button onClick={closeAccountSwitcher} className="p-1 rounded-lg text-[#94B5B0] hover:text-white cursor-pointer">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -91,8 +91,8 @@ export const AccountSwitcherModal: React.FC = () => {
                 }}
                 className={`p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
                   isSelected
-                    ? 'bg-blue-600/20 border-blue-500 shadow-glow-blue'
-                    : 'bg-slate-800/40 border-slate-800 hover:bg-slate-800'
+                    ? 'bg-teal-950/40 border-teal-500/50 shadow-glow-teal'
+                    : 'glass-card border-teal-500/15 hover:border-teal-500/30'
                 }`}
               >
                 {editingAccountId === acc.id ? (
@@ -104,20 +104,20 @@ export const AccountSwitcherModal: React.FC = () => {
                       type="text"
                       value={editingName}
                       onChange={(e) => setEditingName(e.target.value)}
-                      className="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-xs text-white flex-1"
+                      className="px-2.5 py-1 rounded-lg bg-[#030707] border border-teal-500/25 text-xs text-white flex-1"
                     />
                     <button
                       onClick={() => handleRenameAccount(acc.id)}
-                      className="px-2.5 py-1 rounded-lg bg-blue-600 text-white text-xs font-semibold"
+                      className="px-2.5 py-1 rounded-lg bg-[#19E6C8] text-[#030707] text-xs font-bold cursor-pointer"
                     >
                       Save
                     </button>
                   </div>
                 ) : (
                   <div className="flex items-center gap-3 min-w-0">
-                    <span className="text-sm font-bold text-slate-100 truncate">{acc.name}</span>
+                    <span className="text-sm font-bold text-white truncate">{acc.name}</span>
                     {acc.isDefault && (
-                      <span className="text-[10px] text-slate-400 bg-slate-800 px-1.5 py-0.5 rounded">
+                      <span className="text-[10px] text-[#19E6C8] bg-teal-500/10 border border-teal-500/20 px-1.5 py-0.5 rounded">
                         Default
                       </span>
                     )}
@@ -130,7 +130,7 @@ export const AccountSwitcherModal: React.FC = () => {
                       setEditingAccountId(acc.id);
                       setEditingName(acc.name);
                     }}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-700"
+                    className="p-1.5 rounded-lg text-[#94B5B0] hover:text-[#19E6C8] hover:bg-teal-950/40 cursor-pointer"
                     title="Rename"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
@@ -138,14 +138,14 @@ export const AccountSwitcherModal: React.FC = () => {
                   {accounts.length > 1 && (
                     <button
                       onClick={() => handleDeleteAccount(acc.id, acc.name)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-slate-700"
+                      className="p-1.5 rounded-lg text-[#94B5B0] hover:text-[#FF6B6B] hover:bg-teal-950/40 cursor-pointer"
                       title="Delete"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
                   )}
                   {isSelected && (
-                    <div className="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center ml-1">
+                    <div className="w-6 h-6 rounded-full bg-[#19E6C8] text-[#030707] flex items-center justify-center ml-1 font-bold">
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
                     </div>
                   )}
@@ -156,27 +156,27 @@ export const AccountSwitcherModal: React.FC = () => {
 
           {/* Add Account Drawer */}
           {isAddingNew ? (
-            <form onSubmit={handleCreateAccount} className="p-3 bg-slate-950 rounded-2xl border border-slate-800 space-y-2">
-              <span className="text-xs font-semibold text-slate-200">New Account Name</span>
+            <form onSubmit={handleCreateAccount} className="p-3 bg-[#030707] rounded-2xl border border-teal-500/20 space-y-2">
+              <span className="text-xs font-semibold text-white">New Account Name</span>
               <input
                 type="text"
                 value={newAccountName}
                 onChange={(e) => setNewAccountName(e.target.value)}
                 placeholder="e.g. Business, Family, Freelance"
                 autoFocus
-                className="w-full px-3 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white"
+                className="w-full px-3 py-2 rounded-xl bg-[#061817] border border-teal-500/25 text-xs text-white placeholder-[#5B7B76] focus:border-[#19E6C8] outline-none"
               />
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddingNew(false)}
-                  className="flex-1 py-1.5 rounded-xl bg-slate-800 text-xs font-semibold text-slate-300"
+                  className="flex-1 py-1.5 rounded-xl bg-[#061817] border border-teal-500/15 text-xs font-semibold text-[#94B5B0] hover:text-white cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-1.5 rounded-xl bg-blue-600 text-xs font-bold text-white shadow-glow-blue"
+                  className="flex-1 py-1.5 rounded-xl bg-[#19E6C8] text-xs font-bold text-[#030707] shadow-glow-teal hover:bg-[#19E6C8]/90 cursor-pointer"
                 >
                   Create
                 </button>
@@ -185,7 +185,7 @@ export const AccountSwitcherModal: React.FC = () => {
           ) : (
             <button
               onClick={() => setIsAddingNew(true)}
-              className="w-full py-2.5 rounded-2xl border-2 border-dashed border-slate-800 hover:border-slate-700 text-xs font-semibold text-slate-400 hover:text-white flex items-center justify-center gap-1.5 transition-all mt-2"
+              className="w-full py-2.5 rounded-2xl border-2 border-dashed border-teal-500/20 hover:border-teal-500/40 text-xs font-semibold text-[#94B5B0] hover:text-[#19E6C8] flex items-center justify-center gap-1.5 transition-all mt-2 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add New Account</span>

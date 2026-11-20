@@ -104,7 +104,7 @@ export const Sidebar: React.FC = () => {
         {/* Primary "+ New Transaction" White Pill Action Button */}
         <button
           onClick={() => openAddRecord()}
-          className="w-full py-2.5 px-4 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:shadow-[0_0_30px_rgba(25,230,200,0.3)] flex items-center justify-center gap-2 transition-all active:scale-95 group cursor-pointer"
+          className="w-full py-2.5 px-4 rounded-full bg-white hover:bg-[#F4FFFD] text-[#04100F] font-bold text-xs shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:shadow-[0_0_30px_rgba(25,230,200,0.3)] flex items-center justify-center gap-2 transition-all active:scale-95 group cursor-pointer"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>New Transaction</span>

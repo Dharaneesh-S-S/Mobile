@@ -27,7 +27,7 @@ export const Button: React.FC<ButtonProps> = ({
     case 'primary':
       // Solid white pill with black text and gentle white aura
       variantStyles =
-        'bg-white text-[#04100F] font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-slate-100 hover:shadow-[0_0_30px_rgba(25,230,200,0.3)]';
+        'bg-white text-[#04100F] font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] hover:bg-[#F4FFFD] hover:shadow-[0_0_30px_rgba(25,230,200,0.3)]';
       break;
     case 'teal':
       // Vibrant teal glowing button
