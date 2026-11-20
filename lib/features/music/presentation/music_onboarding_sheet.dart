@@ -17,10 +17,31 @@ class MusicOnboardingSheet extends ConsumerWidget {
       backgroundColor: AppColors.canvasBase,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              // Top Bar with Close button
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const SizedBox(width: 40),
+                  Container(
+                    width: 40,
+                    height: 4,
+                    decoration: BoxDecoration(
+                      color: AppColors.textTealMuted.withOpacity(0.4),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close, color: AppColors.textTealMuted),
+                    tooltip: 'Close',
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+
               const Spacer(flex: 1),
 
               // Hero Music Icon with Glow
@@ -49,7 +70,7 @@ class MusicOnboardingSheet extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 28),
+              const SizedBox(height: 24),
 
               // Title & Subtitle
               const Text(
@@ -75,7 +96,7 @@ class MusicOnboardingSheet extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 32),
+              const SizedBox(height: 28),
 
               // Folder Selection Glass Card
               Container(
@@ -165,7 +186,7 @@ class MusicOnboardingSheet extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 18),
 
               // Options & Toggles Card
               Container(
@@ -274,6 +295,9 @@ class MusicOnboardingSheet extends ConsumerWidget {
                       : () async {
                           await notifier.completeOnboarding();
                           onCompleted?.call();
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         },
                   style: FilledButton.styleFrom(
                     backgroundColor: AppColors.glowTealPrimary,
@@ -291,7 +315,22 @@ class MusicOnboardingSheet extends ConsumerWidget {
                 ),
               ),
 
-              const SizedBox(height: 12),
+              const SizedBox(height: 8),
+
+              // Skip / Dismiss Button
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text(
+                  'Skip for Now',
+                  style: TextStyle(
+                    color: AppColors.textTealMuted,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 4),
             ],
           ),
         ),

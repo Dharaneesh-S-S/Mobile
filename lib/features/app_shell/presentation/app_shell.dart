@@ -72,18 +72,6 @@ class AppShell extends StatelessWidget {
 
   void _onDestinationSelected(BuildContext context, int index) {
     if (index >= 0 && index < allNavDestinations.length) {
-      try {
-        final rootNav = Navigator.of(context, rootNavigator: true);
-        if (rootNav.canPop()) {
-          rootNav.pop();
-        }
-      } catch (_) {}
-      try {
-        final localNav = Navigator.of(context, rootNavigator: false);
-        if (localNav.canPop()) {
-          localNav.pop();
-        }
-      } catch (_) {}
       context.go(allNavDestinations[index].path);
     }
   }
@@ -255,7 +243,7 @@ class _MobileBottomNav extends StatelessWidget {
                           border: Border.all(color: const Color(0x402DD4BF)),
                         ),
                         child: const Text(
-                          'SUITE MODULES',
+                          'ALL SUITE MODULES',
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -266,12 +254,9 @@ class _MobileBottomNav extends StatelessWidget {
                       ),
                       const Spacer(),
                       IconButton(
-                        icon: const Icon(Icons.settings_outlined, color: Color(0xFF94B5B0)),
-                        tooltip: 'Settings',
-                        onPressed: () {
-                          Navigator.of(ctx).pop();
-                          onOpenSettings();
-                        },
+                        icon: const Icon(Icons.close, color: Color(0xFF94B5B0)),
+                        tooltip: 'Close',
+                        onPressed: () => Navigator.of(ctx).pop(),
                       ),
                     ],
                   ),
@@ -285,16 +270,30 @@ class _MobileBottomNav extends StatelessWidget {
                       crossAxisSpacing: 12,
                       childAspectRatio: 1.1,
                     ),
-                    itemCount: allNavDestinations.length,
+                    itemCount: allNavDestinations.length + 1,
                     itemBuilder: (context, i) {
-                      final item = allNavDestinations[i];
-                      final isSelected = selectedIndex == i && !isSettingsOpen;
+                      final bool isSettings = i == allNavDestinations.length;
+                      final item = isSettings
+                          ? const NavDestinationItem(
+                              path: '/settings',
+                              label: 'Settings',
+                              icon: Icons.settings_outlined,
+                              selectedIcon: Icons.settings_rounded,
+                            )
+                          : allNavDestinations[i];
+                      final isSelected = isSettings
+                          ? isSettingsOpen
+                          : (selectedIndex == i && !isSettingsOpen);
 
                       return InkWell(
                         borderRadius: BorderRadius.circular(20),
                         onTap: () {
                           Navigator.of(ctx).pop();
-                          onSelect(i);
+                          if (isSettings) {
+                            onOpenSettings();
+                          } else {
+                            onSelect(i);
+                          }
                         },
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 180),

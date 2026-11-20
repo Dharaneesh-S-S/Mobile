@@ -46,20 +46,6 @@ class _MusicDashboardScreenState extends ConsumerState<MusicDashboardScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: _tabs.length, vsync: this);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final folderState = ref.read(musicFolderStateProvider);
-      if (!folderState.hasCompletedOnboarding && !kIsWeb) {
-        showModalBottomSheet(
-          context: context,
-          isScrollControlled: true,
-          isDismissible: false,
-          enableDrag: false,
-          backgroundColor: Colors.transparent,
-          builder: (_) => const MusicOnboardingSheet(),
-        );
-      }
-    });
   }
 
   @override
