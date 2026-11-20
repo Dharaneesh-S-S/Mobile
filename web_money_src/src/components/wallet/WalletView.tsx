@@ -11,7 +11,6 @@ import { useMoney } from '../../context/MoneyContext';
 import { formatInr } from '../../utils/currency';
 import { DynamicIcon } from '../common/IconHelper';
 import { WalletDetailModal } from './WalletDetailModal';
-import { BudgetModal } from './BudgetModal';
 
 export const WalletView: React.FC = () => {
   const {
@@ -24,9 +23,7 @@ export const WalletView: React.FC = () => {
     filteredRecords,
     activeWalletForDetail,
     openWalletDetail,
-    editingBudget,
     openBudgetModal,
-    closeBudgetModal,
     settings,
   } = useMoney();
 
@@ -41,10 +38,18 @@ export const WalletView: React.FC = () => {
   const budgetStats = useMemo(() => {
     return budgets.map((b) => {
       let spentPaise = 0;
+      let transactionCount = 0;
       for (const r of filteredRecords) {
         if (r.type === 'expense') {
-          if (b.categoryIds.length === 0 || b.categoryIds.includes(r.categoryId)) {
+          const hasBudgetIds = Array.isArray(r.budgetIds);
+          const isExplicit = hasBudgetIds && r.budgetIds!.includes(b.id);
+          const isCategoryMatch =
+            !hasBudgetIds &&
+            (b.categoryIds.length === 0 || b.categoryIds.includes(r.categoryId));
+
+          if (isExplicit || isCategoryMatch) {
             spentPaise += r.amountPaise;
+            transactionCount++;
           }
         }
       }
@@ -56,6 +61,7 @@ export const WalletView: React.FC = () => {
       return {
         budget: b,
         spentPaise,
+        transactionCount,
         pct: Math.min(100, pct),
         actualPct: pct,
         remainingPaise,
@@ -206,7 +212,7 @@ export const WalletView: React.FC = () => {
                 <span>+ Set Monthly Budget</span>
               </div>
             ) : (
-              budgetStats.map(({ budget, spentPaise, pct, actualPct, remainingPaise, isOver, isNearLimit }) => {
+              budgetStats.map(({ budget, spentPaise, transactionCount, pct, actualPct, remainingPaise, isOver, isNearLimit }) => {
                 const barColor = isOver ? 'bg-red-500' : isNearLimit ? 'bg-amber-500' : 'bg-emerald-500';
                 return (
                   <div
@@ -230,7 +236,7 @@ export const WalletView: React.FC = () => {
                     </div>
 
                     <div className="flex items-center justify-between text-[11px] text-slate-400">
-                      <span>{actualPct.toFixed(0)}% spent</span>
+                      <span>{actualPct.toFixed(0)}% spent{transactionCount > 0 ? ` (${transactionCount} txns)` : ''}</span>
                       <span className={isOver ? 'text-red-400 font-bold' : 'text-emerald-400 font-medium'}>
                         {isOver
                           ? `Over by ${formatInr(spentPaise - budget.amountPaise, opts)}`
@@ -249,12 +255,6 @@ export const WalletView: React.FC = () => {
       <WalletDetailModal
         wallet={activeWalletForDetail}
         onClose={() => openWalletDetail(null)}
-      />
-
-      {/* Budget Modal */}
-      <BudgetModal
-        budget={editingBudget}
-        onClose={closeBudgetModal}
       />
     </div>
   );

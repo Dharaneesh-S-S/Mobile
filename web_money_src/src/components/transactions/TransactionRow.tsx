@@ -21,7 +21,7 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
   onToggleSelect,
   onLongPress,
 }) => {
-  const { categories, wallets, openAddRecord, deleteRecord, settings } = useMoney();
+  const { categories, wallets, budgets, openAddRecord, deleteRecord, settings } = useMoney();
 
   const category = categories.find((c) => c.id === record.categoryId);
   const wallet = wallets.find((w) => w.id === record.walletId);
@@ -135,13 +135,24 @@ export const TransactionRow: React.FC<TransactionRowProps> = ({
             )}
           </div>
 
-          <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mt-0.5">
+          <div className="flex items-center gap-1.5 text-xs text-[#94B5B0] mt-0.5 flex-wrap">
             <span>{wallet?.name || 'Wallet'}</span>
             {record.feePaise ? (
               <span className="text-[10px] text-amber-400 font-medium font-mono">
                 (Fee: {formatInr(record.feePaise, opts)})
               </span>
             ) : null}
+            {record.budgetIds && record.budgetIds.length > 0 && (
+              <>
+                <span className="text-[#5B7B76]">•</span>
+                <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-emerald-500/15 text-emerald-300 border border-emerald-500/25 text-[10px] font-medium font-mono">
+                  {record.budgetIds
+                    .map((bId) => budgets.find((b) => b.id === bId)?.name)
+                    .filter(Boolean)
+                    .join(', ')}
+                </span>
+              </>
+            )}
             {record.memo && (
               <>
                 <span className="text-[#5B7B76]">•</span>

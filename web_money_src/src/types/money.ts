@@ -66,6 +66,7 @@ export interface Record {
   tags?: string[];
   splitLines?: SplitLine[];
   recurringId?: string;
+  budgetIds?: string[]; // Multiple budget assignments
   isSample?: boolean;
   createdAt: string;
   updatedAt: string;

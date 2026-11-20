@@ -11,15 +11,17 @@ import {
   Check,
   AlertCircle,
   HelpCircle,
+  PiggyBank,
 } from 'lucide-react';
 import { useMoney } from '../../context/MoneyContext';
-import { Category, Wallet, TransactionType, Template } from '../../types/money';
+import { Category, Wallet, TransactionType, Template, Budget } from '../../types/money';
 import { formatInr, rupeesToPaise, paiseToRupees } from '../../utils/currency';
 import { DynamicIcon } from '../common/IconHelper';
 import { CalculatorKeypad } from './CalculatorKeypad';
 import { CategorySelectorModal } from './CategorySelectorModal';
 import { WalletSelectorModal } from './WalletSelectorModal';
 import { TemplateManagerModal } from './TemplateManagerModal';
+import { BudgetSelectorModal } from './BudgetSelectorModal';
 
 export const AddRecordModal: React.FC = () => {
   const {
@@ -32,6 +34,8 @@ export const AddRecordModal: React.FC = () => {
     walletBalances,
     records,
     currentAccount,
+    budgets,
+    openBudgetModal,
     showToast,
     settings,
   } = useMoney();
@@ -66,6 +70,10 @@ export const AddRecordModal: React.FC = () => {
   const [toWalletId, setToWalletId] = useState<string>(
     initialRecord ? initialRecord.toWalletId || '' : wallets[1]?.id || ''
   );
+  const [selectedBudgetIds, setSelectedBudgetIds] = useState<string[]>(
+    initialRecord?.budgetIds || []
+  );
+  const [budgetModalOpen, setBudgetModalOpen] = useState<boolean>(false);
   const [hasFee, setHasFee] = useState<boolean>(!!initialRecord?.feePaise && initialRecord.feePaise > 0);
   const [feeInput, setFeeInput] = useState<string>(
     initialRecord?.feePaise ? (initialRecord.feePaise / 100).toString() : '0'
@@ -116,6 +124,16 @@ export const AddRecordModal: React.FC = () => {
     }
   }, [activeType, categories, categoryId, isEditing]);
 
+  // Auto-suggest matching budgets for new transactions when category changes
+  useEffect(() => {
+    if (!isEditing && (!initialRecord?.budgetIds || initialRecord.budgetIds.length === 0)) {
+      const matches = budgets
+        .filter((b) => b.categoryIds.length === 0 || b.categoryIds.includes(categoryId))
+        .map((b) => b.id);
+      setSelectedBudgetIds(matches);
+    }
+  }, [categoryId, isEditing, budgets]);
+
   const selectedCategory = categories.find((c) => c.id === categoryId);
   const selectedWallet = wallets.find((w) => w.id === walletId);
   const selectedToWallet = wallets.find((w) => w.id === toWalletId);
@@ -144,6 +162,7 @@ export const AddRecordModal: React.FC = () => {
       memo: memo.trim() || undefined,
       imageBlobs: imageBlobs.length > 0 ? imageBlobs : undefined,
       tags: tags.length > 0 ? tags : undefined,
+      budgetIds: selectedBudgetIds.length > 0 ? selectedBudgetIds : undefined,
     };
 
     if (isEditing && initialRecord) {
@@ -156,6 +175,7 @@ export const AddRecordModal: React.FC = () => {
         setDescription('');
         setMemo('');
         setImageBlobs([]);
+        setSelectedBudgetIds([]);
         setShowCalculator(true);
         showToast({ type: 'info', text: 'Saved! Ready for next record' });
       } else {
@@ -383,9 +403,10 @@ export const AddRecordModal: React.FC = () => {
           )}
         </div>
 
-        {/* Category & Wallet Dropdowns */}
+        {/* Category, Wallet & Budget Dropdowns */}
         {activeType !== 'transfer' ? (
-          <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
             {/* Category Selector */}
             <div
               onClick={() => setCategoryModalOpen(true)}
@@ -444,6 +465,126 @@ export const AddRecordModal: React.FC = () => {
               <ChevronDown className="w-4 h-4 text-slate-400" />
             </div>
           </div>
+
+          {/* Budget Selector (Multiple Selection Allowed, Wallet is Single) */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between">
+              <label className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+                <PiggyBank className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Budgets (Multi-select)</span>
+              </label>
+              <div className="flex items-center gap-2">
+                {selectedBudgetIds.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBudgetIds([])}
+                    className="text-[10px] text-slate-500 hover:text-slate-300 transition-colors cursor-pointer"
+                  >
+                    Clear all
+                  </button>
+                )}
+                {budgets.length > 0 && (
+                  <button
+                    type="button"
+                    onClick={() => setSelectedBudgetIds(budgets.map((b) => b.id))}
+                    className="text-[10px] text-emerald-400 hover:underline transition-colors cursor-pointer"
+                  >
+                    Select all
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Clickable Budget Summary Card */}
+            <div
+              onClick={() => setBudgetModalOpen(true)}
+              className="p-3 rounded-2xl bg-slate-900 border border-slate-800 hover:border-emerald-500/40 cursor-pointer flex items-center justify-between transition-all"
+            >
+              <div className="flex items-center gap-2.5 min-w-0 flex-1">
+                <div className="w-7 h-7 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center shrink-0">
+                  <PiggyBank className="w-3.5 h-3.5 text-emerald-400" />
+                </div>
+                <div className="flex flex-col min-w-0 flex-1">
+                  <span className="text-[10px] text-slate-400">Assigned Budgets</span>
+                  {selectedBudgetIds.length === 0 ? (
+                    <span className="text-xs text-slate-400">
+                      None selected (Tap to select budgets)
+                    </span>
+                  ) : (
+                    <div className="flex flex-wrap gap-1 mt-0.5">
+                      {selectedBudgetIds.map((bId) => {
+                        const b = budgets.find((item) => item.id === bId);
+                        if (!b) return null;
+                        return (
+                          <span
+                            key={b.id}
+                            className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[11px] font-semibold"
+                          >
+                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                            {b.name}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div className="flex items-center gap-1 text-slate-400 shrink-0 ml-2">
+                {selectedBudgetIds.length > 0 && (
+                  <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-emerald-950 text-emerald-300 border border-emerald-500/30">
+                    {selectedBudgetIds.length}
+                  </span>
+                )}
+                <ChevronDown className="w-4 h-4" />
+              </div>
+            </div>
+
+            {/* Quick Multi-select Chips */}
+            {budgets.length > 0 ? (
+              <div className="flex flex-wrap gap-1.5 pt-0.5">
+                {budgets.map((b) => {
+                  const isSelected = selectedBudgetIds.includes(b.id);
+                  return (
+                    <button
+                      key={b.id}
+                      type="button"
+                      onClick={() => {
+                        setSelectedBudgetIds((prev) =>
+                          isSelected ? prev.filter((id) => id !== b.id) : [...prev, b.id]
+                        );
+                      }}
+                      className={`px-2.5 py-1.5 rounded-xl text-xs font-semibold transition-all flex items-center gap-1.5 cursor-pointer ${
+                        isSelected
+                          ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]'
+                          : 'bg-slate-900/90 text-slate-400 border border-slate-800 hover:border-slate-700 hover:text-slate-200'
+                      }`}
+                    >
+                      <div
+                        className={`w-3.5 h-3.5 rounded flex items-center justify-center transition-all ${
+                          isSelected ? 'bg-emerald-500 text-black' : 'border border-slate-700 bg-slate-800'
+                        }`}
+                      >
+                        {isSelected && <Check className="w-2.5 h-2.5 stroke-[3]" />}
+                      </div>
+                      <span>{b.name}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-[11px] text-slate-500 flex items-center justify-between px-1">
+                <span>No active budgets found.</span>
+                <button
+                  type="button"
+                  onClick={() => openBudgetModal('new')}
+                  className="text-emerald-400 hover:underline font-semibold cursor-pointer"
+                >
+                  + Create budget
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
         ) : (
           /* Transfer Wallet Selectors (From -> To) */
           <div className="space-y-3">
@@ -613,6 +754,20 @@ export const AddRecordModal: React.FC = () => {
           else setWalletId(w.id);
         }}
         title={walletModalMode === 'to' ? 'Select Destination Wallet' : 'Select Wallet'}
+      />
+
+      {/* Budget Selector Screen (Multi-select) */}
+      <BudgetSelectorModal
+        isOpen={budgetModalOpen}
+        onClose={() => setBudgetModalOpen(false)}
+        selectedBudgetIds={selectedBudgetIds}
+        onToggleBudget={(bId) => {
+          setSelectedBudgetIds((prev) =>
+            prev.includes(bId) ? prev.filter((id) => id !== bId) : [...prev, bId]
+          );
+        }}
+        onSelectAll={() => setSelectedBudgetIds(budgets.map((b) => b.id))}
+        onClearAll={() => setSelectedBudgetIds([])}
       />
 
       {/* Template Manager Modal */}

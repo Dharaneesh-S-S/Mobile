@@ -11,6 +11,7 @@ import { CategoryManagerModal } from './components/recordForm/CategoryManagerMod
 import { AccountSwitcherModal } from './components/settings/AccountSwitcherModal';
 import { MonthlyReportModal } from './components/settings/MonthlyReportModal';
 import { SettingsModal } from './components/settings/SettingsModal';
+import { BudgetModal } from './components/wallet/BudgetModal';
 import { PasscodeLock } from './components/common/PasscodeLock';
 import { LandingView } from './components/landing/LandingView';
 import { StyleguideView } from './components/styleguide/StyleguideView';
@@ -31,6 +32,8 @@ const MainAppContent: React.FC = () => {
     updateSettings,
     isCategoryManagerOpen,
     closeCategoryManager,
+    editingBudget,
+    closeBudgetModal,
   } = useMoney();
 
   // Desktop Keyboard Shortcuts
@@ -117,6 +120,7 @@ const MainAppContent: React.FC = () => {
       <AccountSwitcherModal />
       <MonthlyReportModal />
       <SettingsModal />
+      <BudgetModal budget={editingBudget} onClose={closeBudgetModal} />
 
       {/* First Launch Modal */}
       {showFirstLaunchPrompt && (
