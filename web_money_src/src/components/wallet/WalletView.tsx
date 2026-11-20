@@ -77,21 +77,24 @@ export const WalletView: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 bg-[#090d16] p-4 md:p-6 max-w-7xl w-full mx-auto space-y-6 overflow-y-auto select-none pb-24">
+    <div className="flex-1 flex flex-col min-h-0 bg-transparent px-3 sm:px-6 md:px-8 py-3 md:py-5 max-w-7xl w-full mx-auto space-y-6 overflow-y-auto select-none pb-28">
       {/* 1. Account Balance Hero Card (Net Worth) */}
-      <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-teal-950/40 via-slate-900 to-slate-950 border border-teal-500/20 shadow-xl relative overflow-hidden">
-        <div className="flex items-center justify-between text-xs text-slate-400 font-medium mb-1">
-          <span className="uppercase tracking-wider font-semibold">Net Worth (Total Balance)</span>
+      <div className="glass-card-featured rounded-3xl p-5 sm:p-7 relative overflow-hidden group">
+        <div className="flex items-center justify-between text-xs text-[#94B5B0] mb-2">
+          <span className="font-bold uppercase tracking-wider text-white flex items-center gap-2 font-mono text-[11px]">
+            <span className="w-2 h-2 rounded-full bg-[#19E6C8] shadow-[0_0_10px_#19E6C8] animate-pulse" />
+            Net Worth (Total Balance)
+          </span>
           <button
             onClick={toggleHideBalance}
-            className="p-1.5 rounded-full text-slate-400 hover:text-white hover:bg-slate-800/60 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-teal-500/10 text-[#94B5B0] hover:text-[#19E6C8] border border-teal-500/20 hover:border-teal-400/40 transition-all cursor-pointer"
             title={isBalanceHidden ? 'Show balance' : 'Hide balance'}
           >
             {isBalanceHidden ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
         </div>
 
-        <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-display tracking-tight mt-1">
+        <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-white font-display tracking-tight text-glow-teal mt-1">
           {isBalanceHidden ? '₹ ••••••' : formatInr(totalAccountBalance, opts)}
         </div>
       </div>
@@ -101,12 +104,14 @@ export const WalletView: React.FC = () => {
         <div className="flex items-center justify-between px-1">
           <button
             onClick={() => toggleSection('wallets')}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-300 uppercase tracking-wider cursor-pointer"
+            className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider font-mono cursor-pointer group"
           >
-            <WalletIcon className="w-4 h-4 text-[#19E6C8]" />
+            <div className="p-1.5 rounded-xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20 group-hover:border-teal-500/40 transition-colors">
+              <WalletIcon className="w-4 h-4" />
+            </div>
             <span>Wallets ({wallets.filter((w) => !w.isArchived).length})</span>
             <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform ${
+              className={`w-3.5 h-3.5 text-[#5B7B76] transition-transform ${
                 collapsedSections['wallets'] ? '-rotate-90' : ''
               }`}
             />
@@ -123,26 +128,29 @@ export const WalletView: React.FC = () => {
                   <div
                     key={w.id}
                     onClick={() => openWalletDetail(w)}
-                    className="p-4 rounded-3xl bg-slate-900 hover:bg-slate-850 active:bg-slate-800 border border-slate-800 hover:border-teal-500/30 cursor-pointer flex flex-col justify-between shadow-md transition-all group"
+                    className="glass-card rounded-3xl p-5 hover:border-teal-400/40 hover:shadow-[0_0_30px_rgba(25,230,200,0.18)] cursor-pointer flex flex-col justify-between transition-all group relative overflow-hidden"
                   >
-                    <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center justify-between mb-4">
                       <div
-                        className="w-10 h-10 rounded-2xl flex items-center justify-center shadow-sm"
+                        className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-md transition-transform group-hover:scale-105"
                         style={{
                           backgroundColor: `${w.color}22`,
                           border: `1.5px solid ${w.color}`,
+                          boxShadow: `0 0 16px ${w.color}28`,
                         }}
                       >
                         <DynamicIcon name={w.icon} className="w-5 h-5" color={w.color} />
                       </div>
-                      <span className="text-[10px] text-slate-400 uppercase tracking-wider font-bold bg-slate-950 px-2 py-0.5 rounded-full border border-slate-800">
+                      <span className="text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-teal-500/10 text-[#19E6C8] border border-teal-500/25">
                         {w.type}
                       </span>
                     </div>
 
                     <div className="flex flex-col min-w-0">
-                      <span className="text-xs font-semibold text-slate-300 truncate">{w.name}</span>
-                      <span className="text-base sm:text-lg font-black text-white font-display mt-0.5">
+                      <span className="text-xs font-semibold text-[#94B5B0] truncate group-hover:text-white transition-colors">
+                        {w.name}
+                      </span>
+                      <span className="text-xl font-black text-white font-display mt-0.5 tracking-tight group-hover:text-[#19E6C8] group-hover:text-glow-teal transition-all">
                         {isBalanceHidden ? '₹ ••••' : formatInr(bal, opts)}
                       </span>
                     </div>
@@ -166,12 +174,12 @@ export const WalletView: React.FC = () => {
                   createdAt: new Date().toISOString(),
                 })
               }
-              className="p-4 rounded-3xl border-2 border-dashed border-slate-800 hover:border-teal-500/40 hover:bg-slate-900/40 cursor-pointer flex flex-col items-center justify-center min-h-[108px] text-slate-400 hover:text-white transition-all group"
+              className="rounded-3xl border-2 border-dashed border-teal-500/20 hover:border-[#19E6C8] hover:bg-teal-500/5 cursor-pointer flex flex-col items-center justify-center min-h-[120px] text-[#94B5B0] hover:text-[#19E6C8] transition-all group p-4"
             >
-              <div className="w-9 h-9 rounded-2xl bg-slate-800/60 group-hover:bg-teal-500/20 text-slate-400 group-hover:text-[#19E6C8] flex items-center justify-center mb-1 transition-colors">
-                <Plus className="w-4 h-4 stroke-[2.5]" />
+              <div className="w-10 h-10 rounded-2xl bg-[#061817] border border-teal-500/20 group-hover:border-[#19E6C8] text-[#5B7B76] group-hover:text-[#19E6C8] flex items-center justify-center mb-1.5 transition-all group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(25,230,200,0.3)]">
+                <Plus className="w-5 h-5 stroke-[2.5]" />
               </div>
-              <span className="text-xs font-semibold">Add Wallet</span>
+              <span className="text-xs font-bold font-mono">Add Wallet</span>
             </div>
           </div>
         )}
@@ -182,22 +190,24 @@ export const WalletView: React.FC = () => {
         <div className="flex items-center justify-between px-1">
           <button
             onClick={() => toggleSection('budgets')}
-            className="flex items-center gap-1.5 text-xs font-bold text-slate-300 uppercase tracking-wider cursor-pointer"
+            className="flex items-center gap-2 text-xs font-bold text-white uppercase tracking-wider font-mono cursor-pointer group"
           >
-            <PiggyBank className="w-4 h-4 text-emerald-400" />
+            <div className="p-1.5 rounded-xl bg-teal-500/10 text-[#19E6C8] border border-teal-500/20 group-hover:border-teal-500/40 transition-colors">
+              <PiggyBank className="w-4 h-4" />
+            </div>
             <span>Budgets ({budgets.length})</span>
             <ChevronDown
-              className={`w-3.5 h-3.5 transition-transform ${
+              className={`w-3.5 h-3.5 text-[#5B7B76] transition-transform ${
                 collapsedSections['budgets'] ? '-rotate-90' : ''
               }`}
             />
           </button>
           <button
             onClick={() => openBudgetModal('new')}
-            className="text-xs text-[#19E6C8] hover:underline font-semibold flex items-center gap-0.5 cursor-pointer"
+            className="px-3 py-1.5 rounded-xl bg-teal-500/10 hover:bg-teal-500/20 border border-teal-500/25 text-[#19E6C8] text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-[0_0_12px_rgba(25,230,200,0.15)]"
           >
-            <Plus className="w-3.5 h-3.5" />
-            <span>Add</span>
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>New Budget</span>
           </button>
         </div>
 
@@ -206,38 +216,47 @@ export const WalletView: React.FC = () => {
             {budgetStats.length === 0 ? (
               <div
                 onClick={() => openBudgetModal('new')}
-                className="col-span-full p-6 rounded-3xl border-2 border-dashed border-slate-800 hover:border-teal-500/40 flex items-center justify-center gap-2 cursor-pointer text-xs font-semibold text-slate-400 hover:text-white transition-all"
+                className="col-span-full p-8 rounded-3xl border-2 border-dashed border-teal-500/20 hover:border-[#19E6C8] hover:bg-teal-500/5 flex flex-col items-center justify-center gap-2 cursor-pointer text-[#94B5B0] hover:text-[#19E6C8] transition-all group"
               >
-                <Plus className="w-4 h-4" />
-                <span>+ Set Monthly Budget</span>
+                <div className="w-10 h-10 rounded-2xl bg-[#061817] border border-teal-500/20 group-hover:border-[#19E6C8] text-[#5B7B76] group-hover:text-[#19E6C8] flex items-center justify-center mb-1 transition-all group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(25,230,200,0.3)]">
+                  <Plus className="w-5 h-5 stroke-[2.5]" />
+                </div>
+                <span className="text-xs font-bold font-mono">+ Set Monthly Budget</span>
               </div>
             ) : (
               budgetStats.map(({ budget, spentPaise, transactionCount, pct, actualPct, remainingPaise, isOver, isNearLimit }) => {
-                const barColor = isOver ? 'bg-red-500' : isNearLimit ? 'bg-amber-500' : 'bg-emerald-500';
+                const barColor = isOver
+                  ? 'bg-[#FF6B6B] shadow-[0_0_10px_#FF6B6B]'
+                  : isNearLimit
+                  ? 'bg-amber-400 shadow-[0_0_10px_rgba(251,191,36,0.5)]'
+                  : 'bg-[#19E6C8] shadow-[0_0_10px_#19E6C8]';
+
                 return (
                   <div
                     key={budget.id}
                     onClick={() => openBudgetModal(budget)}
-                    className="p-4 rounded-3xl bg-slate-900 border border-slate-800 hover:border-slate-700 cursor-pointer shadow-sm transition-all"
+                    className="glass-card rounded-3xl p-5 hover:border-teal-400/40 hover:shadow-[0_0_30px_rgba(25,230,200,0.15)] cursor-pointer shadow-sm transition-all group"
                   >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <span className="text-xs font-bold text-slate-100">{budget.name}</span>
-                      <span className="text-xs font-bold font-display text-slate-300">
-                        {formatInr(spentPaise, opts)} / {formatInr(budget.amountPaise, opts)}
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-xs font-bold text-white group-hover:text-[#19E6C8] transition-colors">
+                        {budget.name}
+                      </span>
+                      <span className="text-xs font-bold font-mono text-[#94B5B0]">
+                        <span className="text-white">{formatInr(spentPaise, opts)}</span> / {formatInr(budget.amountPaise, opts)}
                       </span>
                     </div>
 
                     {/* Progress Bar */}
-                    <div className="w-full h-2.5 rounded-full bg-slate-800 overflow-hidden my-2">
+                    <div className="w-full h-2 rounded-full bg-[#030807] border border-teal-500/20 overflow-hidden my-2.5">
                       <div
-                        className={`h-full rounded-full transition-all duration-300 ${barColor}`}
+                        className={`h-full rounded-full transition-all duration-500 ${barColor}`}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
 
-                    <div className="flex items-center justify-between text-[11px] text-slate-400">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-[#5B7B76]">
                       <span>{actualPct.toFixed(0)}% spent{transactionCount > 0 ? ` (${transactionCount} txns)` : ''}</span>
-                      <span className={isOver ? 'text-red-400 font-bold' : 'text-emerald-400 font-medium'}>
+                      <span className={isOver ? 'text-[#FF6B6B] font-bold' : 'text-[#19E6C8] font-medium'}>
                         {isOver
                           ? `Over by ${formatInr(spentPaise - budget.amountPaise, opts)}`
                           : `${formatInr(remainingPaise, opts)} left`}
