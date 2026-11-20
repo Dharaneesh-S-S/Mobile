@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ChevronLeft,
   ChevronRight,
@@ -183,11 +184,11 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
     onClose();
   };
 
-  return (
-    <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 animate-in fade-in duration-150">
+  return createPortal(
+    <div className="fixed inset-0 z-[100] bg-black/75 backdrop-blur-md flex items-center justify-center p-3 sm:p-4 overflow-y-auto animate-in fade-in duration-150">
       <div className="fixed inset-0" onClick={onClose} />
 
-      <div className="relative w-full max-w-sm bg-[#040e0d] border border-teal-500/25 rounded-3xl p-4 sm:p-5 shadow-[0_25px_60px_rgba(0,0,0,0.9)] z-10 animate-in zoom-in-95 duration-150 select-none">
+      <div className="relative w-full max-w-sm sm:max-w-md bg-[#040e0d]/95 border border-teal-500/30 rounded-3xl p-4 sm:p-6 shadow-[0_25px_70px_rgba(0,0,0,0.95)] z-10 animate-in zoom-in-95 duration-150 select-none my-auto">
         {/* ========================================================= */}
         {/* VIEW 1: YEAR SELECTION (Only the year appears to be selected) */}
         {/* ========================================================= */}
@@ -205,18 +206,18 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setDecadeStartYear((prev) => prev - 12)}
-                  className="p-1 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
                   title="Previous decade"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="font-mono text-xs font-bold text-[#94B5B0]">
+                <span className="font-mono text-xs font-bold text-[#94B5B0] px-1">
                   {decadeStartYear} – {decadeStartYear + 11}
                 </span>
                 <button
                   type="button"
                   onClick={() => setDecadeStartYear((prev) => prev + 12)}
-                  className="p-1 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
                   title="Next decade"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -224,7 +225,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-1 ml-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
+                  className="p-1.5 ml-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -232,7 +233,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
             </div>
 
             {/* 12-Year Grid */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-2.5">
               {yearsList.map((y) => {
                 const isSelected = anchorDate.getFullYear() === y;
                 const isThisYear = new Date().getFullYear() === y;
@@ -242,7 +243,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                     key={y}
                     type="button"
                     onClick={() => handleYearClick(y)}
-                    className={`py-3 rounded-2xl text-xs font-bold font-mono transition-all cursor-pointer relative ${
+                    className={`py-3 rounded-2xl text-xs sm:text-sm font-bold font-mono transition-all cursor-pointer relative ${
                       isSelected
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.45)]'
                         : isThisYear
@@ -283,18 +284,18 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                 <button
                   type="button"
                   onClick={() => setTargetYear((y) => y - 1)}
-                  className="p-1 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
                   title="Previous year"
                 >
                   <ChevronLeft className="w-4 h-4" />
                 </button>
-                <span className="font-mono text-sm font-bold text-white">
+                <span className="font-mono text-sm font-bold text-white px-1">
                   {targetYear}
                 </span>
                 <button
                   type="button"
                   onClick={() => setTargetYear((y) => y + 1)}
-                  className="p-1 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
+                  className="p-1.5 rounded-lg text-[#94B5B0] hover:text-white hover:bg-teal-950/50 transition-colors cursor-pointer"
                   title="Next year"
                 >
                   <ChevronRight className="w-4 h-4" />
@@ -302,7 +303,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="p-1 ml-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
+                  className="p-1.5 ml-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />
                 </button>
@@ -310,7 +311,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
             </div>
 
             {/* 12 Months Grid */}
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2 sm:gap-2.5">
               {monthNames.map((m, idx) => {
                 const isSelected =
                   anchorDate.getMonth() === idx &&
@@ -324,7 +325,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                     key={m}
                     type="button"
                     onClick={() => handleMonthClick(idx)}
-                    className={`py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer relative ${
+                    className={`py-3 rounded-2xl text-xs sm:text-sm font-bold transition-all cursor-pointer relative ${
                       isSelected
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.45)]'
                         : isCurrentMonth
@@ -353,7 +354,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('month')}
-                className="flex items-center gap-1 text-xs font-semibold text-[#19E6C8] hover:text-[#2DD4BF] transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-semibold text-[#19E6C8] hover:text-[#2DD4BF] transition-colors cursor-pointer"
                 title="Back to Month Selection"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -361,7 +362,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               </button>
 
               <div className="text-center">
-                <span className="text-xs font-bold text-white font-display">
+                <span className="text-xs sm:text-sm font-bold text-white font-display">
                   {fullMonthNames[targetMonth]} {targetYear}
                 </span>
                 <span className="text-[10px] text-[#94B5B0] block">
@@ -372,20 +373,20 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* List of Weeks in the Selected Month */}
-            <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+            <div className="space-y-2 max-h-72 sm:max-h-80 overflow-y-auto pr-1">
               {weeksList.map((wk) => (
                 <button
                   key={wk.weekIndex}
                   type="button"
                   onClick={() => handleWeekClick(wk.startDate)}
-                  className={`w-full p-3 rounded-2xl flex items-center justify-between text-xs transition-all cursor-pointer ${
+                  className={`w-full p-3 rounded-2xl flex items-center justify-between text-xs sm:text-sm transition-all cursor-pointer ${
                     wk.isCurrentAnchorWeek
                       ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_15px_rgba(25,230,200,0.4)]'
                       : 'bg-[#061817]/70 text-[#94B5B0] hover:text-white hover:bg-teal-950/50 border border-teal-500/15'
@@ -404,7 +405,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                     <span className="font-semibold">Week {wk.weekIndex}</span>
                   </div>
                   <span
-                    className={`font-mono text-[11px] ${
+                    className={`font-mono text-[11px] sm:text-xs ${
                       wk.isCurrentAnchorWeek ? 'text-black font-bold' : 'text-[#94B5B0]'
                     }`}
                   >
@@ -426,7 +427,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               <button
                 type="button"
                 onClick={() => setStep('month')}
-                className="flex items-center gap-1 text-xs font-semibold text-[#19E6C8] hover:text-[#2DD4BF] transition-colors cursor-pointer"
+                className="flex items-center gap-1.5 text-xs font-semibold text-[#19E6C8] hover:text-[#2DD4BF] transition-colors cursor-pointer"
                 title="Back to Month Selection"
               >
                 <ArrowLeft className="w-3.5 h-3.5" />
@@ -434,7 +435,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               </button>
 
               <div className="text-center">
-                <span className="text-xs font-bold text-white font-display">
+                <span className="text-xs sm:text-sm font-bold text-white font-display">
                   {fullMonthNames[targetMonth]} {targetYear}
                 </span>
                 <span className="text-[10px] text-[#94B5B0] block">
@@ -445,14 +446,14 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 text-[#94B5B0] hover:text-white rounded-lg transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
             {/* Weekday Row */}
-            <div className="grid grid-cols-7 text-center mb-1 text-[10px] font-bold text-[#94B5B0]">
+            <div className="grid grid-cols-7 text-center mb-1.5 text-[10px] sm:text-xs font-bold text-[#94B5B0]">
               {weekdays.map((wd) => (
                 <div key={wd} className="py-1">
                   {wd.slice(0, 2)}
@@ -461,10 +462,10 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
             </div>
 
             {/* Days Grid */}
-            <div className="grid grid-cols-7 gap-1 text-center">
+            <div className="grid grid-cols-7 gap-1 sm:gap-1.5 text-center">
               {/* Empty leading cells */}
               {Array.from({ length: daysGrid.emptyDays }).map((_, i) => (
-                <div key={`empty-${i}`} className="p-2" />
+                <div key={`empty-${i}`} className="h-8 w-8 sm:h-9 sm:w-9 mx-auto" />
               ))}
 
               {/* Day cells */}
@@ -478,7 +479,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
                     key={dayNum}
                     type="button"
                     onClick={() => handleDayClick(dayNum)}
-                    className={`h-8 w-8 sm:h-9 sm:w-9 mx-auto rounded-xl flex items-center justify-center text-xs font-bold font-mono transition-all cursor-pointer relative ${
+                    className={`h-8 w-8 sm:h-9 sm:w-9 mx-auto rounded-xl flex items-center justify-center text-xs sm:text-sm font-bold font-mono transition-all cursor-pointer relative ${
                       isSelected
                         ? 'bg-[#19E6C8] text-black font-extrabold shadow-[0_0_12px_rgba(25,230,200,0.5)]'
                         : isToday
@@ -498,7 +499,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
         )}
 
         {/* Footer Shortcut */}
-        <div className="mt-4 pt-3 border-t border-teal-500/15 flex items-center justify-between text-[11px]">
+        <div className="mt-4 pt-3 border-t border-teal-500/15 flex items-center justify-between text-xs">
           <span className="text-[#5B7B76]">
             Mode: <strong className="text-[#94B5B0] capitalize">{viewRange}</strong>
           </span>
@@ -511,6 +512,7 @@ export const DateSelectionModal: React.FC<DateSelectionModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
