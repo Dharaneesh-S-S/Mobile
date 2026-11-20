@@ -389,9 +389,6 @@ class _EventEditorScreenState extends ConsumerState<EventEditorScreen> {
               items: const [
                 DropdownMenuItem(value: CalendarItemType.event, child: Text('Event / Meeting')),
                 DropdownMenuItem(value: CalendarItemType.task, child: Text('Task')),
-                DropdownMenuItem(value: CalendarItemType.outOfOffice, child: Text('Out of Office')),
-                DropdownMenuItem(value: CalendarItemType.focusTime, child: Text('Focus Time')),
-                DropdownMenuItem(value: CalendarItemType.workingLocation, child: Text('Working Location')),
                 DropdownMenuItem(value: CalendarItemType.appointmentSchedule, child: Text('Appointment Schedule')),
                 DropdownMenuItem(value: CalendarItemType.birthday, child: Text('Birthday')),
                 DropdownMenuItem(value: CalendarItemType.holiday, child: Text('Holiday')),
