@@ -137,11 +137,10 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               setEditingCategory(null);
               setIsCreatingNew(false);
             }}
-            className={`flex-1 py-2 text-center border-b-2 transition-all cursor-pointer ${
-              activeTab === 'expense'
-                ? 'border-[#FF6B6B] text-[#FF6B6B] font-bold bg-[#FF6B6B]/10 shadow-[inset_0_-2px_10px_rgba(255,107,107,0.15)]'
-                : 'border-transparent text-[#94B5B0] hover:text-white'
-            }`}
+            className={`flex-1 py-2 text-center border-b-2 transition-all cursor-pointer ${activeTab === 'expense'
+              ? 'border-[#FF6B6B] text-[#FF6B6B] font-bold bg-[#FF6B6B]/10 shadow-[inset_0_-2px_10px_rgba(255,107,107,0.15)]'
+              : 'border-transparent text-[#94B5B0] hover:text-white'
+              }`}
           >
             EXPENSE ({categories.filter((c) => c.type === 'expense').length})
           </button>
@@ -151,11 +150,10 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
               setEditingCategory(null);
               setIsCreatingNew(false);
             }}
-            className={`flex-1 py-2 text-center border-b-2 transition-all cursor-pointer ${
-              activeTab === 'income'
-                ? 'border-[#19E6C8] text-[#19E6C8] font-bold bg-teal-500/10 shadow-[inset_0_-2px_10px_rgba(25,230,200,0.15)]'
-                : 'border-transparent text-[#94B5B0] hover:text-white'
-            }`}
+            className={`flex-1 py-2 text-center border-b-2 transition-all cursor-pointer ${activeTab === 'income'
+              ? 'border-[#19E6C8] text-[#19E6C8] font-bold bg-teal-500/10 shadow-[inset_0_-2px_10px_rgba(25,230,200,0.15)]'
+              : 'border-transparent text-[#94B5B0] hover:text-white'
+              }`}
           >
             INCOME ({categories.filter((c) => c.type === 'income').length})
           </button>
@@ -218,9 +216,8 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                     key={c}
                     type="button"
                     onClick={() => setColor(c)}
-                    className={`w-6 h-6 rounded-full transition-transform cursor-pointer ${
-                      color === c ? 'scale-125 ring-2 ring-[#19E6C8] shadow-[0_0_8px_#19E6C8]' : 'hover:scale-110'
-                    }`}
+                    className={`w-6 h-6 rounded-full transition-transform cursor-pointer ${color === c ? 'scale-125 ring-2 ring-[#19E6C8] shadow-[0_0_8px_#19E6C8]' : 'hover:scale-110'
+                      }`}
                     style={{ backgroundColor: c }}
                   />
                 ))}
@@ -246,9 +243,8 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
                         setIcon(ic);
                         setShowIconPicker(false);
                       }}
-                      className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
-                        icon === ic ? 'bg-[#19E6C8] text-[#030807] shadow-[0_0_10px_#19E6C8]' : 'bg-[#061817] hover:bg-teal-950/40 text-[#94B5B0]'
-                      }`}
+                      className={`p-2 rounded-xl flex items-center justify-center transition-all cursor-pointer ${icon === ic ? 'bg-[#19E6C8] text-[#030807] shadow-[0_0_10px_#19E6C8]' : 'bg-[#061817] hover:bg-teal-950/40 text-[#94B5B0]'
+                        }`}
                       title={ic}
                     >
                       <DynamicIcon name={ic} className="w-5 h-5" />
@@ -405,5 +401,7 @@ export const CategoryManagerModal: React.FC<CategoryManagerModalProps> = ({
         )}
       </div>
     </div>
+      </div >
+    </div >
   );
 };

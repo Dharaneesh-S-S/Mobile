@@ -228,7 +228,7 @@ export const BudgetSelectorModal: React.FC<BudgetSelectorModalProps> = ({
                 </div>
 
                 {/* Progress bar */}
-                <div className="w-full h-1.5 rounded-full bg-[#030707] border border-teal-500/10 overflow-hidden">
+                <div className="w-full h-1.5 rounded-full bg-slate-800 overflow-hidden">
                   <div
                     className={`h-full rounded-full transition-all duration-300 ${barColor}`}
                     style={{ width: `${pct}%` }}

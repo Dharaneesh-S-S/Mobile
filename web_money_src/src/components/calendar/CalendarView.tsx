@@ -103,25 +103,22 @@ export const CalendarView: React.FC = () => {
   return (
     <div className="flex-1 flex flex-col min-h-0 bg-transparent p-4 md:p-6 max-w-7xl w-full mx-auto overflow-y-auto select-none pb-20">
       {/* 1. Header Balance Strip */}
-      <div className="grid grid-cols-3 gap-2.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl sm:rounded-3xl glass-card border border-teal-500/15 shadow-md mb-4 text-center">
+      <div className="grid grid-cols-3 gap-2.5 sm:gap-4 p-3 sm:p-3.5 rounded-2xl sm:rounded-3xl glass-card border border-teal-500/15 shadow-md mb-4 text-center items-center">
         <div>
-          <span className="text-[11px] text-[#19E6C8] font-semibold block mb-0.5">Income</span>
-          <span className="text-xs sm:text-base font-bold text-[#19E6C8] font-display truncate block">
+          <span className="text-sm sm:text-base font-bold text-[#19E6C8] font-display truncate block">
             {formatInr(periodIncome, opts)}
           </span>
         </div>
 
         <div>
-          <span className="text-[11px] text-[#FF6B6B] font-semibold block mb-0.5">Expense</span>
-          <span className="text-xs sm:text-base font-bold text-[#FF6B6B] font-display truncate block">
+          <span className="text-sm sm:text-base font-bold text-[#FF6B6B] font-display truncate block">
             {periodExpense > 0 ? `-${formatInr(periodExpense, opts)}` : '₹0'}
           </span>
         </div>
 
         <div>
-          <span className="text-[11px] text-[#94B5B0] font-semibold block mb-0.5">Total</span>
           <span
-            className={`text-xs sm:text-base font-bold font-display truncate block ${
+            className={`text-sm sm:text-base font-bold font-display truncate block ${
               periodNet >= 0
                 ? settings.showGreenNet
                   ? 'text-[#19E6C8]'
