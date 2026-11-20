@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeft, Search, Settings, Check, X } from 'lucide-react';
 import { Category, TransactionType } from '../../types/money';
 import { useMoney } from '../../context/MoneyContext';
@@ -24,6 +24,13 @@ export const CategorySelectorModal: React.FC<CategorySelectorModalProps> = ({
   const [activeTab, setActiveTab] = useState<'expense' | 'income'>(defaultType);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [showSearch, setShowSearch] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isOpen) {
+      setActiveTab(defaultType);
+      setSearchQuery('');
+    }
+  }, [isOpen, defaultType]);
 
   if (!isOpen) return null;
 

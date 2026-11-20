@@ -116,13 +116,15 @@ export const AddRecordModal: React.FC = () => {
 
   // Adjust category when type changes
   useEffect(() => {
-    if (!isEditing) {
-      const match = categories.find((c) => c.type === (activeType === 'transfer' ? 'expense' : activeType));
-      if (match && (!categoryId || categories.find((c) => c.id === categoryId)?.type !== match.type)) {
+    const targetType = activeType === 'transfer' ? 'expense' : activeType;
+    const currentCat = categories.find((c) => c.id === categoryId);
+    if (!currentCat || currentCat.type !== targetType) {
+      const match = categories.find((c) => c.type === targetType);
+      if (match) {
         setCategoryId(match.id);
       }
     }
-  }, [activeType, categories, categoryId, isEditing]);
+  }, [activeType, categories, categoryId]);
 
   // Auto-suggest matching budgets for new transactions when category changes
   useEffect(() => {
@@ -273,7 +275,14 @@ export const AddRecordModal: React.FC = () => {
       {/* 2. Type Tabs: Income, Expense, Transfer */}
       <div className="flex border-b border-teal-500/15 text-xs font-semibold shrink-0 bg-[#061817]/70 backdrop-blur-md">
         <button
-          onClick={() => setActiveType('income')}
+          onClick={() => {
+            setActiveType('income');
+            const incCat = categories.find((c) => c.type === 'income');
+            const curCat = categories.find((c) => c.id === categoryId);
+            if (incCat && (!curCat || curCat.type !== 'income')) {
+              setCategoryId(incCat.id);
+            }
+          }}
           className={`flex-1 py-3 text-center border-b-2 transition-all cursor-pointer ${
             activeType === 'income'
               ? 'border-[#19E6C8] text-[#19E6C8] font-bold bg-teal-500/10 shadow-[inset_0_-2px_10px_rgba(25,230,200,0.15)]'
@@ -283,7 +292,14 @@ export const AddRecordModal: React.FC = () => {
           Income
         </button>
         <button
-          onClick={() => setActiveType('expense')}
+          onClick={() => {
+            setActiveType('expense');
+            const expCat = categories.find((c) => c.type === 'expense');
+            const curCat = categories.find((c) => c.id === categoryId);
+            if (expCat && (!curCat || curCat.type !== 'expense')) {
+              setCategoryId(expCat.id);
+            }
+          }}
           className={`flex-1 py-3 text-center border-b-2 transition-all cursor-pointer ${
             activeType === 'expense'
               ? 'border-[#FF6B6B] text-[#FF6B6B] font-bold bg-[#FF6B6B]/10 shadow-[inset_0_-2px_10px_rgba(255,107,107,0.15)]'
@@ -743,7 +759,12 @@ export const AddRecordModal: React.FC = () => {
         isOpen={categoryModalOpen}
         onClose={() => setCategoryModalOpen(false)}
         selectedCategoryId={categoryId}
-        onSelectCategory={(cat) => setCategoryId(cat.id)}
+        onSelectCategory={(cat) => {
+          setCategoryId(cat.id);
+          if (activeType !== 'transfer' && cat.type !== activeType) {
+            setActiveType(cat.type);
+          }
+        }}
         defaultType={activeType === 'income' ? 'income' : 'expense'}
       />
 

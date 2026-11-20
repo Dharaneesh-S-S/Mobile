@@ -211,7 +211,12 @@ class _TransactionEditorScreenState extends ConsumerState<TransactionEditorScree
               onSelectionChanged: (set) {
                 setState(() {
                   _txType = set.first;
-                  _categoryId = null; // Reset category when switching type
+                  if (_txType == 'transfer') {
+                    _categoryId = null;
+                  } else {
+                    final matchingCats = categories.where((c) => c.isExpense == (_txType == 'expense')).toList();
+                    _categoryId = matchingCats.isNotEmpty ? matchingCats.first.id : null;
+                  }
                 });
               },
             ),
