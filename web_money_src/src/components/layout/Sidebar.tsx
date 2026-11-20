@@ -7,10 +7,8 @@ import {
   Plus,
   FileText,
   Tags,
-  Settings as SettingsIcon,
   Eye,
   EyeOff,
-  ChevronDown,
   Sparkles,
   Palette,
   ExternalLink,
@@ -23,13 +21,10 @@ export const Sidebar: React.FC = () => {
     activeTab,
     setActiveTab,
     openAddRecord,
-    currentAccount,
     totalAccountBalance,
     isBalanceHidden,
     toggleHideBalance,
-    openAccountSwitcher,
     openMonthlyReport,
-    openSettings,
     openCategoryManager,
     periodExpense,
     budgets,
@@ -89,25 +84,13 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
 
-        {/* Account Selector & Total Balance Card */}
-        <div
-          onClick={openAccountSwitcher}
-          className="p-3.5 rounded-2xl bg-[#061817]/70 border border-teal-500/20 hover:border-teal-400/40 cursor-pointer transition-all duration-200 group relative overflow-hidden shadow-lg"
-          role="button"
-          tabIndex={0}
-          title="Switch Account"
-        >
+        {/* Total Balance Card */}
+        <div className="p-3.5 rounded-2xl bg-[#061817]/70 border border-teal-500/20 relative overflow-hidden shadow-lg">
           <div className="flex items-center justify-between text-[11px] text-[#94B5B0] font-medium">
-            <div className="flex items-center gap-1 group-hover:text-white transition-colors">
-              <span>{currentAccount?.name || 'Personal'}</span>
-              <ChevronDown className="w-3 h-3 text-[#5B7B76] group-hover:translate-y-0.5 transition-transform" />
-            </div>
+            <span className="uppercase tracking-wider font-semibold text-[10px]">Total Balance</span>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleHideBalance();
-              }}
-              className="text-[#5B7B76] hover:text-[#19E6C8] p-0.5 transition-colors"
+              onClick={() => toggleHideBalance()}
+              className="text-[#5B7B76] hover:text-[#19E6C8] p-0.5 transition-colors cursor-pointer"
               title={isBalanceHidden ? 'Show balance' : 'Hide balance'}
             >
               {isBalanceHidden ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -233,14 +216,6 @@ export const Sidebar: React.FC = () => {
         >
           <Tags className="w-4 h-4 text-[#5B7B76]" />
           <span>Categories & Icons</span>
-        </button>
-
-        <button
-          onClick={openSettings}
-          className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs text-[#94B5B0] hover:text-white hover:bg-teal-950/30 transition-colors"
-        >
-          <SettingsIcon className="w-4 h-4 text-[#5B7B76]" />
-          <span>Settings</span>
         </button>
       </div>
     </aside>

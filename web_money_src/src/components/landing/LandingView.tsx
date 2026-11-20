@@ -75,9 +75,9 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
     },
     {
       id: 'faq-3',
-      title: 'Can I track debts, loans, and recurring subscriptions?',
+      title: 'Can I track monthly budgets and category expenses?',
       content:
-        'Yes. RupeeFlow features a dedicated Debt Snowball tracker, recurring monthly bill automations with next-due projections, and multi-wallet balance transfers.',
+        'Yes. RupeeFlow features proactive monthly budget limits with threshold warnings, category breakdown analytics, and multi-wallet balance transfers.',
     },
     {
       id: 'faq-4',
@@ -236,7 +236,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
               Why Individuals Choose RupeeFlow?
             </h2>
             <p className="text-sm text-[#94B5B0] max-w-lg mx-auto">
-              A modern suite designed to handle personal expenses, budgets, savings goals, and multi-wallet transfers.
+              A modern suite designed to handle personal expenses, budgets, and multi-wallet transfers.
             </p>
           </div>
 
@@ -300,7 +300,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                     Multi-Wallet Balances
                   </h3>
                   <p className="text-xs text-[#94B5B0] mt-1.5 leading-relaxed">
-                    Track Cash, Bank accounts, Credit cards, and Meal cards side-by-side with transfer fees and debts.
+                    Track Cash, Bank accounts, Credit cards, and Meal cards side-by-side with transfer fees and balance sync.
                   </p>
                 </div>
 
@@ -495,7 +495,7 @@ export const LandingView: React.FC<LandingViewProps> = ({ onEnterApp }) => {
                   <span className="text-xs text-[#94B5B0] font-normal font-sans">/ month</span>
                 </div>
                 <p className="text-xs text-[#94B5B0] mt-2">
-                  Advanced financial intelligence, debt tracker, and recurring automations.
+                  Advanced financial intelligence, budget limits, and proactive spending alerts.
                 </p>
 
                 <ul className="mt-6 space-y-2.5 text-xs text-slate-200">
