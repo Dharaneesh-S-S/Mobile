@@ -66,7 +66,7 @@
             </intent-filter>
         </receiver>
 
-        <!-- Android Home-Screen Music Widget Receiver -->
+        <!-- Android Home-Screen Music Widget (Medium 4x2) Receiver -->
         <receiver
             android:name=".widget.MusicWidgetProvider"
             android:exported="true">
@@ -77,6 +77,32 @@
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/music_widget_info" />
+        </receiver>
+
+        <!-- Android Home-Screen Music Widget (Small 2x2) Receiver -->
+        <receiver
+            android:name=".widget.MusicSmallWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="es.antonborri.home_widget.action.UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/music_widget_small_info" />
+        </receiver>
+
+        <!-- Android Home-Screen Music Widget (Large 4x4) Receiver -->
+        <receiver
+            android:name=".widget.MusicLargeWidgetProvider"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="es.antonborri.home_widget.action.UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/music_widget_large_info" />
         </receiver>
 
         <!-- Android Home-Screen Mobile Usage Widget Receiver -->

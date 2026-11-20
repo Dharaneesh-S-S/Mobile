@@ -7,15 +7,21 @@ import '../../../core/providers/core_providers.dart';
 import '../providers/music_library_provider.dart';
 
 class PlaylistDialogs {
-  /// Opens a dialog to create a new playlist
-  static Future<void> showCreatePlaylistDialog(BuildContext context, WidgetRef ref) async {
+  /// Opens a dialog to create a new playlist, optionally pre-populating it with songs
+  static Future<void> showCreatePlaylistDialog(
+    BuildContext context,
+    WidgetRef ref, {
+    List<SongModel>? initialSongs,
+  }) async {
     final controller = TextEditingController();
 
     await showDialog(
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('New Playlist'),
+          title: Text(initialSongs != null && initialSongs.isNotEmpty
+              ? 'Save Queue as Playlist'
+              : 'New Playlist'),
           content: TextField(
             controller: controller,
             autofocus: true,
@@ -34,13 +40,25 @@ class PlaylistDialogs {
                 final name = controller.text.trim();
                 if (name.isNotEmpty) {
                   final db = ref.read(databaseProvider);
+                  final playlistId = const Uuid().v4();
                   await db.musicDao.insertPlaylist(
                     MusicPlaylistsCompanion.insert(
-                      id: const Uuid().v4(),
+                      id: playlistId,
                       name: name,
                       createdAt: DateTime.now(),
                     ),
                   );
+
+                  if (initialSongs != null && initialSongs.isNotEmpty) {
+                    for (final song in initialSongs) {
+                      await db.musicDao.addSongToPlaylist(
+                        PlaylistSongsCompanion.insert(
+                          playlistId: playlistId,
+                          songPath: song.data,
+                        ),
+                      );
+                    }
+                  }
                 }
                 if (ctx.mounted) Navigator.pop(ctx);
               },
@@ -52,11 +70,20 @@ class PlaylistDialogs {
     );
   }
 
-  /// Opens a dialog to choose a playlist to add a song to
+  /// Opens a dialog to choose a playlist to add a single song to
   static Future<void> showAddToPlaylistDialog(
     BuildContext context,
     WidgetRef ref,
     SongModel song,
+  ) async {
+    await showAddSongsToPlaylistDialog(context, ref, [song]);
+  }
+
+  /// Opens a dialog to choose a playlist to add multiple songs to
+  static Future<void> showAddSongsToPlaylistDialog(
+    BuildContext context,
+    WidgetRef ref,
+    List<SongModel> songs,
   ) async {
     final playlistsAsync = ref.read(musicPlaylistsProvider);
     final playlists = playlistsAsync.valueOrNull ?? [];
@@ -65,18 +92,20 @@ class PlaylistDialogs {
       context: context,
       builder: (ctx) {
         return AlertDialog(
-          title: const Text('Add to Playlist'),
+          title: Text(songs.length == 1
+              ? 'Add to Playlist'
+              : 'Add ${songs.length} Tracks to Playlist'),
           content: SizedBox(
             width: double.maxFinite,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 ListTile(
-                  leading: const Icon(Icons.add, color: Colors.blue),
+                  leading: const Icon(Icons.add, color: Colors.tealAccent),
                   title: const Text('Create New Playlist'),
                   onTap: () {
                     Navigator.pop(ctx);
-                    showCreatePlaylistDialog(context, ref);
+                    showCreatePlaylistDialog(context, ref, initialSongs: songs);
                   },
                 ),
                 const Divider(),
@@ -97,16 +126,24 @@ class PlaylistDialogs {
                           title: Text(pl.name),
                           onTap: () async {
                             final db = ref.read(databaseProvider);
-                            await db.musicDao.addSongToPlaylist(
-                              PlaylistSongsCompanion.insert(
-                                playlistId: pl.id,
-                                songPath: song.data,
-                              ),
-                            );
+                            for (final song in songs) {
+                              await db.musicDao.addSongToPlaylist(
+                                PlaylistSongsCompanion.insert(
+                                  playlistId: pl.id,
+                                  songPath: song.data,
+                                ),
+                              );
+                            }
                             if (ctx.mounted) {
                               Navigator.pop(ctx);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('Added to ${pl.name}')),
+                                SnackBar(
+                                  content: Text(
+                                    songs.length == 1
+                                        ? 'Added to ${pl.name}'
+                                        : 'Added ${songs.length} tracks to ${pl.name}',
+                                  ),
+                                ),
                               );
                             }
                           },

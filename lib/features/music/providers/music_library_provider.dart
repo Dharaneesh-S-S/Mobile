@@ -17,34 +17,226 @@ final currentMusicTabProvider = StateProvider<MusicTab>((ref) => MusicTab.tracks
 // Search query for music library
 final musicSearchQueryProvider = StateProvider<String>((ref) => '');
 
-// Provides the persisted music folder path (null means scan all device audio)
-final musicFolderPathProvider = StateNotifierProvider<MusicFolderNotifier, String?>((ref) {
-  return MusicFolderNotifier();
+// Multi-select mode state
+final musicMultiSelectModeProvider = StateProvider<bool>((ref) => false);
+final musicSelectedSongIdsProvider = StateProvider<Set<int>>((ref) => {});
+
+// Aliases for convenient consumption
+final isMultiSelectModeProvider = Provider<bool>((ref) {
+  final explicit = ref.watch(musicMultiSelectModeProvider);
+  final ids = ref.watch(musicSelectedSongIdsProvider);
+  return explicit || ids.isNotEmpty;
+});
+final selectedSongIdsProvider = musicSelectedSongIdsProvider;
+
+// Sort options for tracks
+enum SongSortOption {
+  title,
+  artist,
+  album,
+  duration,
+  dateAdded,
+  year,
+}
+
+final songSortOptionProvider = StateProvider<SongSortOption>((ref) => SongSortOption.title);
+final songSortAscendingProvider = StateProvider<bool>((ref) => true);
+
+class MusicFolderState {
+  final String? folderPath;
+  final bool includeSubfolders;
+  final int minDurationSeconds;
+  final List<String> ignoredFolders;
+  final bool hasCompletedOnboarding;
+  final bool isScanning;
+  final double scanProgress;
+  final int trackCount;
+  final String? scanStatus;
+  final DateTime? lastScanned;
+
+  const MusicFolderState({
+    this.folderPath,
+    this.includeSubfolders = true,
+    this.minDurationSeconds = 30,
+    this.ignoredFolders = const [],
+    this.hasCompletedOnboarding = false,
+    this.isScanning = false,
+    this.scanProgress = 0.0,
+    this.trackCount = 0,
+    this.scanStatus,
+    this.lastScanned,
+  });
+
+  MusicFolderState copyWith({
+    String? folderPath,
+    bool? includeSubfolders,
+    int? minDurationSeconds,
+    List<String>? ignoredFolders,
+    bool? hasCompletedOnboarding,
+    bool? isScanning,
+    double? scanProgress,
+    int? trackCount,
+    String? scanStatus,
+    DateTime? lastScanned,
+    bool clearFolder = false,
+  }) {
+    return MusicFolderState(
+      folderPath: clearFolder ? null : (folderPath ?? this.folderPath),
+      includeSubfolders: includeSubfolders ?? this.includeSubfolders,
+      minDurationSeconds: minDurationSeconds ?? this.minDurationSeconds,
+      ignoredFolders: ignoredFolders ?? this.ignoredFolders,
+      hasCompletedOnboarding: hasCompletedOnboarding ?? this.hasCompletedOnboarding,
+      isScanning: isScanning ?? this.isScanning,
+      scanProgress: scanProgress ?? this.scanProgress,
+      trackCount: trackCount ?? this.trackCount,
+      scanStatus: scanStatus ?? this.scanStatus,
+      lastScanned: lastScanned ?? this.lastScanned,
+    );
+  }
+}
+
+// StateNotifier managing music folder selection, recursive scan, and filters
+final musicFolderStateProvider = StateNotifierProvider<MusicFolderNotifier, MusicFolderState>((ref) {
+  return MusicFolderNotifier(ref);
 });
 
-class MusicFolderNotifier extends StateNotifier<String?> {
-  MusicFolderNotifier() : super(null) {
+// Backwards-compatible folder path provider
+final musicFolderPathProvider = Provider<String?>((ref) {
+  return ref.watch(musicFolderStateProvider).folderPath;
+});
+
+class MusicFolderNotifier extends StateNotifier<MusicFolderState> {
+  final Ref _ref;
+
+  MusicFolderNotifier(this._ref) : super(const MusicFolderState()) {
     _load();
   }
 
   Future<void> _load() async {
     final prefs = await SharedPreferences.getInstance();
-    state = prefs.getString('selected_music_folder');
+    final folder = prefs.getString('selected_music_folder');
+    final includeSub = prefs.getBool('music_include_subfolders') ?? true;
+    final minDuration = prefs.getInt('music_min_duration_seconds') ?? 30;
+    final ignored = prefs.getStringList('music_ignored_folders') ?? [];
+    final onboardingDone = prefs.getBool('music_has_completed_onboarding') ?? (folder != null);
+
+    state = state.copyWith(
+      folderPath: folder,
+      includeSubfolders: includeSub,
+      minDurationSeconds: minDuration,
+      ignoredFolders: ignored,
+      hasCompletedOnboarding: onboardingDone,
+    );
   }
 
   Future<void> pickFolder() async {
-    String? path = await FilePicker.platform.getDirectoryPath();
+    final String? path = await FilePicker.platform.getDirectoryPath();
     if (path != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('selected_music_folder', path);
-      state = path;
+      await prefs.setBool('music_has_completed_onboarding', true);
+
+      state = state.copyWith(
+        folderPath: path,
+        hasCompletedOnboarding: true,
+      );
+
+      await rescan();
     }
   }
 
   Future<void> clearFolder() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('selected_music_folder');
-    state = null;
+    state = state.copyWith(clearFolder: true);
+    _ref.invalidate(songsProvider);
+  }
+
+  Future<void> setIncludeSubfolders(bool include) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('music_include_subfolders', include);
+    state = state.copyWith(includeSubfolders: include);
+    _ref.invalidate(songsProvider);
+  }
+
+  Future<void> setMinDurationSeconds(int seconds) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('music_min_duration_seconds', seconds);
+    state = state.copyWith(minDurationSeconds: seconds);
+    _ref.invalidate(songsProvider);
+  }
+
+  Future<void> addIgnoredFolder(String folderPath) async {
+    final updated = [...state.ignoredFolders, folderPath];
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('music_ignored_folders', updated);
+    state = state.copyWith(ignoredFolders: updated);
+    _ref.invalidate(songsProvider);
+  }
+
+  Future<void> removeIgnoredFolder(String folderPath) async {
+    final updated = state.ignoredFolders.where((f) => f != folderPath).toList();
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setStringList('music_ignored_folders', updated);
+    state = state.copyWith(ignoredFolders: updated);
+    _ref.invalidate(songsProvider);
+  }
+
+  Future<void> completeOnboarding() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('music_has_completed_onboarding', true);
+    state = state.copyWith(hasCompletedOnboarding: true);
+  }
+
+  Future<void> rescan() async {
+    final folder = state.folderPath;
+    if (folder == null) return;
+
+    state = state.copyWith(
+      isScanning: true,
+      scanProgress: 0.1,
+      scanStatus: 'Scanning music folder...',
+    );
+
+    try {
+      final dir = Directory(folder);
+      if (!dir.existsSync()) {
+        state = state.copyWith(
+          isScanning: false,
+          scanStatus: 'Selected folder does not exist',
+        );
+        return;
+      }
+
+      int count = 0;
+      final Set<String> foundPaths = {};
+
+      await for (final entity in dir.list(recursive: state.includeSubfolders, followLinks: false)) {
+        if (entity is File) {
+          final lower = entity.path.toLowerCase();
+          final isIgnored = state.ignoredFolders.any((ig) => entity.path.startsWith(ig));
+          if (!isIgnored && supportedAudioExtensions.any((ext) => lower.endsWith(ext))) {
+            count++;
+            foundPaths.add(entity.path);
+          }
+        }
+      }
+
+      state = state.copyWith(
+        isScanning: false,
+        scanProgress: 1.0,
+        trackCount: count,
+        scanStatus: 'Scan complete ($count tracks found)',
+        lastScanned: DateTime.now(),
+      );
+
+      _ref.invalidate(songsProvider);
+    } catch (e) {
+      state = state.copyWith(
+        isScanning: false,
+        scanStatus: 'Scan error: $e',
+      );
+    }
   }
 }
 
@@ -59,10 +251,13 @@ const Set<String> supportedAudioExtensions = {
   '.opus',
 };
 
-// Fetches all valid songs, filtered by folder (if set) and supported formats, deduplicated
+// Fetches all valid songs, filtered by folder (if set), min duration, ignored folders, and sorted
 final songsProvider = FutureProvider<List<SongModel>>((ref) async {
-  final folder = ref.watch(musicFolderPathProvider);
+  final folderState = ref.watch(musicFolderStateProvider);
+  final folder = folderState.folderPath;
   final query = ref.watch(onAudioQueryProvider);
+  final sortOption = ref.watch(songSortOptionProvider);
+  final sortAscending = ref.watch(songSortAscendingProvider);
 
   try {
     bool hasPermission = await query.permissionsStatus();
@@ -91,7 +286,24 @@ final songsProvider = FutureProvider<List<SongModel>>((ref) async {
       if (!hasValidExt) continue;
 
       // Check folder boundary if selected
-      if (folder != null && !path.startsWith(folder)) {
+      if (folder != null) {
+        if (!path.startsWith(folder)) continue;
+
+        if (!folderState.includeSubfolders) {
+          // If subfolders not included, song must be directly inside folder
+          final songDir = File(path).parent.path;
+          if (songDir != folder) continue;
+        }
+      }
+
+      // Check ignored folders
+      if (folderState.ignoredFolders.any((ig) => path.startsWith(ig))) {
+        continue;
+      }
+
+      // Minimum duration filter (in milliseconds)
+      final durationMs = song.duration ?? 0;
+      if (durationMs > 0 && durationMs < (folderState.minDurationSeconds * 1000)) {
         continue;
       }
 
@@ -101,6 +313,32 @@ final songsProvider = FutureProvider<List<SongModel>>((ref) async {
         validSongs.add(song);
       }
     }
+
+    // Sort valid songs based on user's active sort option
+    validSongs.sort((a, b) {
+      int cmp = 0;
+      switch (sortOption) {
+        case SongSortOption.title:
+          cmp = (a.title).toLowerCase().compareTo((b.title).toLowerCase());
+          break;
+        case SongSortOption.artist:
+          cmp = (a.artist ?? '').toLowerCase().compareTo((b.artist ?? '').toLowerCase());
+          break;
+        case SongSortOption.album:
+          cmp = (a.album ?? '').toLowerCase().compareTo((b.album ?? '').toLowerCase());
+          break;
+        case SongSortOption.duration:
+          cmp = (a.duration ?? 0).compareTo(b.duration ?? 0);
+          break;
+        case SongSortOption.dateAdded:
+          cmp = (a.dateAdded ?? 0).compareTo(b.dateAdded ?? 0);
+          break;
+        case SongSortOption.year:
+          cmp = (a.composer ?? '').compareTo(b.composer ?? '');
+          break;
+      }
+      return sortAscending ? cmp : -cmp;
+    });
 
     return validSongs;
   } catch (e) {

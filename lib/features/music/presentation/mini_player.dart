@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio_background/just_audio_background.dart';
 import 'package:on_audio_query/on_audio_query.dart';
+import '../../../core/theme/app_colors.dart';
 import '../providers/music_player_provider.dart';
 import 'now_playing_screen.dart';
 
@@ -10,7 +11,6 @@ class MiniPlayer extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context);
     final sequenceStateAsync = ref.watch(sequenceStateProvider);
     final playerStateAsync = ref.watch(playerStateProvider);
     final positionAsync = ref.watch(positionProvider);
@@ -40,14 +40,17 @@ class MiniPlayer extends ConsumerWidget {
             );
           },
           child: Container(
-            height: 68,
-            decoration: BoxDecoration(
-              color: theme.colorScheme.surfaceContainerHighest,
+            height: 70,
+            decoration: const BoxDecoration(
+              color: AppColors.canvasElevated,
+              border: Border(
+                top: BorderSide(color: AppColors.glassBorderGlow, width: 1.2),
+              ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.12),
-                  blurRadius: 8,
-                  offset: const Offset(0, -2),
+                  color: Colors.black45,
+                  blurRadius: 10,
+                  offset: Offset(0, -3),
                 ),
               ],
             ),
@@ -57,33 +60,41 @@ class MiniPlayer extends ConsumerWidget {
                 LinearProgressIndicator(
                   value: progress,
                   minHeight: 2.5,
-                  backgroundColor: Colors.transparent,
-                  valueColor: AlwaysStoppedAnimation<Color>(theme.colorScheme.primary),
+                  backgroundColor: AppColors.canvasBase,
+                  valueColor: const AlwaysStoppedAnimation<Color>(AppColors.glowTealPrimary),
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 14.0),
                     child: Row(
                       children: [
                         // Album Art
                         ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: SizedBox(
-                            width: 48,
-                            height: 48,
+                            width: 46,
+                            height: 46,
                             child: currentSong != null
                                 ? QueryArtworkWidget(
                                     id: currentSong.id,
                                     type: ArtworkType.AUDIO,
                                     artworkFit: BoxFit.cover,
                                     nullArtworkWidget: Container(
-                                      color: theme.colorScheme.surfaceVariant,
-                                      child: const Icon(Icons.music_note, size: 24),
+                                      color: AppColors.canvasSurface,
+                                      child: const Icon(
+                                        Icons.music_note,
+                                        size: 22,
+                                        color: AppColors.glowTealPrimary,
+                                      ),
                                     ),
                                   )
                                 : Container(
-                                    color: theme.colorScheme.surfaceVariant,
-                                    child: const Icon(Icons.music_note, size: 24),
+                                    color: AppColors.canvasSurface,
+                                    child: const Icon(
+                                      Icons.music_note,
+                                      size: 22,
+                                      color: AppColors.glowTealPrimary,
+                                    ),
                                   ),
                           ),
                         ),
@@ -97,15 +108,19 @@ class MiniPlayer extends ConsumerWidget {
                             children: [
                               Text(
                                 currentItem.title,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: AppColors.textWhiteHeading,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
                               const SizedBox(height: 2),
                               Text(
                                 currentItem.artist ?? 'Unknown Artist',
-                                style: TextStyle(
-                                  color: theme.colorScheme.onSurfaceVariant,
+                                style: const TextStyle(
+                                  color: AppColors.textTealMuted,
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,
@@ -117,16 +132,18 @@ class MiniPlayer extends ConsumerWidget {
 
                         // Play/Pause Button
                         IconButton(
-                          iconSize: 32,
-                          icon: Icon(isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled),
-                          color: theme.colorScheme.primary,
+                          iconSize: 34,
+                          icon: Icon(
+                            isPlaying ? Icons.pause_circle_filled : Icons.play_circle_filled,
+                            color: AppColors.glowTealPrimary,
+                          ),
                           onPressed: () => controller.togglePlayPause(),
                         ),
 
                         // Next Button
                         IconButton(
-                          iconSize: 28,
-                          icon: const Icon(Icons.skip_next),
+                          iconSize: 26,
+                          icon: const Icon(Icons.skip_next, color: AppColors.textTealBody),
                           onPressed: () => controller.seekToNext(),
                         ),
                       ],
