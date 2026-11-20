@@ -8,6 +8,7 @@ import {
   CheckSquare,
   Square,
   MoreVertical,
+  X,
 } from 'lucide-react';
 import { useTasks } from '../../context/TasksContext';
 import { ListOptionsMenu } from '../lists/ListOptionsMenu';
@@ -17,6 +18,7 @@ export const Sidebar: React.FC = () => {
     lists,
     tasks,
     isSidebarCollapsed,
+    toggleSidebar,
     activeNavTab,
     setActiveNavTab,
     visibleListIds,
@@ -25,7 +27,6 @@ export const Sidebar: React.FC = () => {
     setShowCreateListModal,
     setActiveListId,
     activeListId,
-    setIsAddingTask,
     setListToRename,
     setListToDelete,
   } = useTasks();
@@ -50,6 +51,10 @@ export const Sidebar: React.FC = () => {
     if (!visibleListIds.has(listId)) {
       toggleListVisibility(listId);
     }
+    // Auto-close on mobile screen
+    if (typeof window !== 'undefined' && window.innerWidth < 768) {
+      toggleSidebar();
+    }
     // Smooth scroll the column into view
     setTimeout(() => {
       const col = document.getElementById(`list-column-${listId}`);
@@ -60,16 +65,16 @@ export const Sidebar: React.FC = () => {
   };
 
   return (
-    <aside className="w-64 flex-shrink-0 flex flex-col h-full bg-[#051211]/90 backdrop-blur-xl border-r border-teal-500/20 text-[#F4FFFD] select-none z-20">
-      {/* Prominent "+ Create" White Pill Button */}
-      <div className="p-4 pb-2">
+    <aside className="w-64 flex-shrink-0 flex flex-col h-full bg-[#051211]/95 backdrop-blur-xl border-r border-teal-500/20 text-[#F4FFFD] select-none z-40 fixed md:relative inset-y-0 left-0 top-14 md:top-0 shadow-2xl md:shadow-none transition-transform duration-200">
+      {/* Sidebar Header with Close Button */}
+      <div className="flex items-center justify-between px-4 py-3 border-b border-teal-500/15">
+        <span className="text-xs font-bold uppercase tracking-wider text-teal-400">Zenith Tasks</span>
         <button
-          onClick={() => setIsAddingTask(true)}
-          className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white hover:bg-slate-100 text-[#04100F] font-bold shadow-[0_0_20px_rgba(255,255,255,0.22)] text-xs transition active:scale-95"
-          title="Create task"
+          onClick={toggleSidebar}
+          className="p-1 rounded-lg text-teal-400/70 hover:text-white hover:bg-teal-500/15 transition"
+          title="Close menu"
         >
-          <Plus className="w-4 h-4 stroke-[2.5]" />
-          <span>Create</span>
+          <X className="w-4 h-4" />
         </button>
       </div>
 
@@ -79,6 +84,9 @@ export const Sidebar: React.FC = () => {
           onClick={() => {
             setActiveNavTab('all');
             showAllLists();
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+              toggleSidebar();
+            }
           }}
           className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-semibold transition ${
             activeNavTab === 'all'
@@ -93,6 +101,9 @@ export const Sidebar: React.FC = () => {
         <button
           onClick={() => {
             setActiveNavTab('starred');
+            if (typeof window !== 'undefined' && window.innerWidth < 768) {
+              toggleSidebar();
+            }
           }}
           className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-full text-xs font-semibold transition ${
             activeNavTab === 'starred'

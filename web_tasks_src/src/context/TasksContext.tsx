@@ -118,7 +118,7 @@ export const TasksProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [settings, setSettings] = useState<TaskSettings>(() => loadSettings());
   const [activeListId, setActiveListId] = useState<string>('list_default');
   const [layoutMode, setLayoutMode] = useState<LayoutMode>('fullscreen');
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true);
   const [activeNavTab, setActiveNavTab] = useState<'all' | 'starred'>('all');
   const [visibleListIds, setVisibleListIds] = useState<Set<string>>(() => new Set(loadLists().map(l => l.id)));
   const [inlineAddingListId, setInlineAddingListId] = useState<string | null>(null);

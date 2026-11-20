@@ -14,6 +14,8 @@ import { ToastContainer } from './components/toasts/ToastContainer';
 
 export const App: React.FC = () => {
   const {
+    isSidebarCollapsed,
+    toggleSidebar,
     editingTaskId,
     setEditingTaskId,
     searchQuery,
@@ -32,6 +34,14 @@ export const App: React.FC = () => {
 
       {/* Main Body: Sidebar + Horizontal Board / Search View + Right Detail Drawer */}
       <div className="flex-1 flex flex-row overflow-hidden relative">
+        {/* Mobile backdrop when sidebar is open */}
+        {!isSidebarCollapsed && (
+          <div
+            onClick={toggleSidebar}
+            className="fixed inset-0 top-14 bg-black/60 backdrop-blur-xs z-30 md:hidden transition-opacity"
+          />
+        )}
+
         {/* Left Sidebar */}
         <Sidebar />
 
