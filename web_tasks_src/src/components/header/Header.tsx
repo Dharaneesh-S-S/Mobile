@@ -3,12 +3,6 @@ import {
   Menu,
   Check,
   Search,
-  HelpCircle,
-  Settings,
-  Grid,
-  Sun,
-  Moon,
-  Laptop,
   X,
 } from 'lucide-react';
 import { useTasks } from '../../context/TasksContext';
@@ -22,18 +16,9 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
     toggleSidebar,
     searchQuery,
     setSearchQuery,
-    setShowShortcutsHelp,
-    setShowSettingsModal,
-    settings,
-    updateSettings,
   } = useTasks();
 
   const [isSearchActive, setIsSearchActive] = useState(false);
-
-  const handleCycleTheme = () => {
-    const next = settings.theme === 'dark' ? 'light' : 'dark';
-    updateSettings({ theme: next });
-  };
 
   return (
     <header className="h-14 flex-shrink-0 bg-[#051211]/90 backdrop-blur-xl border-b border-teal-500/20 flex items-center justify-between px-4 text-[#F4FFFD] select-none z-30">
@@ -81,7 +66,7 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
         </div>
       </div>
 
-      {/* Right Action Icons: Help, Settings, Grid, Avatar */}
+      {/* Right Action Icons: Mobile search */}
       <div className="flex items-center gap-1">
         {/* Mobile search button */}
         <div className="md:hidden">
@@ -109,52 +94,6 @@ export const Header: React.FC<HeaderProps> = ({ searchInputRef }) => {
               <Search className="w-5 h-5" />
             </button>
           )}
-        </div>
-
-        {/* Theme Toggle */}
-        <button
-          onClick={handleCycleTheme}
-          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
-          title={`Theme: ${settings.theme}`}
-        >
-          {settings.theme === 'light' ? (
-            <Sun className="w-5 h-5 text-amber-400" />
-          ) : (
-            <Moon className="w-5 h-5 text-[#19E6C8]" />
-          )}
-        </button>
-
-        {/* Help icon */}
-        <button
-          onClick={() => setShowShortcutsHelp(true)}
-          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
-          title="Support & keyboard shortcuts (?)"
-        >
-          <HelpCircle className="w-5 h-5" />
-        </button>
-
-        {/* Settings icon */}
-        <button
-          onClick={() => setShowSettingsModal(true)}
-          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition"
-          title="Settings"
-        >
-          <Settings className="w-5 h-5" />
-        </button>
-
-        {/* 9-dots Grid icon */}
-        <button
-          className="p-2 rounded-full hover:bg-teal-500/10 text-[#94B5B0] hover:text-[#F4FFFD] transition hidden sm:inline-flex"
-          title="Apps"
-        >
-          <Grid className="w-5 h-5" />
-        </button>
-
-        {/* Profile Avatar */}
-        <div className="ml-1 cursor-pointer">
-          <div className="w-8 h-8 rounded-full bg-teal-500/20 border border-teal-400/40 flex items-center justify-center text-[#19E6C8] text-xs font-bold ring-2 ring-transparent hover:ring-[#19E6C8] transition shadow-[0_0_12px_rgba(25,230,200,0.25)]">
-            D
-          </div>
         </div>
       </div>
     </header>
