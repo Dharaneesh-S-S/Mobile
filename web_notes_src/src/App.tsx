@@ -34,7 +34,7 @@ export const App: React.FC = () => {
   // App State
   const [currentSection, setCurrentSection] = useState<SidebarSection>('notes')
   const [searchQuery, setSearchQuery] = useState('')
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(true)
   const [selectedNoteIds, setSelectedNoteIds] = useState<string[]>([])
 
   // Active Editors & Overlays
@@ -504,12 +504,21 @@ export const App: React.FC = () => {
       />
 
       {/* Main Workspace Layout: Sidebar on left + Content grid on right */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex overflow-hidden relative">
+        {/* Mobile backdrop when sidebar is open */}
+        {!isSidebarCollapsed && (
+          <div
+            onClick={() => setIsSidebarCollapsed(true)}
+            className="fixed inset-0 top-[61px] bg-black/60 backdrop-blur-xs z-25 md:hidden transition-opacity"
+          />
+        )}
+
         {/* Collapsible Sidebar */}
         <Sidebar
           currentSection={currentSection}
           onSelectSection={(sec) => setCurrentSection(sec)}
           isCollapsed={isSidebarCollapsed}
+          onClose={() => setIsSidebarCollapsed(true)}
           labels={labels}
           onOpenEditLabels={() => setIsLabelsModalOpen(true)}
           trashCount={trashCount}
