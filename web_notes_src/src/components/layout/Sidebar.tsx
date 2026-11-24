@@ -40,8 +40,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const mainNav = [
     { id: 'notes', label: 'Notes', icon: Lightbulb },
     { id: 'reminders', label: 'Reminders', icon: Bell },
-    { id: 'documents', label: 'Documents', icon: FileText },
-    { id: 'drawings', label: 'Drawings', icon: PenTool },
   ]
 
   const bottomNav = [

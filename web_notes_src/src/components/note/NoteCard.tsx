@@ -384,16 +384,6 @@ export const NoteCard: React.FC<NoteCardProps> = ({
             )}
           </div>
 
-          {/* Add Drawing */}
-          <button
-            type="button"
-            onClick={() => onOpenDrawingModal(note)}
-            className="p-1.5 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
-            title="Add drawing"
-          >
-            <PenTool className="w-3.5 h-3.5" />
-          </button>
-
           {/* Archive */}
           <button
             type="button"
@@ -439,30 +429,6 @@ export const NoteCard: React.FC<NoteCardProps> = ({
                 >
                   <Copy className="w-3.5 h-3.5" /> Make a copy
                 </button>
-                <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
-                {isDocument ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onConvertToQuickNote(note)
-                      setShowMoreMenu(false)
-                    }}
-                    className="w-full text-left px-3 py-1.5 hover:bg-teal-500/10 text-teal-400 hover:text-teal-200 flex items-center gap-2 font-medium"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-[#19E6C8]" /> Shrink to quick note
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      onConvertToDocument(note)
-                      setShowMoreMenu(false)
-                    }}
-                    className="w-full text-left px-3 py-1.5 hover:bg-teal-500/10 text-[#19E6C8] flex items-center gap-2 font-medium"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" /> Expand to document
-                  </button>
-                )}
                 <button
                   type="button"
                   onClick={() => {

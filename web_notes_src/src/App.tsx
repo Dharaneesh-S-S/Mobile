@@ -23,7 +23,7 @@ import { SettingsModal } from './components/modals/SettingsModal'
 import { ShortcutsHelpModal } from './components/modals/ShortcutsHelpModal'
 
 import { exportAllDataAsJson, printDocument } from './utils/exportImport'
-import { RotateCcw, X, Bell } from 'lucide-react'
+import { RotateCcw, X, Bell, Plus } from 'lucide-react'
 
 export const App: React.FC = () => {
   // DB Live Queries
@@ -143,12 +143,9 @@ export const App: React.FC = () => {
         return
       }
 
-      if (e.key === 'c' || e.key === 'C') {
+      if (e.key === 'c' || e.key === 'C' || e.key === 'l' || e.key === 'L') {
         e.preventDefault()
         handleCreateQuickNote()
-      } else if (e.key === 'l' || e.key === 'L') {
-        e.preventDefault()
-        handleCreateChecklist()
       } else if (e.key === '/') {
         e.preventDefault()
         document.getElementById('main-search-input')?.focus()
@@ -494,13 +491,6 @@ export const App: React.FC = () => {
         onToggleSidebar={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         searchQuery={searchQuery}
         setSearchQuery={setSearchQuery}
-        viewMode={settings.viewMode}
-        onToggleViewMode={toggleViewMode}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onCreateQuickNote={handleCreateQuickNote}
-        onCreateChecklist={handleCreateChecklist}
-        onCreateDrawing={handleCreateDrawing}
-        onCreateDocument={handleCreateDocument}
       />
 
       {/* Main Workspace Layout: Sidebar on left + Content grid on right */}
@@ -527,22 +517,9 @@ export const App: React.FC = () => {
 
         {/* Scrollable Center Content Area */}
         <main className="flex-1 overflow-y-auto px-4 md:px-8 py-6">
-          {/* Expanding "Take a note..." Bar (only in notes section and not searching) */}
+          {/* Quick "Take a note..." Trigger (only in notes section and not searching) */}
           {currentSection === 'notes' && !searchQuery && (
-            <TakeNoteBar
-              onCreateNote={async (data) => {
-                await handleCreateNote(data)
-              }}
-              onOpenDrawingModal={(onSave) => setActiveDrawingCallback({
-                onSave: (data, url) => onSave(url, data)
-              })}
-              onOpenReminderModal={(_onSave) => {
-                handleCreateQuickNote()
-              }}
-              onOpenCollaboratorsModal={(_onSave) => {
-                handleCreateQuickNote()
-              }}
-            />
+            <TakeNoteBar onOpenCreateNote={handleCreateQuickNote} />
           )}
 
           {/* Masonry / List Notes Grid */}
@@ -595,6 +572,16 @@ export const App: React.FC = () => {
             onReorderNotes={handleReorderNotes}
           />
         </main>
+
+        {/* Floating Action Button for normal note addition */}
+        <button
+          type="button"
+          onClick={handleCreateQuickNote}
+          className="fixed bottom-6 right-6 md:bottom-8 md:right-8 z-40 w-14 h-14 rounded-full bg-[#19E6C8] hover:bg-[#19E6C8]/90 text-[#030707] shadow-[0_0_25px_rgba(25,230,200,0.45)] flex items-center justify-center transition-all hover:scale-105 active:scale-95"
+          title="Add note"
+        >
+          <Plus className="w-6 h-6 stroke-[2.5]" />
+        </button>
       </div>
 
       {/* Bulk Action Context Bar (when 1+ notes selected) */}

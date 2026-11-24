@@ -481,16 +481,6 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
               />
             </label>
 
-            {/* Add Drawing */}
-            <button
-              type="button"
-              onClick={() => onOpenDrawingModal(note)}
-              className="p-2 rounded-full hover:bg-slate-200/60 dark:hover:bg-slate-800 transition-colors"
-              title="Add drawing"
-            >
-              <PenTool className="w-4 h-4" />
-            </button>
-
             {/* Archive */}
             <button
               type="button"
@@ -516,65 +506,6 @@ export const QuickNoteModal: React.FC<QuickNoteModalProps> = ({
               </button>
               {showMoreMenu && (
                 <div className="absolute left-0 bottom-full mb-2 w-52 bg-white dark:bg-slate-800 rounded-xl shadow-xl border border-slate-200 dark:border-slate-700 py-1.5 z-50 text-xs">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsChecklist(!isChecklist)
-                      setShowMoreMenu(false)
-                    }}
-                    className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 flex items-center gap-2"
-                  >
-                    <CheckSquare className="w-3.5 h-3.5" />
-                    {isChecklist ? 'Hide checkboxes' : 'Show checkboxes'}
-                  </button>
-
-                  {isChecklist && (
-                    <>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          moveCheckedToBottom()
-                          setShowMoreMenu(false)
-                        }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700"
-                      >
-                        Move checked items to bottom
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          uncheckAllItems()
-                          setShowMoreMenu(false)
-                        }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700"
-                      >
-                        Uncheck all items
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          deleteCompletedItems()
-                          setShowMoreMenu(false)
-                        }}
-                        className="w-full text-left px-3 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-700 text-red-500"
-                      >
-                        Delete completed items
-                      </button>
-                    </>
-                  )}
-
-                  <div className="my-1 border-t border-slate-100 dark:border-slate-700" />
-                  <button
-                    type="button"
-                    onClick={() => {
-                      handleSaveAndClose()
-                      onConvertToDocument(note)
-                      setShowMoreMenu(false)
-                    }}
-                    className="w-full text-left px-3 py-1.5 hover:bg-teal-500/10 text-[#19E6C8] flex items-center gap-2 font-medium"
-                  >
-                    <Sparkles className="w-3.5 h-3.5" /> Expand to document
-                  </button>
                   <button
                     type="button"
                     onClick={() => {
