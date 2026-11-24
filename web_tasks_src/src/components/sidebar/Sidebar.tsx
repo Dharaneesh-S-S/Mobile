@@ -9,6 +9,8 @@ import {
   Square,
   MoreVertical,
   X,
+  Trash2,
+  Edit2,
 } from 'lucide-react';
 import { useTasks } from '../../context/TasksContext';
 import { ListOptionsMenu } from '../lists/ListOptionsMenu';
@@ -116,12 +118,24 @@ export const Sidebar: React.FC = () => {
         </button>
       </div>
 
-      {/* Lists Section Header */}
-      <div className="mt-3 px-4 py-1.5 flex items-center justify-between text-[11px] font-bold text-teal-400/80 uppercase tracking-wider">
-        <span>Lists</span>
+      {/* Lists Section Header with New List button */}
+      <div className="mt-3 px-3.5 py-1.5 flex items-center justify-between text-[11px] font-bold text-teal-400/80 uppercase tracking-wider">
+        <div className="flex items-center gap-2">
+          <span>Lists</span>
+          <button
+            type="button"
+            onClick={() => setShowCreateListModal(true)}
+            className="p-1 rounded-lg bg-teal-500/15 hover:bg-teal-500/25 text-[#19E6C8] hover:text-white border border-teal-500/30 transition flex items-center gap-1 normal-case tracking-normal font-semibold text-[11px] px-2 py-0.5 cursor-pointer shadow-[0_0_10px_rgba(25,230,200,0.15)] active:scale-95"
+            title="Create new list"
+          >
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>New list</span>
+          </button>
+        </div>
         <button
           onClick={() => setIsListsExpanded(!isListsExpanded)}
           className="p-1 rounded hover:bg-teal-500/10 text-teal-400 hover:text-white transition"
+          title={isListsExpanded ? 'Collapse lists' : 'Expand lists'}
         >
           {isListsExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
         </button>
@@ -167,21 +181,36 @@ export const Sidebar: React.FC = () => {
                   <span className="truncate">{list.name}</span>
                 </div>
 
-                {/* Task Count on the Right */}
+                {/* Task Count & Actions on the Right */}
                 <div className="flex items-center gap-1.5 flex-shrink-0">
                   <span className="text-[11px] text-teal-400/60 font-medium px-1">
                     {count}
                   </span>
 
-                  {/* Options Menu Button (visible on hover) */}
-                  {hoveredListId === list.id && (
+                  {/* Delete button: appears when list is clicked/selected or hovered */}
+                  {!list.isDefault && (isSelected || hoveredListId === list.id) && (
+                    <button
+                      type="button"
+                      onClick={e => {
+                        e.stopPropagation();
+                        setListToDelete(list);
+                      }}
+                      className="p-1 rounded-md text-rose-400 hover:text-rose-200 hover:bg-rose-500/25 transition active:scale-95"
+                      title={`Delete "${list.name}"`}
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+
+                  {/* Options Menu Button (visible when selected or hovered) */}
+                  {(isSelected || hoveredListId === list.id) && (
                     <button
                       type="button"
                       onClick={e => {
                         e.stopPropagation();
                         setActiveMenuId(activeMenuId === list.id ? null : list.id);
                       }}
-                      className="p-1 rounded hover:bg-teal-500/20 text-teal-400 hover:text-white"
+                      className="p-1 rounded hover:bg-teal-500/20 text-teal-400 hover:text-white transition"
                       title="List options"
                     >
                       <MoreVertical className="w-3.5 h-3.5" />
@@ -189,13 +218,34 @@ export const Sidebar: React.FC = () => {
                   )}
                 </div>
 
-                {/* Options Dropdown */}
+                {/* Inline Options Dropdown */}
                 {activeMenuId === list.id && (
                   <div
-                    className="absolute right-2 top-full mt-1 z-50"
+                    className="absolute right-2 top-full mt-1 z-50 w-44 bg-[#051211]/95 backdrop-blur-xl rounded-xl shadow-2xl border border-teal-500/30 py-1 text-xs text-[#F4FFFD] animate-pop-in"
                     onClick={e => e.stopPropagation()}
                   >
-                    <ListOptionsMenu onClose={() => setActiveMenuId(null)} />
+                    <button
+                      onClick={() => {
+                        setActiveMenuId(null);
+                        setListToRename(list);
+                      }}
+                      className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-teal-500/15 text-[#F4FFFD] transition text-left"
+                    >
+                      <Edit2 className="w-3.5 h-3.5 text-teal-400" />
+                      <span>Rename list</span>
+                    </button>
+                    {!list.isDefault && (
+                      <button
+                        onClick={() => {
+                          setActiveMenuId(null);
+                          setListToDelete(list);
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-1.5 hover:bg-rose-500/15 text-rose-400 hover:text-rose-300 transition text-left"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                        <span>Delete list</span>
+                      </button>
+                    )}
                   </div>
                 )}
               </div>

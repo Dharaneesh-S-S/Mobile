@@ -142,29 +142,29 @@ export const ListDialogs: React.FC = () => {
 
       {/* Delete List Confirmation Dialog */}
       {listToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in">
-            <div className="flex items-center gap-3 mb-3 text-rose-600 dark:text-rose-400">
-              <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-sm bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-rose-500/30 p-5 animate-pop-in text-[#F4FFFD]">
+            <div className="flex items-center gap-3 mb-3 text-rose-400">
+              <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
                 <AlertTriangle className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Delete "{listToDelete.name}"?</h3>
+              <h3 className="text-base font-bold text-[#F4FFFD]">Delete "{listToDelete.name}"?</h3>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
-              This list will be deleted along with all its <strong className="text-rose-600 dark:text-rose-400">{listTasksCount} task(s)</strong>. You can undo this immediately from the toast.
+            <p className="text-sm text-[#94B5B0] mb-5 leading-relaxed">
+              This list will be deleted along with all its <strong className="text-rose-400">{listTasksCount} task(s)</strong>. You can undo this immediately from the toast.
             </p>
             <div className="flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setListToDelete(null)}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                className="px-4 py-2 rounded-xl text-sm font-medium text-[#94B5B0] hover:bg-teal-500/10 transition"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleDeleteConfirm}
-                className="px-4 py-2 rounded-xl text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white transition shadow-sm"
+                className="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white transition shadow-[0_0_15px_rgba(244,63,94,0.3)]"
               >
                 Delete list
               </button>
@@ -175,29 +175,29 @@ export const ListDialogs: React.FC = () => {
 
       {/* Delete All Completed Modal */}
       {showDeleteCompletedModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/40 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-sm bg-white dark:bg-slate-800 rounded-2xl shadow-modal border border-slate-200 dark:border-slate-700 p-5 animate-pop-in">
-            <div className="flex items-center gap-3 mb-3 text-rose-600 dark:text-rose-400">
-              <div className="w-9 h-9 rounded-xl bg-rose-50 dark:bg-rose-950/40 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md animate-fade-in">
+          <div className="w-full max-w-sm bg-[#051211]/95 backdrop-blur-xl rounded-2xl shadow-2xl border border-rose-500/30 p-5 animate-pop-in text-[#F4FFFD]">
+            <div className="flex items-center gap-3 mb-3 text-rose-400">
+              <div className="w-9 h-9 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center border border-rose-500/30">
                 <Trash2 className="w-5 h-5" />
               </div>
-              <h3 className="text-base font-semibold text-slate-800 dark:text-slate-100">Delete completed tasks?</h3>
+              <h3 className="text-base font-bold text-[#F4FFFD]">Delete completed tasks?</h3>
             </div>
-            <p className="text-sm text-slate-600 dark:text-slate-300 mb-5 leading-relaxed">
-              Permanently delete all <strong className="text-slate-800 dark:text-slate-100">{completedCount} completed task(s)</strong> in this list?
+            <p className="text-sm text-[#94B5B0] mb-5 leading-relaxed">
+              Permanently delete all <strong className="text-rose-400">{completedCount} completed task(s)</strong> in this list?
             </p>
             <div className="flex items-center justify-end gap-2">
               <button
                 type="button"
                 onClick={() => setShowDeleteCompletedModal(false)}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition"
+                className="px-4 py-2 rounded-xl text-sm font-medium text-[#94B5B0] hover:bg-teal-500/10 transition"
               >
                 Cancel
               </button>
               <button
                 type="button"
                 onClick={handleDeleteCompletedConfirm}
-                className="px-4 py-2 rounded-xl text-sm font-medium bg-rose-600 hover:bg-rose-700 text-white transition shadow-sm"
+                className="px-4 py-2 rounded-full text-sm font-bold bg-rose-600 hover:bg-rose-500 text-white transition shadow-[0_0_15px_rgba(244,63,94,0.3)]"
               >
                 Delete
               </button>
