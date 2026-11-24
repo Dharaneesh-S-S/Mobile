@@ -184,11 +184,12 @@ class _MobileBottomNav extends StatelessWidget {
     required this.onOpenSettings,
   });
 
-  void _showAllModulesSheet(BuildContext context) {
+  Future<void> _showAllModulesSheet(BuildContext context) async {
     final theme = Theme.of(context);
 
-    showModalBottomSheet(
+    final selectedIndexResult = await showModalBottomSheet<int>(
       context: context,
+      useRootNavigator: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (ctx) {
@@ -210,156 +211,175 @@ class _MobileBottomNav extends StatelessWidget {
             ],
           ),
           child: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF19E6C8).withOpacity(0.4),
-                        borderRadius: BorderRadius.circular(2),
-                        boxShadow: const [
-                          BoxShadow(
-                            color: Color(0x3319E6C8),
-                            blurRadius: 6,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 18),
-                  Row(
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
                         decoration: BoxDecoration(
-                          color: const Color(0x1F2DD4BF),
-                          borderRadius: BorderRadius.circular(9999),
-                          border: Border.all(color: const Color(0x402DD4BF)),
-                        ),
-                        child: const Text(
-                          'ALL SUITE MODULES',
-                          style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700,
-                            letterSpacing: 1.0,
-                            color: Color(0xFF19E6C8),
-                          ),
-                        ),
-                      ),
-                      const Spacer(),
-                      IconButton(
-                        icon: const Icon(Icons.close, color: Color(0xFF94B5B0)),
-                        tooltip: 'Close',
-                        onPressed: () => Navigator.of(ctx).pop(),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 3,
-                      mainAxisSpacing: 12,
-                      crossAxisSpacing: 12,
-                      childAspectRatio: 1.1,
-                    ),
-                    itemCount: allNavDestinations.length + 1,
-                    itemBuilder: (context, i) {
-                      final bool isSettings = i == allNavDestinations.length;
-                      final item = isSettings
-                          ? const NavDestinationItem(
-                              path: '/settings',
-                              label: 'Settings',
-                              icon: Icons.settings_outlined,
-                              selectedIcon: Icons.settings_rounded,
-                            )
-                          : allNavDestinations[i];
-                      final isSelected = isSettings
-                          ? isSettingsOpen
-                          : (selectedIndex == i && !isSettingsOpen);
-
-                      return InkWell(
-                        borderRadius: BorderRadius.circular(20),
-                        onTap: () {
-                          Navigator.of(ctx).pop();
-                          if (isSettings) {
-                            onOpenSettings();
-                          } else {
-                            onSelect(i);
-                          }
-                        },
-                        child: AnimatedContainer(
-                          duration: const Duration(milliseconds: 180),
-                          decoration: BoxDecoration(
-                            color: isSelected
-                                ? const Color(0x2619E6C8)
-                                : const Color(0x80081A18),
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                              color: isSelected
-                                  ? const Color(0xFF19E6C8)
-                                  : const Color(0x262DD4BF),
-                              width: isSelected ? 1.5 : 1,
+                          color: const Color(0xFF19E6C8).withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(2),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Color(0x3319E6C8),
+                              blurRadius: 6,
                             ),
-                            boxShadow: isSelected
-                                ? const [
-                                    BoxShadow(
-                                      color: Color(0x3319E6C8),
-                                      blurRadius: 16,
-                                    ),
-                                  ]
-                                : null,
+                          ],
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 18),
+                    Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0x1F2DD4BF),
+                            borderRadius: BorderRadius.circular(9999),
+                            border: Border.all(color: const Color(0x402DD4BF)),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Icon(
-                                isSelected ? item.selectedIcon : item.icon,
-                                color: isSelected
-                                    ? const Color(0xFF19E6C8)
-                                    : const Color(0xFF94B5B0),
-                                size: 28,
-                              ),
-                              const SizedBox(height: 8),
-                              Text(
-                                item.label,
-                                style: TextStyle(
-                                  color: isSelected
-                                      ? const Color(0xFFF4FFFD)
-                                      : const Color(0xFF94B5B0),
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                  fontSize: 12,
-                                ),
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ],
+                          child: const Text(
+                            'ALL SUITE MODULES',
+                            style: TextStyle(
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 1.0,
+                              color: Color(0xFF19E6C8),
+                            ),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 8),
-                ],
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: Color(0xFF94B5B0)),
+                          tooltip: 'Close',
+                          onPressed: () => Navigator.of(ctx).pop(),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    GridView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 3,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        childAspectRatio: 1.1,
+                      ),
+                      itemCount: allNavDestinations.length + 1,
+                      itemBuilder: (gridCtx, i) {
+                        final bool isSettings = i == allNavDestinations.length;
+                        final item = isSettings
+                            ? const NavDestinationItem(
+                                path: '/settings',
+                                label: 'Settings',
+                                icon: Icons.settings_outlined,
+                                selectedIcon: Icons.settings_rounded,
+                              )
+                            : allNavDestinations[i];
+                        final isSelected = isSettings
+                            ? isSettingsOpen
+                            : (selectedIndex == i && !isSettingsOpen);
+
+                        return Material(
+                          color: Colors.transparent,
+                          child: GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () => Navigator.of(ctx).pop(i),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(20),
+                              onTap: () => Navigator.of(ctx).pop(i),
+                              child: Ink(
+                                decoration: BoxDecoration(
+                                  color: isSelected
+                                      ? const Color(0x2619E6C8)
+                                      : const Color(0x80081A18),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: isSelected
+                                        ? const Color(0xFF19E6C8)
+                                        : const Color(0x262DD4BF),
+                                    width: isSelected ? 1.5 : 1,
+                                  ),
+                                  boxShadow: isSelected
+                                      ? const [
+                                          BoxShadow(
+                                            color: Color(0x3319E6C8),
+                                            blurRadius: 16,
+                                          ),
+                                        ]
+                                      : null,
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      isSelected ? item.selectedIcon : item.icon,
+                                      color: isSelected
+                                          ? const Color(0xFF19E6C8)
+                                          : const Color(0xFF94B5B0),
+                                      size: 28,
+                                    ),
+                                    const SizedBox(height: 8),
+                                    Text(
+                                      item.label,
+                                      style: TextStyle(
+                                        color: isSelected
+                                            ? const Color(0xFFF4FFFD)
+                                            : const Color(0xFF94B5B0),
+                                        fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                                        fontSize: 12,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                    const SizedBox(height: 8),
+                  ],
+                ),
               ),
             ),
           ),
         );
       },
     );
+
+    if (selectedIndexResult != null) {
+      if (selectedIndexResult == allNavDestinations.length) {
+        onOpenSettings();
+      } else {
+        onSelect(selectedIndexResult);
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     const primaryCount = 4;
     final isMoreSelected = selectedIndex >= primaryCount && !isSettingsOpen;
+    final activeOverflowItem = (selectedIndex >= primaryCount && selectedIndex < allNavDestinations.length && !isSettingsOpen)
+        ? allNavDestinations[selectedIndex]
+        : null;
+    final overflowIcon = activeOverflowItem != null
+        ? activeOverflowItem.selectedIcon
+        : Icons.grid_view_rounded;
+    final overflowLabel = activeOverflowItem != null
+        ? activeOverflowItem.label
+        : 'More';
 
     return SafeArea(
       child: Padding(
@@ -453,22 +473,26 @@ class _MobileBottomNav extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: isMoreSelected ? const Color(0x2E19E6C8) : Colors.transparent,
                           borderRadius: BorderRadius.circular(16),
+                          boxShadow: isMoreSelected
+                              ? const [
+                                  BoxShadow(
+                                    color: Color(0x2619E6C8),
+                                    blurRadius: 8,
+                                  ),
+                                ]
+                              : null,
                         ),
-                        child: Badge(
-                          isLabelVisible: isMoreSelected,
-                          backgroundColor: const Color(0xFF19E6C8),
-                          child: Icon(
-                            Icons.grid_view_rounded,
-                            color: isMoreSelected
-                                ? const Color(0xFF19E6C8)
-                                : const Color(0xFF5B7B76),
-                            size: 22,
-                          ),
+                        child: Icon(
+                          overflowIcon,
+                          color: isMoreSelected
+                              ? const Color(0xFF19E6C8)
+                              : const Color(0xFF5B7B76),
+                          size: 22,
                         ),
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        'More',
+                        overflowLabel,
                         style: TextStyle(
                           fontSize: 10,
                           fontWeight: isMoreSelected ? FontWeight.w700 : FontWeight.w500,
